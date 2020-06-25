@@ -6,32 +6,28 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
-      films: []
+      films: [],
     }
   }
 
   retrieve() {
-    var list = [];
     fetch('https://ghibliapi.herokuapp.com/films')
         .then(response => response.json())
-        // Return the data within the JS object
-        .then(function(data) {
-          console.log(data);
-          data.forEach(movie => {
-            list.push(movie.title)
-            console.log(movie.title)
-          })
-          console.log(list);
-          this.setState({
-            films: list
-          })
-        })
+        .then(data => this.setState({
+          films: data
+        }))
+        .then(() => console.log(this.state.films))
+        .then(() => this.displayData())
         .catch(err => {
           console.error('Error with fetch');
           console.error(err);
         });
-    console.log(this.state.list);
+  }
+
+  displayData() {
+    this.state.films.forEach(film =>
+        console.log(film.title)
+    )
   }
 
   render() {
@@ -55,9 +51,8 @@ class App extends React.Component {
             </p>
             <div className="card">
               <div className="card-body">
-                <h5 className="card-title">Steve Jobs</h5>
-                <h6 className="card-subtitle mb-2 text-muted">steve@apple.com</h6>
-                <p className="card-text">Stay Hungry, Stay Foolish</p>
+                <p className="card-title">Film List</p>
+                <ul className="card-text">List goes here</ul>
               </div>
             </div>
           </header>

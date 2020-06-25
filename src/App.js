@@ -6,60 +6,32 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      data: [],
       films: []
     }
   }
 
   retrieve() {
-    var parseJson = function(response) {
-      return response.json();
-    }
-
+    var list = [];
     fetch('https://ghibliapi.herokuapp.com/films')
-        .then(
-            function(response) {
-              if (response.status !== 200) {
-                console.log('error with GET url');
-                return Promise.reject(new Error(response.statusText));
-              }
-
-              response.json().then(function (data) {
-                console.log(data);
-              });
-            })
-        .then(parseJson)
-        .catch(err => {
-          // error
+        .then(response => response.json())
+        // Return the data within the JS object
+        .then(function(data) {
+          console.log(data);
+          data.forEach(movie => {
+            list.push(movie.title)
+            console.log(movie.title)
+          })
+          console.log(list);
+          this.setState({
+            films: list
+          })
         })
-
-    // Declare the request object.
-    var request = new XMLHttpRequest()
-    var filmlist;
-    // Open the request with GET
-    request.open('GET', ' https://ghibliapi.herokuapp.com/films', true)
-    // Do when request has completed
-    request.onload = function() {
-      // Access JSON data
-      var data = JSON.parse(this.response)
-      if (request.status >=200 && request.status < 400) {
-        // Test it's working
-        //data.forEach(movie => {
-        //  console.log(movie.title)
-        //})
-        console.log('GET request successful')
-        filmlist = data.title;
-        console.log(filmlist)
-
-      } else {
-        console.log('error with GET url');
-      }
-    }
-    request.send()
-    this.setState({
-      films: filmlist
-    });
-    console.log(this.state.films);
-    console.log(filmlist);
+        .catch(err => {
+          console.error('Error with fetch');
+          console.error(err);
+        });
+    console.log(this.state.list);
   }
 
   render() {

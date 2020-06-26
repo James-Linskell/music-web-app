@@ -10,12 +10,37 @@ class App extends React.Component {
     }
   }
 
+  authorise() {
+    var client_id = 'CLIENT_ID'; // Your client id
+    var client_secret = 'CLIENT_SECRET'; // Your secret
+    var redirect_uri = 'REDIRECT_URI'; // Your redirect uri
+
+    var accessToken = 'BQCPA9KtEp3A_b1kDn1sosY8q4UjoJiA9ILEx3K0G-lE3fP54UMw-9WCgHVnTBsk3dtkQRZ1c7QfFgXhMi2C-mIKuphkNxMvjbn9ei3GhTmRyVKWThMUX8x7_O2PuG8_foWt0m5GHw'
+    // Generated access token: 'BQDDFdq3i0NIuXUFACZAyW9trJiaofAxPCryawQ1dzom6izsS9YrV9p_elzVrbyzeAfzL1BWS9XARxDrMdW5ptgl0JcvYoaGBRwviDMihsfjio74SD9igsoLvNPYHNLIBKanhDHC_Q'
+    var myOptions = {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + accessToken
+      },
+      mode: 'cors',
+      cache: 'default'
+    };
+    fetch('https://api.spotify.com/v1/tracks/6dsq7Nt5mIFzvm5kIYNORy', myOptions )
+        .then(response => response.json())
+        .then(json => console.log(json))
+        .catch(err => {
+          console.error('Error with fetch');
+          console.error(err);
+        });
+  }
+
   retrieve() {
-    fetch('https://ghibliapi.herokuapp.com/films')
+    fetch('https://open.spotify.com/playlist/37i9dQZF1DX8SIpKv9qw6x')
         .then(response => response.json())
         .then(data => this.setState({
           films: data
         }))
+        // For debug purposes
         .then(() => console.log(this.state.films))
         .then(() => this.displayData())
         .catch(err => {
@@ -47,7 +72,7 @@ class App extends React.Component {
               Learn React
             </a>
             <p>
-              <button onClick={() => this.retrieve()}>Retrieve Data</button>
+              <button onClick={() => this.authorise()}>Retrieve Data</button>
             </p>
             <div className="card">
               <div className="card-body">

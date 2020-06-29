@@ -9,7 +9,10 @@ class App extends React.Component {
       test: null,
       token: 'NO_TOKEN(CLIENT)',
       songs: [],
-    }
+      searchQuery: 'q=',
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   // FOR DEBUG: Call my API on page refresh
@@ -26,6 +29,17 @@ class App extends React.Component {
     })*/
   }
 
+  handleChange(event) {
+    console.log(event.target.value);
+    this.setState({ searchQuery: event.target.value });
+    console.log(this.state.searchQuery);
+  }
+
+  handleSubmit(event) {
+    //event.preventDefault();
+    this.fetchData();
+  }
+
   // Calls the node.js Express server to return the Spotify client token
   getToken = async () => {
     const response = await fetch('/authenticate');
@@ -37,7 +51,7 @@ class App extends React.Component {
     return body;
   };
 
-  retrieve = async () => {
+  fetchData = async () => {
     const requestToken = await this.getToken();
     this.setState({
       test: requestToken.express,
@@ -49,7 +63,12 @@ class App extends React.Component {
       }
     }
 
-    const response = await fetch('https://api.spotify.com/v1/playlists/37i9dQZF1DWWvhKV4FBciw', myOptions)
+    const endpoint = 'https://api.spotify.com/v1/search?';
+    const query = 'q=name:' + this.state.searchQuery;
+    const type = '&type=track';
+    const url = endpoint + query + type;
+
+    const response = await fetch(url, myOptions)
     const data = await response.json();
     console.log(data);
     this.setState({
@@ -75,8 +94,8 @@ class App extends React.Component {
             <p>Search for a song to get started!</p>
             <div className="searchbar">
               <p>
-                <input type="text" placeholder="Search.."></input>
-                <button id="searchclick" onClick={() => this.retrieve()}>Search</button>
+                <input type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>
+                <button id="searchclick" onClick={() => this.handleSubmit()}>Search</button>
               </p>
             </div>
             <div>

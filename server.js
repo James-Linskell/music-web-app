@@ -23,18 +23,6 @@ app.get('/authenticate', (req, res) => {
                 express: 'RESPONSE RECEIVED FROM AUTHENTICATION SERVER',
                 myToken: token,
             });
-
-            // Calling the spotify API with the token (move to client side)
-            /*var options = {
-                url: 'https://api.spotify.com/v1/users/jmperezperez',
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                json: true
-            };
-            request.get(options, function (error, response, body) {
-                console.log(body);
-            });*/
         }
     });
 });

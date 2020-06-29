@@ -3,8 +3,9 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 20vmin;
   pointer-events: none;
+  margin-bottom: 40px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -24,8 +25,18 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.searchbar {
+  size: 20px;
+}
+
+.searchbar input[type=text] {
+  margin-top: 8px;
+  margin-right: 16px;
+  font-size: 24px;
+}
+
+#searchclick {
+  font-size: 20px;
 }
 
 @keyframes App-logo-spin {

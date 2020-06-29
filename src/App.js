@@ -9,7 +9,7 @@ class App extends React.Component {
       test: null,
       token: 'NO_TOKEN(CLIENT)',
       songs: [],
-      searchQuery: 'q=',
+      searchQuery: '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -30,13 +30,13 @@ class App extends React.Component {
   }
 
   handleChange(event) {
-    console.log(event.target.value);
+    //console.log(event.target.value);
     this.setState({ searchQuery: event.target.value });
-    console.log(this.state.searchQuery);
+    //console.log(this.state.searchQuery);
   }
 
-  handleSubmit(event) {
-    //event.preventDefault();
+  handleSubmit = event => {
+    event.preventDefault();
     this.fetchData();
   }
 
@@ -64,7 +64,7 @@ class App extends React.Component {
     }
 
     const endpoint = 'https://api.spotify.com/v1/search?';
-    const query = 'q=name:' + this.state.searchQuery;
+    const query = 'q=' + this.state.searchQuery;
     const type = '&type=track';
     const url = endpoint + query + type;
 
@@ -93,10 +93,10 @@ class App extends React.Component {
             <img src={hellify} className="App-logo" alt="logo"/>
             <p>Search for a song to get started!</p>
             <div className="searchbar">
-              <p>
+              <form onSubmit={this.handleSubmit}>
                 <input type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>
-                <button id="searchclick" onClick={() => this.handleSubmit()}>Search</button>
-              </p>
+                <button id="searchclick" type="submit">Search</button>
+              </form>
             </div>
             <div>
               {this.state.songs}

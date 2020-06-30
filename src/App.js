@@ -1,46 +1,51 @@
 import React from 'react';
 import hellify from './hellify.png';
-import './App.css';
+import './styles/App.css';
+import SearchResult from "./components/SearchResult";
 
 class App extends React.Component {
+  /**
+   * Default constructor for main app.
+   * @param props
+   */
   constructor(props) {
     super(props);
     this.state = {
       test: null,
       token: 'NO_TOKEN(CLIENT)',
-      songs: [],
+      songList: {},
       searchQuery: '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  // FOR DEBUG: Call my API on page refresh
   componentDidMount() {
-    /*this.getToken()
-        .then(res => this.setState({
-          test: res.express,
-          token: res.myToken
-        }))
-        .catch(err => console.log(err));*/
-    /*this.setState({
-      token: '',
-      songs: ''
-    })*/
+    // For when something re-renders.
   }
 
+  /**
+   * Updates the state {searchQuery} whenever a letter is typed in the search box.
+   * @param onChange event for search box input
+   */
   handleChange(event) {
-    //console.log(event.target.value);
     this.setState({ searchQuery: event.target.value });
-    //console.log(this.state.searchQuery);
   }
 
+  /**
+   * Handles submit of search query.
+   * @param onSubmit event for search submit.
+   */
   handleSubmit = event => {
     event.preventDefault();
     this.fetchData();
   }
 
-  // Calls the node.js Express server to return the Spotify client token
+
+  /**
+   * Calls my node server which requests a Spotify client access token.
+   * @returns {Promise<any>} Json body containing Spotify client token and test message
+   */
   getToken = async () => {
     const response = await fetch('/authenticate');
     const body = await response.json();
@@ -51,6 +56,10 @@ class App extends React.Component {
     return body;
   };
 
+  /**
+   * Calls Spotify API using token.
+   * @returns {Promise<void>}
+   */
   fetchData = async () => {
     const requestToken = await this.getToken();
     this.setState({
@@ -72,20 +81,28 @@ class App extends React.Component {
     const data = await response.json();
     console.log(data);
     this.setState({
-          songs: data.name
-        });
+      songList: data
+    });
     this.displayData();
     //2WRmxGFCK8b8oujhfK80TI
     //55odIfJy7sm2HkHf3n9Gha
   }
 
+  /**
+   * Displays data fetched from spotify.
+   */
   displayData() {
-    /*this.state.songs.forEach(song =>
+    /*this.state.songList.forEach(song =>
         console.log(song.title)
-    )*/
-
+    );*/
+    this.state.songList.tracks.items.forEach(song =>
+            console.log(song.name)
+    );
   }
 
+  /**
+   * Renders main page to the DOM.
+   */
   render() {
     return (
         <div className="App">
@@ -102,9 +119,18 @@ class App extends React.Component {
               {this.state.songs}
             </div>
           </header>
-          <div>
-            <p className="card-text">{this.state.test}. {this.state.token}</p>
+
+          <div className="Cards">
+            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"></SearchResult></p>
+            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"></SearchResult></p>
+            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"></SearchResult></p>
+            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"></SearchResult></p>
+            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"></SearchResult></p>
           </div>
+
+          <footer className="Footer">
+            <p>{this.state.test}. {this.state.token}</p>
+          </footer>
         </div>
     );
   }

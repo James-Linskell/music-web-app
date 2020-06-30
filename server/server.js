@@ -32,7 +32,7 @@ const request = require('request'); // "Request" library
 const client_id = '9921383d96874fd99c7747a000d97483'; // Your client id
 const client_secret = '57e54ccba90143178aa912eafa2616d8'; // Your secret
 
-// your application requests authorization
+// Request authentication from Spotify server
 const authOptions = {
     url: 'https://accounts.spotify.com/api/token',
     headers: {

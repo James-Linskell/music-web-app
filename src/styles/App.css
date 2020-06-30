@@ -14,8 +14,21 @@
   }
 }
 
+.Track-image {
+  height: 15vmin;
+}
+
+.Track-deck {
+  margin-top: 10vmin;
+  font-size: 25px;
+}
+
+.Track-card {
+  margin-left: 10vmin;
+}
+
 .App-header {
-  background-color: #282c34;
+  background-color: #212120;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -46,4 +59,22 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.Cards {
+  position: center;
+  margin-left: 10vmin;
+}
+
+.Cards p:hover {
+  background-color: lightgray;
+}
+
+.Cards p {
+  float: left;
+  position: center;
+}
+
+.Footer {
+  clear: both;
 }

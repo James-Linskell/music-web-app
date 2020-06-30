@@ -1,0 +1,30 @@
+.Result-card {
+
+}
+
+.Song-title {
+
+}
+
+.Album-title {
+
+}
+
+.Artist-name {
+
+}
+
+.Album-art {
+    height: 18vmin;
+    pointer-events: none;
+    margin-bottom: 0px;
+}
+
+.Song-info {
+    font-size: 2vmin;
+    padding-right: 1vmin;
+}
+
+.Song-info div {
+    padding-bottom: 2vmin;
+}

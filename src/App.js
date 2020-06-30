@@ -2,6 +2,9 @@ import React from 'react';
 import hellify from './hellify.png';
 import './styles/App.css';
 import SearchResult from "./components/SearchResult";
+import { BsChevronDoubleDown } from "react-icons/bs";
+import { Router, Route } from "react-router";
+import CardMaker from './components/CardMaker';
 
 class App extends React.Component {
   /**
@@ -13,7 +16,7 @@ class App extends React.Component {
     this.state = {
       test: null,
       token: 'NO_TOKEN(CLIENT)',
-      songList: {},
+      songList: null,
       searchQuery: '',
     };
     this.handleChange = this.handleChange.bind(this);
@@ -84,6 +87,7 @@ class App extends React.Component {
       songList: data
     });
     this.displayData();
+    this.generateSongInfo();
     //2WRmxGFCK8b8oujhfK80TI
     //55odIfJy7sm2HkHf3n9Gha
   }
@@ -100,11 +104,33 @@ class App extends React.Component {
     );
   }
 
+  generateSongInfo() {
+    const songs = {
+      name: '',
+      artist: '',
+      album: '',
+      art: null,
+    }
+    this.state.songList.tracks.items.forEach(song => {
+        console.log(song.name);
+        console.log(song.artists[0].name);
+        console.log(song.album.name);
+      }
+    );
+  }
+
   /**
    * Renders main page to the DOM.
    */
   render() {
     return (
+        /* For when we add routes. Replace everything on this page with these few lines.
+         * <Router>
+         *  <Route path={"user"} component={User} />
+         *  <Route path={"home"} component={Home} />
+         * <Router>
+         *
+         */
         <div className="App">
           <header className="App-header">
             <img src={hellify} className="App-logo" alt="logo"/>
@@ -118,14 +144,15 @@ class App extends React.Component {
             <div>
               {this.state.songs}
             </div>
+            <footer id="Scroll-div"><BsChevronDoubleDown id="Scroll-icon" size="5vmin" /></footer>
           </header>
 
           <div className="Cards">
-            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"></SearchResult></p>
-            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"></SearchResult></p>
-            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"></SearchResult></p>
-            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"></SearchResult></p>
-            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"></SearchResult></p>
+            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"/></p>
+            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"/></p>
+            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"/></p>
+            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"/></p>
+            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"/></p>
           </div>
 
           <footer className="Footer">

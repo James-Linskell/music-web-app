@@ -3,8 +3,10 @@ import hellify from './hellify.png';
 import './styles/App.css';
 import SearchResult from "./components/SearchResult";
 import { BsChevronDoubleDown } from "react-icons/bs";
-import { Router, Route } from "react-router";
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import CardMaker from './components/CardMaker';
+import HomePage from "./routes/HomePage";
+import ResultsPage from "./routes/ResultsPage";
 
 class App extends React.Component {
   /**
@@ -20,6 +22,7 @@ class App extends React.Component {
       songListRaw: null,
       simplifiedSongList: null,
       searchQuery: '',
+      currentRoute: HomePage
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -43,6 +46,7 @@ class App extends React.Component {
    */
   handleSubmit = event => {
     event.preventDefault();
+    this.setState({currentRoute: ResultsPage})
     this.fetchData();
   }
 
@@ -90,12 +94,9 @@ class App extends React.Component {
     });
     this.displayData();
     this.generateSongInfo();
+    this.scrollToBottom()
     //2WRmxGFCK8b8oujhfK80TI
     //55odIfJy7sm2HkHf3n9Gha
-    //TEST
-    const response1 = await fetch('https://api.spotify.com/v1/artists/4Z8W4fKeB5YxbusRsdQVPb', myOptions)
-    const data1 = await response1.json();
-    console.log(data1);
   }
 
   /**
@@ -109,6 +110,12 @@ class App extends React.Component {
             console.log(song.name)
     );
   }
+
+  scrollToBottom = () => {
+    this.resultsStart.scrollIntoView({ behavior: "smooth"});
+    this.resultsStart.scrollIntoView({ behavior: "smooth"});
+  }
+
 
   generateSongInfo() {
     const songs = []
@@ -137,7 +144,7 @@ class App extends React.Component {
         /* For when we add routes. Replace everything on this page with these few lines.
          * <Router>
          *  <Route path={"user"} component={User} />
-         *  <Route path={"home"} component={Home} />
+         *  <Route path={"home"} component={HomePage} />
          * <Router>
          *
          */
@@ -157,13 +164,14 @@ class App extends React.Component {
             <footer id="Scroll-div"><BsChevronDoubleDown id="Scroll-icon" size="3vmin" /></footer>
           </header>
 
-          <div id="test">
-            <p>{this.state.test1}</p>
-          </div>
+          <Router>
+            <Route path="/" component={this.state.currentRoute} data={this.state.simplifiedSongList}/>
+          </Router>
 
-          <div className="Cards">
+          <div className="Cards" ref={e1 => { this.resultsStart = e1; }}>
             <CardMaker data={this.state.simplifiedSongList} />
           </div>
+
           <footer className="Footer">
             <p>{this.state.test}. {this.state.token}</p>
           </footer>

@@ -1,7 +1,7 @@
 .Result-card {
     width: 40vmin;
     border: 3px solid black;
-    margin-left: 1vmin;
+    margin: 0.3vmin;
     background-color: black;
     height: 18.5vmin;
 }

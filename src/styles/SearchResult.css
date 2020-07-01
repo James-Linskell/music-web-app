@@ -1,5 +1,8 @@
 .Result-card {
-
+    width: 40vmin;
+    border: 3px solid black;
+    margin-left: 1vmin;
+    background-color: black;
 }
 
 .Song-title {
@@ -22,9 +25,13 @@
 
 .Song-info {
     font-size: 2vmin;
-    padding-right: 1vmin;
+    padding-right: 0vmin;
+    margin-left: 5vmin;
+    text-align: center;
+    width: 22vmin;
+    background-color: seagreen;
 }
 
 .Song-info div {
-    padding-bottom: 2vmin;
+    margin-bottom: 1vmin;
 }

@@ -16,7 +16,8 @@ class App extends React.Component {
     this.state = {
       test: null,
       token: 'NO_TOKEN(CLIENT)',
-      songList: null,
+      songListRaw: null,
+      simplifiedSongList: null,
       searchQuery: '',
     };
     this.handleChange = this.handleChange.bind(this);
@@ -84,7 +85,7 @@ class App extends React.Component {
     const data = await response.json();
     console.log(data);
     this.setState({
-      songList: data
+      songListRaw: data
     });
     this.displayData();
     this.generateSongInfo();
@@ -99,24 +100,28 @@ class App extends React.Component {
     /*this.state.songList.forEach(song =>
         console.log(song.title)
     );*/
-    this.state.songList.tracks.items.forEach(song =>
+    this.state.songListRaw.tracks.items.forEach(song =>
             console.log(song.name)
     );
   }
 
   generateSongInfo() {
-    const songs = {
-      name: '',
-      artist: '',
-      album: '',
-      art: null,
-    }
-    this.state.songList.tracks.items.forEach(song => {
-        console.log(song.name);
-        console.log(song.artists[0].name);
-        console.log(song.album.name);
+    const songs = []
+    // Add truncation of long titles.
+    this.state.songListRaw.tracks.items.forEach(song => {
+        songs.push({
+          name: song.name,
+          artist: song.artists[0].name,
+          album: song.album.name,
+          art: song.album.images[1].url
+        });
+        //console.log(song.name);
+        //console.log(song.artists[0].name);
+        //console.log(song.album.name);
       }
     );
+    this.setState({simplifiedSongList: songs})
+    console.log(songs);
   }
 
   /**
@@ -144,17 +149,12 @@ class App extends React.Component {
             <div>
               {this.state.songs}
             </div>
-            <footer id="Scroll-div"><BsChevronDoubleDown id="Scroll-icon" size="5vmin" /></footer>
+            <footer id="Scroll-div"><BsChevronDoubleDown id="Scroll-icon" size="3vmin" /></footer>
           </header>
 
           <div className="Cards">
-            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"/></p>
-            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"/></p>
-            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"/></p>
-            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"/></p>
-            <p><SearchResult artwork={hellify} name="(Song name)" album="(Album name)" artist="(Artist name)"/></p>
+            <CardMaker data={this.state.simplifiedSongList} />
           </div>
-
           <footer className="Footer">
             <p>{this.state.test}. {this.state.token}</p>
           </footer>

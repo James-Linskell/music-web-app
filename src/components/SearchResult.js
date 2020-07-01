@@ -16,9 +16,9 @@ class SearchResult extends React.Component {
                             <img className="Album-art" src={this.props.artwork} className="Album-art" alt="album artwork"/>
                         </td>
                         <td className="Song-info">
-                            <div>Song title goes here{this.props.name}</div>
-                            <div>Album title goes here{this.props.album}</div>
-                            <div>Artist's name goes here{this.props.artist}</div>
+                            <div>{this.props.name}</div>
+                            <div>{this.props.album}</div>
+                            <div>{this.props.artist}</div>
                         </td>
                     </tr>
                 </table>

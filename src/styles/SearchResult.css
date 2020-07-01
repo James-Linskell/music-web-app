@@ -3,6 +3,7 @@
     border: 3px solid black;
     margin-left: 1vmin;
     background-color: black;
+    height: 18.5vmin;
 }
 
 .Song-title {
@@ -29,9 +30,15 @@
     margin-left: 5vmin;
     text-align: center;
     width: 22vmin;
-    background-color: seagreen;
+    color: white;
 }
 
 .Song-info div {
     margin-bottom: 1vmin;
+}
+
+#BGpic {
+    position: absolute;
+    opacity: 1;
+    height: 5vmin;
 }

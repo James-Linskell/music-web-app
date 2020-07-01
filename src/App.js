@@ -15,6 +15,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       test: null,
+      test1: null,
       token: 'NO_TOKEN(CLIENT)',
       songListRaw: null,
       simplifiedSongList: null,
@@ -91,6 +92,10 @@ class App extends React.Component {
     this.generateSongInfo();
     //2WRmxGFCK8b8oujhfK80TI
     //55odIfJy7sm2HkHf3n9Gha
+    //TEST
+    const response1 = await fetch('https://api.spotify.com/v1/artists/4Z8W4fKeB5YxbusRsdQVPb', myOptions)
+    const data1 = await response1.json();
+    console.log(data1);
   }
 
   /**
@@ -151,6 +156,10 @@ class App extends React.Component {
             </div>
             <footer id="Scroll-div"><BsChevronDoubleDown id="Scroll-icon" size="3vmin" /></footer>
           </header>
+
+          <div id="test">
+            <p>{this.state.test1}</p>
+          </div>
 
           <div className="Cards">
             <CardMaker data={this.state.simplifiedSongList} />

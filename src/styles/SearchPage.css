@@ -1,11 +1,10 @@
-.App {
-  text-align: center;
+.Search {
+  background-color: #212120;
 }
 
-.App-logo {
-  height: 20vmin;
+.Search-logo {
+  height: 15vmin;
   pointer-events: none;
-  margin-bottom: 40px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -14,28 +13,20 @@
   }
 }
 
-.Track-image {
-  height: 15vmin;
-}
-
-.Track-deck {
-  margin-top: 10vmin;
-  font-size: 25px;
-}
-
-.Track-card {
-  margin-left: 10vmin;
-}
-
-.App-header {
+.Search-header {
   background-color: #212120;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
+  min-height: 40vh;
   color: white;
+}
+
+#margin {
+  height: 10vh;
+  background-color: #212120;
 }
 
 .searchbar {
@@ -68,7 +59,7 @@
 }
 
 .Cards p:hover {
-  background-color: black;
+  background-color: white;
   z-index: 1;
 }
 

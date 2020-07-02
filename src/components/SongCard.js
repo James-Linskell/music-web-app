@@ -1,7 +1,7 @@
 import React from 'react';
-import '../styles/SearchResult.css';
+import '../styles/SongCard.css';
 
-class SearchResult extends React.Component {
+class SongCard extends React.Component {
     render() {
         return (
             <div className="Result-card">
@@ -29,4 +29,4 @@ class SearchResult extends React.Component {
 
 }
 
-export default SearchResult;
+export default SongCard;

@@ -5,12 +5,6 @@ const port = process.env.PORT || 5000;
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-// create a GET route
-app.get('/express_backend', (req, res) => {
-    res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT\n' });
-    //res.send({ express: })
-});
-
 app.get('/authenticate', (req, res) => {
     let token = 'NO_TOKEN(SERVER)';
     request.post(authOptions, function (error, response, body) {
@@ -20,7 +14,7 @@ app.get('/authenticate', (req, res) => {
             token = body.access_token;
 
             res.send({
-                express: 'RESPONSE RECEIVED FROM AUTHENTICATION SERVER',
+                test: 'RESPONSE RECEIVED FROM AUTHENTICATION SERVER',
                 myToken: token,
             });
         }

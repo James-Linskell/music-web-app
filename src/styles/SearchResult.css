@@ -1,44 +1,31 @@
 .Result-card {
-    width: 40vmin;
+    width: 40vh;
     border: 3px solid black;
-    margin: 0.3vmin;
+    margin: 0.3vh;
     background-color: black;
-    height: 18.5vmin;
-}
-
-.Song-title {
-
-}
-
-.Album-title {
-
-}
-
-.Artist-name {
-
+    height: 18.5vh;
 }
 
 .Album-art {
-    height: 18vmin;
+    height: 18vh;
     pointer-events: none;
     margin-bottom: 0px;
 }
 
 .Song-info {
-    font-size: 2vmin;
-    padding-right: 0vmin;
+    font-size: 1.8vh;
+    padding-right: 0vh;
     margin-left: 5vmin;
     text-align: center;
-    width: 22vmin;
+    width: 40vmin;
     color: white;
+    opacity: 1;
 }
 
 .Song-info div {
     margin-bottom: 1vmin;
 }
 
-#BGpic {
-    position: absolute;
-    opacity: 1;
-    height: 5vmin;
+.Info-name {
+    font-size: 2.7vh;
 }

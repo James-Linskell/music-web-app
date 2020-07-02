@@ -63,7 +63,8 @@
 
 .Cards {
   position: center;
-  margin-left: 12vmin;
+  margin-left: 5vh;
+  margin-right: 5vh;
 }
 
 .Cards p:hover {
@@ -72,7 +73,7 @@
 }
 
 .Cards p {
-  float: left;
+  display: inline-block;
   position: center;
 }
 

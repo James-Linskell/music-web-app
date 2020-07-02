@@ -1,12 +1,12 @@
 import React from 'react';
 import hellify from './hellify.png';
 import './styles/App.css';
-import SearchResult from "./components/SearchResult";
 import { BsChevronDoubleDown } from "react-icons/bs";
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import CardMaker from './components/CardMaker';
 import HomePage from "./routes/HomePage";
 import ResultsPage from "./routes/ResultsPage";
+import FetchSearchData from './components/FetchSearchData';
 
 class App extends React.Component {
   /**
@@ -22,14 +22,10 @@ class App extends React.Component {
       songListRaw: null,
       simplifiedSongList: null,
       searchQuery: '',
-      currentRoute: HomePage
+      currentRoute: null
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentDidMount() {
-    // For when something re-renders.
   }
 
   /**
@@ -47,79 +43,18 @@ class App extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     this.setState({currentRoute: ResultsPage})
-    this.fetchData();
+    this.waitForFetch();
   }
 
-
-  /**
-   * Calls my node server which requests a Spotify client access token.
-   * @returns {Promise<any>} Json body containing Spotify client token and test message
-   */
-  getToken = async () => {
-    const response = await fetch('/authenticate');
-    const body = await response.json();
-
-    if (response.status !== 200) {
-      throw Error(body.message)
-    }
-    return body;
-  };
-
-  /**
-   * Calls Spotify API using token.
-   * @returns {Promise<void>}
-   */
-  fetchData = async () => {
-    const requestToken = await this.getToken();
-    this.setState({
-      test: requestToken.express,
-      token: requestToken.myToken
-    })
-    var myOptions = {
-      headers: {
-        Authorization: 'Bearer ' + this.state.token
-      }
-    }
-
-    const endpoint = 'https://api.spotify.com/v1/search?';
-    const query = 'q=' + this.state.searchQuery;
-    const type = '&type=track';
-    const url = endpoint + query + type;
-
-    const response = await fetch(url, myOptions)
-    const data = await response.json();
-    console.log(data);
-    this.setState({
-      songListRaw: data
-    });
-    this.displayData();
+  waitForFetch = async () => {
+    const data = await FetchSearchData.fetchData(this.state.searchQuery, 'track');
+    this.setState({songListRaw: data})
     this.generateSongInfo();
-    this.scrollToBottom()
-    //2WRmxGFCK8b8oujhfK80TI
-    //55odIfJy7sm2HkHf3n9Gha
-  }
-
-  /**
-   * Displays data fetched from spotify.
-   */
-  displayData() {
-    /*this.state.songList.forEach(song =>
-        console.log(song.title)
-    );*/
-    this.state.songListRaw.tracks.items.forEach(song =>
-            console.log(song.name)
-    );
-  }
-
-  scrollToBottom = () => {
     this.resultsStart.scrollIntoView({ behavior: "smooth"});
-    this.resultsStart.scrollIntoView({ behavior: "smooth"});
-  }
-
+  };
 
   generateSongInfo() {
     const songs = []
-    // Add truncation of long titles.
     this.state.songListRaw.tracks.items.forEach(song => {
         songs.push({
           name: song.name,
@@ -127,13 +62,9 @@ class App extends React.Component {
           album: song.album.name,
           art: song.album.images[1].url
         });
-        //console.log(song.name);
-        //console.log(song.artists[0].name);
-        //console.log(song.album.name);
       }
     );
     this.setState({simplifiedSongList: songs})
-    console.log(songs);
   }
 
   /**
@@ -141,41 +72,36 @@ class App extends React.Component {
    */
   render() {
     return (
-        /* For when we add routes. Replace everything on this page with these few lines.
-         * <Router>
-         *  <Route path={"user"} component={User} />
-         *  <Route path={"home"} component={HomePage} />
-         * <Router>
-         *
-         */
-        <div className="App">
-          <header className="App-header">
-            <img src={hellify} className="App-logo" alt="logo"/>
-            <p>Search for a song to get started!</p>
-            <div className="searchbar">
-              <form onSubmit={this.handleSubmit}>
-                <input type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>
-                <button id="searchclick" type="submit">Search</button>
-              </form>
-            </div>
+        <Router>
+          <div className="App">
+            <header className="App-header">
+              <img src={hellify} className="App-logo" alt="logo"/>
+              <p>Search for a song to get started!</p>
+              <div className="searchbar">
+                <form onSubmit={this.handleSubmit}>
+                  <input type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>
+                  <button id="searchclick" type="submit">Search</button>
+                </form>
+              </div>
+              <div id="routetest">
+                {this.state.songs}
+              </div>
+              <footer id="Scroll-div"><BsChevronDoubleDown id="Scroll-icon" size="3vmin" /></footer>
+            </header>
+
             <div>
-              {this.state.songs}
+              <Route path="/" exact component={this.state.currentRoute}/>
+              <Route path="/home" component={HomePage}/>
             </div>
-            <footer id="Scroll-div"><BsChevronDoubleDown id="Scroll-icon" size="3vmin" /></footer>
-          </header>
+            <div className="Cards" ref={e1 => { this.resultsStart = e1; }}>
+              <CardMaker data={this.state.simplifiedSongList} />
+            </div>
 
-          <Router>
-            <Route path="/" component={this.state.currentRoute} data={this.state.simplifiedSongList}/>
-          </Router>
-
-          <div className="Cards" ref={e1 => { this.resultsStart = e1; }}>
-            <CardMaker data={this.state.simplifiedSongList} />
+            <footer className="Footer">
+              <p>{this.state.test}. {this.state.token}</p>
+            </footer>
           </div>
-
-          <footer className="Footer">
-            <p>{this.state.test}. {this.state.token}</p>
-          </footer>
-        </div>
+        </Router>
     );
   }
 }

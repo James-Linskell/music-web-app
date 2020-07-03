@@ -5,6 +5,7 @@ class FetchSearchData {
      * @returns {Promise<void>}
      */
     static fetchData = async (searchQuery, searchType) => {
+        let data = '';
         /**
          * Calls my node server which requests a Spotify client access token.
          * @returns {Promise<any>} Json body containing Spotify client token and test message
@@ -31,7 +32,7 @@ class FetchSearchData {
         const url = endpoint + query + type;
 
         const response = await fetch(url, myOptions)
-        const data = await response.json();
+        data = await response.json();
         console.log(data);
         return data;
     }

@@ -8,7 +8,7 @@ class CardMaker extends React.Component {
     populateGrid() {
         // Else generate cards.
         if (this.props.data == null) {
-            return [];
+            return null;
         }
         var cardGrid = [];
         for (var i=0; i < this.props.data.length; i++) {

@@ -41,6 +41,10 @@ class SearchPage extends React.Component {
    */
   handleSubmit = event => {
     event.preventDefault();
+    // Don't fetch if there is no query:
+    if (this.state.searchQuery === "") {
+      return;
+    }
     this.waitForFetch();
   }
 
@@ -61,6 +65,16 @@ class SearchPage extends React.Component {
       window.clearTimeout(id);
     }
     this.setState({songListRaw: data})
+    // Error handling if no search results are returned:
+    if (data.tracks.items.length === 0) {
+      this.setState({
+        results:
+            <div className="Margin" >
+              No results found!
+            </div>
+      });
+      return;
+    }
     this.generateSongInfo();
     this.setState({
       results:

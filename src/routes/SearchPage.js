@@ -20,7 +20,8 @@ class SearchPage extends React.Component {
       songListRaw: null,
       simplifiedSongList: null,
       searchQuery: '',
-      currentRoute: null
+      currentRoute: null,
+      results: <div className="Margin" ></div>
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -40,14 +41,33 @@ class SearchPage extends React.Component {
    */
   handleSubmit = event => {
     event.preventDefault();
-    this.setState({currentRoute: ResultsPage})
     this.waitForFetch();
   }
 
   waitForFetch = async () => {
+    // Set timeout for 'searching' message to appear:
+    setTimeout(() => {
+      this.setState({
+        results:
+            <div className="Margin" >
+              Searching for results...
+            </div>
+      });
+    }, 1000);
     const data = await FetchSearchData.fetchData(this.state.searchQuery, 'track');
+    // Clear all timeouts (as search is complete):
+    let id = setTimeout(function() {}, 0);
+    while (id--) {
+      window.clearTimeout(id);
+    }
     this.setState({songListRaw: data})
     this.generateSongInfo();
+    this.setState({
+      results:
+          <div className="Cards" >
+            <CardMaker data={this.state.simplifiedSongList} />
+          </div>
+    })
   };
 
   generateSongInfo() {
@@ -80,17 +100,11 @@ class SearchPage extends React.Component {
                   <button id="searchclick" type="submit">Search</button>
                 </form>
               </div>
-              <div id="routetest">
-                {this.state.songs}
-              </div>
             </header>
-
+            {this.state.results}
             <div>
               <Route path="/" exact component={this.state.currentRoute}/>
               <Route path="/home" component={HomePage}/>
-            </div>
-            <div className="Cards" >
-              <CardMaker data={this.state.simplifiedSongList} />
             </div>
           </div>
         </Router>

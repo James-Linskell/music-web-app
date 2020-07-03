@@ -45,6 +45,8 @@ class SearchPage extends React.Component {
     if (this.state.searchQuery === "") {
       return;
     }
+      //return;
+
     this.waitForFetch();
   }
 

@@ -26,6 +26,9 @@ class FetchSearchData {
                 Authorization: 'Bearer ' + token
             }
         }
+        // Replaces special characters in query:
+        searchQuery = searchQuery.replace(/\\|#|%|{|}|\^|\||`/g, "")
+        console.log(searchQuery)
         const endpoint = 'https://api.spotify.com/v1/search?';
         const query = 'q=' + searchQuery;
         const type = '&type=' + searchType;

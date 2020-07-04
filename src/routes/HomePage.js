@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter as Router} from "react-router-dom";
+import hellify from "../hellify.png";
 import '../styles/HomePage.css';
-import {GiSoundWaves} from "react-icons/gi";
 
 /**
  * Takes song data as props and produces card elements for all data entered. Renders the card grid to he DOM.
@@ -11,7 +11,7 @@ class HomePage extends React.Component {
         return (
             <div className="App">
                 <header className="App-header">
-                    <img src={GiSoundWaves} className="App-logo" alt="logo"/>
+                    <img src={hellify} className="App-logo" alt="logo"/>
                     <div className="row">
                         <div className="column">
                             <h1>Explore your song</h1>

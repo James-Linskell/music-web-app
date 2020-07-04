@@ -9,21 +9,20 @@
 .Album-art {
     height: 18vh;
     pointer-events: none;
-    margin-bottom: 0px;
 }
 
 .Song-info {
     font-size: 1.8vh;
     padding-right: 0vh;
-    margin-left: 5vmin;
+    margin-left: 5vh;
     text-align: center;
-    width: 40vmin;
+    width: 40vh;
     color: white;
     opacity: 1;
 }
 
 .Song-info div {
-    margin-bottom: 1vmin;
+    margin-bottom: 1vh;
 }
 
 .Info-name {

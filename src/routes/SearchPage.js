@@ -1,7 +1,6 @@
 import React from 'react';
 import hellify from '../hellify.png';
 import '../styles/SearchPage.css';
-import { BsChevronDoubleDown } from "react-icons/bs";
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import CardMaker from '../components/CardMaker';
 import HomePage from "../routes/HomePage";
@@ -25,6 +24,10 @@ class SearchPage extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    fetch('/');
   }
 
   /**
@@ -112,9 +115,11 @@ class SearchPage extends React.Component {
               <p>Search for a song to get started!</p>
               <div className="searchbar">
                 <form onSubmit={this.handleSubmit}>
-                  <input type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>
-                  <button id="searchclick" type="submit">Search</button>
+                  <input className="Search-box" type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>
                 </form>
+              </div>
+              <div id="buttondiv" >
+                <button id="searchclick" type="submit">Search</button>
               </div>
             </header>
             {this.state.results}

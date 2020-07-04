@@ -3,8 +3,12 @@
 }
 
 .Search-logo {
-  height: 15vmin;
+  height: 15vh;
   pointer-events: none;
+}
+
+.Search-box {
+  width: 30vh;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -46,6 +50,13 @@
 
 #searchclick {
   font-size: 20px;
+  position: center;
+  display: inline-block;
+  justify-content: center;
+}
+
+#buttondiv {
+  margin-top: 2vh;
 }
 
 @keyframes App-logo-spin {
@@ -79,5 +90,5 @@
 
 #Scroll-div {
   position: absolute;
-  bottom: 3vmin;
+  bottom: 3vh;
 }

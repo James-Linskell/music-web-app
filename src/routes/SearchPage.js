@@ -27,6 +27,9 @@ class SearchPage extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  /**
+   * Fetches the static node server which serves the webapp.
+   */
   componentDidMount() {
     fetch('/');
   }

@@ -2,10 +2,8 @@ import React from 'react';
 import hellify from '../hellify.png';
 import '../styles/SearchPage.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import CardMaker from '../components/CardMaker';
 import FetchSearchData from '../components/FetchSearchData';
 import SongCard from "../components/SongCard";
-import {Redirect} from 'react-router-dom';
 
 class SearchPage extends React.Component {
   /**

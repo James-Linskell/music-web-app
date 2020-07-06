@@ -1,17 +1,16 @@
 import React from 'react';
 import hellify from '../hellify.png';
 import '../styles/SearchPage.css';
-import { BsChevronDoubleDown } from "react-icons/bs";
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import CardMaker from '../components/CardMaker';
-import HomePage from "../routes/HomePage";
-import ResultsPage from "../routes/ResultsPage";
 import FetchSearchData from '../components/FetchSearchData';
-import spectro from "../radiohead_spectro.png";
 
+/**
+ * Search page which allows user to type in a search query, fetches results from Spotify's API and renders them.
+ */
 class SearchPage extends React.Component {
   /**
-   * Default constructor for main app.
+   * Default constructor for search page.
    * @param props
    */
   constructor(props) {
@@ -53,11 +52,14 @@ class SearchPage extends React.Component {
     if (this.state.searchQuery === "") {
       return;
     }
-      //return;
-
     this.waitForFetch();
   }
 
+  /**
+   * Handles fetching data from the Spotify API. Sets a timeout for a 'Searching' prompt, fetches the data,
+   *  then renders it.
+   * @returns {Promise<void>}
+   */
   waitForFetch = async () => {
     // Set timeout for 'searching' message to appear:
     setTimeout(() => {
@@ -94,6 +96,9 @@ class SearchPage extends React.Component {
     })
   };
 
+  /**
+   * Takes the raw json data from spotify, extracts the useful information and organises it into a new more concise json.
+   */
   generateSongInfo() {
     const songs = []
     this.state.songListRaw.tracks.items.forEach(song => {
@@ -109,7 +114,7 @@ class SearchPage extends React.Component {
   }
 
   /**
-   * Renders main page to the DOM.
+   * Renders search page to the DOM.
    */
   render() {
     return (

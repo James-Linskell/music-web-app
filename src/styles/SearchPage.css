@@ -30,7 +30,6 @@
   font-size: calc(10px + 2vmin);
   min-height: 40vh;
   color: white;
-  z-index: -3;
 }
 
 .Margin {
@@ -77,9 +76,10 @@
 }
 
 .Cards {
-  position: center;
+  width: auto;
   margin-left: 5vh;
   margin-right: 5vh;
+  justify-content: center;
 }
 
 .Cards p:hover {
@@ -89,7 +89,6 @@
 
 .Cards p {
   display: inline-block;
-  position: center;
 }
 
 .Footer {

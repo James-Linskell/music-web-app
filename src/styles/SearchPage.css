@@ -76,10 +76,14 @@
 }
 
 .Cards {
-  width: auto;
   margin-left: 5vh;
   margin-right: 5vh;
   justify-content: center;
+  clear: both;
+  align-items: center;
+  text-align: center;
+  color: red;
+  align-self: center;
 }
 
 .Cards p:hover {

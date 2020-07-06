@@ -7,6 +7,7 @@ import CardMaker from '../components/CardMaker';
 import HomePage from "../routes/HomePage";
 import ResultsPage from "../routes/ResultsPage";
 import FetchSearchData from '../components/FetchSearchData';
+import spectro from "../radiohead_spectro.png";
 
 class SearchPage extends React.Component {
   /**
@@ -113,7 +114,8 @@ class SearchPage extends React.Component {
   render() {
     return (
         <Router>
-          <div className="Search">
+          <div className="bg" />
+          <div className="Search" >
             <header className="Search-header" >
               <img src={hellify} className="Search-logo" alt="logo"/>
               <p>Search for a song to get started!</p>

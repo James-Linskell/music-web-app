@@ -34,15 +34,12 @@
 }
 
 .Margin {
-  min-height: 60vh;
-  background-color: #212120;
-  background-image: url(../radiohead_spectro.png);
-  background-size: 100%;
   color: white;
   font-size: 2vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 60vh;
 }
 
 .searchbar {
@@ -64,6 +61,10 @@
 
 #buttondiv {
   margin-top: 2vh;
+  position: center;
+  align-items: center;
+  display: inline-block;
+  justify-content: center;
 }
 
 @keyframes App-logo-spin {

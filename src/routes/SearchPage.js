@@ -122,17 +122,11 @@ class SearchPage extends React.Component {
               <div className="searchbar">
                 <form onSubmit={this.handleSubmit}>
                   <input className="Search-box" type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>
+                  <button id="searchclick" type="submit">Search</button>
                 </form>
-              </div>
-              <div id="buttondiv" >
-                <button id="searchclick" type="submit">Search</button>
               </div>
             </header>
             {this.state.results}
-            <div>
-              <Route path="/" exact component={this.state.currentRoute}/>
-              <Route path="/home" component={HomePage}/>
-            </div>
           </div>
         </Router>
     );

@@ -2,9 +2,13 @@ import React from 'react';
 import '../styles/SongCard.css';
 
 class SongCard extends React.Component {
+    onCardClick() {
+        //console.log(this.props.name)
+    }
+
     render() {
         return (
-            <div className="Result-card">
+            <div className="Result-card" onClick={this.props.buttonClick}>
                 <table className="Card-table">
                     <tr className="Class-row">
                         <td rowSpan="0" className="Col-art">

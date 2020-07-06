@@ -4,6 +4,8 @@ import '../styles/SearchPage.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import CardMaker from '../components/CardMaker';
 import FetchSearchData from '../components/FetchSearchData';
+import SongCard from "../components/SongCard";
+import {Redirect} from 'react-router-dom';
 
 class SearchPage extends React.Component {
   /**
@@ -21,6 +23,7 @@ class SearchPage extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onCardClick = this.onCardClick.bind(this);
   }
 
   /**
@@ -84,23 +87,75 @@ class SearchPage extends React.Component {
     this.setState({
       results:
           <div className="Cards" >
-            <CardMaker data={this.state.simplifiedSongList} />
+            {this.populateGrid(this.state.simplifiedSongList)}
           </div>
     })
   };
 
+  /**
+   * When a song card is clicked, redirect to the results page passing the song id as the react router
+   * history object prop 'props.location.search'.
+   * @param songId
+   */
+  onCardClick(songId) {
+    console.log("Click successful!! ID: " + songId)
+    this.props.history.push({
+      pathname: '/song',
+      search: songId
+    });
+  }
+
   generateSongInfo() {
     const songs = []
+
     this.state.songListRaw.tracks.items.forEach(song => {
           songs.push({
             name: song.name,
             artist: song.artists[0].name,
             album: song.album.name,
-            art: song.album.images[1].url
+            art: song.album.images[1].url,
+            songId: song.id
           });
         }
     );
     this.setState({simplifiedSongList: songs})
+  }
+
+  populateGrid(data) {
+    // Else generate cards.
+    if (data == null) {
+      return null;
+    }
+    var cardGrid = [];
+    for (var i=0; i < data.length; i++) {
+
+      let name = data[i].name;
+      let album = data[i].album;;
+      let artist = data[i].artist;
+      let songId = data[i].songId;
+      // Truncate info if it is too long to fit on card:
+      if (data[i].name.length > 30) {
+        name = data[i].name.substring(0, 30) + '...'
+      }
+      if (data[i].album.length > 20) {
+        album = data[i].album.substring(0, 20) + '...'
+      }
+      if (data[i].artist.length > 40) {
+        artist = data[i].artist.substring(0, 40) + '...'
+      }
+
+      cardGrid.push(
+          <p key={i} ><SongCard
+              buttonClick={this.onCardClick.bind(this, songId)}
+              name={name}
+              album={album}
+              artist={artist}
+              artwork={data[i].art}
+              songId={songId}
+          /></p>
+      )
+    }
+    return cardGrid;
   }
 
   /**

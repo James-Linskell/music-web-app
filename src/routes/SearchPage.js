@@ -1,10 +1,8 @@
 import React from 'react';
 import hellify from '../hellify.png';
 import '../styles/SearchPage.css';
-import { BsChevronDoubleDown } from "react-icons/bs";
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import CardMaker from '../components/CardMaker';
-import HomePage from "../routes/HomePage";
 import ResultsPage from "../routes/ResultsPage";
 import FetchSearchData from '../components/FetchSearchData';
 
@@ -20,7 +18,6 @@ class SearchPage extends React.Component {
       songListRaw: null,
       simplifiedSongList: null,
       searchQuery: '',
-      currentRoute: null,
       results: <div className="Margin" ></div>
     };
     this.handleChange = this.handleChange.bind(this);

@@ -1,0 +1,16 @@
+.Main {
+    background-image: url(../radiohead_spectro.png);
+    background-size: 100%;
+    background-color: #212120;
+    color: white;
+    height: 100vh;
+    font-size: 10vh;
+    text-align: center;
+}
+
+.Chart {
+    top: 40vh;
+    margin: 20vh;
+    margin-top: 0vh;
+
+}

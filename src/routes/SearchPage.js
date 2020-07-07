@@ -17,18 +17,13 @@ class SearchPage extends React.Component {
       songListRaw: null,
       simplifiedSongList: null,
       searchQuery: '',
-      results: <div className="Margin" ></div>
+      previousSearchQuery: '',
+      results: <div className="Margin" ></div>,
+      prompt: null
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onCardClick = this.onCardClick.bind(this);
-  }
-
-  /**
-   * Fetches the static node server which serves the webapp.
-   */
-  componentDidMount() {
-    fetch('/');
   }
 
   /**
@@ -49,7 +44,10 @@ class SearchPage extends React.Component {
     if (this.state.searchQuery === "") {
       return;
     }
-    //return;
+    this.setState({previousSearchQuery: this.state.searchQuery})
+    if (this.state.searchQuery == this.state.previousSearchQuery) {
+      return
+    }
 
     this.waitForFetch();
   }
@@ -58,10 +56,7 @@ class SearchPage extends React.Component {
     // Set timeout for 'searching' message to appear:
     setTimeout(() => {
       this.setState({
-        results:
-            <div className="Margin" >
-              Searching for results...
-            </div>
+        prompt: "Searching for results..."
       });
     }, 1000);
     const data = await FetchSearchData.fetchData(this.state.searchQuery, 'track');
@@ -69,15 +64,16 @@ class SearchPage extends React.Component {
     let id = setTimeout(function() {}, 0);
     while (id--) {
       window.clearTimeout(id);
+      this.setState({
+        prompt: null
+      });
     }
     this.setState({songListRaw: data})
     // Error handling if no search results are returned:
     if (data.tracks.items.length === 0) {
       this.setState({
-        results:
-            <div className="Margin" >
-              No results found!
-            </div>
+        prompt: "No results found!",
+        results: <div className="Margin" ></div>
       });
       return;
     }
@@ -171,6 +167,9 @@ class SearchPage extends React.Component {
                   <input className="Search-box" type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>
                   <button id="searchclick" type="submit">Search</button>
                 </form>
+              </div>
+              <div style={{marginTop: "3vh", position: "absolute", top: "35vh"}}>
+                {this.state.prompt}
               </div>
             </header>
             {this.state.results}

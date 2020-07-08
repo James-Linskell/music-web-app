@@ -10,7 +10,7 @@ body {
 }
 
 .Chart {
-
+    margin: 0vh;
 }
 
 .Container div {
@@ -18,7 +18,11 @@ body {
 }
 
 .Container h2 {
-    font-size: 4vh;
+    font-size: 3vh;
+}
+
+.Container p {
+    font-size: 3vh;
 }
 
 @media only screen and (max-width: 700px) {
@@ -40,6 +44,10 @@ body {
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .Container p {
+        margin: 0vh;
     }
 }
 
@@ -68,5 +76,9 @@ body {
 
     .Container div:nth-of-type(2) {
         grid-row: 1/3;
+    }
+
+    .Container p {
+        margin: 4vh;
     }
 }

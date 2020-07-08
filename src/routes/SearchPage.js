@@ -173,6 +173,7 @@ class SearchPage extends React.Component {
               </div>
             </header>
             {this.state.results}
+            <div id="footer" style={{height: "36.6vh"}}/>
           </div>
         </Router>
     );

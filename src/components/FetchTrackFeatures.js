@@ -1,9 +1,9 @@
 class FetchTrackFeatures {
     /**
-     * Calls Spotify API using token.
+     * Calls Spotify API using token. Type = 'features' or 'analysis'.
      * @returns {Promise<void>}
      */
-    static fetchData = async (songId) => {
+    static fetchData = async (songId, type) => {
         let data = '';
         /**
          * Calls my node server which requests a Spotify client access token.
@@ -26,9 +26,10 @@ class FetchTrackFeatures {
             }
         }
         // Replaces special characters in query:
-        const endpoint = 'https://api.spotify.com/v1/audio-features/';
+        const endpoint = 'https://api.spotify.com/v1/';
+        const ty = type;
         const id = songId;
-        const url = endpoint + id;
+        const url = endpoint + ty + id;
 
         const response = await fetch(url, myOptions)
         data = await response.json();

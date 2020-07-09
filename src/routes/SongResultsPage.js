@@ -30,6 +30,12 @@ class SongResultsPage extends React.Component {
         await this.waitForAnalysis();
         await this.waitFortrack();
         this.generateSongFeatures();
+        this.setState({
+            bgImage: <img
+            src={this.state.rawTrack.album.images[0].url}
+            style={{width: "100vw", height: "auto", overflow: "hidden", display: "block"}} alt="album art"
+            />
+        })
     }
 
     waitFortrack = async () => {
@@ -45,16 +51,25 @@ class SongResultsPage extends React.Component {
         }
         console.log(data);
         this.setState({rawTrack: data});
+        let name = data.name;
+        let album = data.album.name;
+        let artist = data.artists[0].name;
+        // Truncate info if it is too long to fit on card:
+        if (data.name.length > 30) {
+            name = data.name.substring(0, 30) + '...'
+        }
+        if (data.album.name.length > 20) {
+            album = data.album.name.substring(0, 20) + '...'
+        }
+        if (data.artists[0].name.length > 40) {
+            artist = data.artists[0].name.substring(0, 40) + '...'
+        }
         this.setState({
             songCard: <SongCard
-                name={this.state.rawTrack.name}
-                album={this.state.rawTrack.album.name}
-                artist={this.state.rawTrack.artists[0].name}
+                name={name}
+                album={album}
+                artist={artist}
                 artwork={this.state.rawTrack.album.images[1].url}
-            />,
-            bgImage: <img
-                src={this.state.rawTrack.album.images[0].url}
-                style={{width: "100vw", height: "auto", overflow: "hidden", display: "block"}} alt="album art"
             />
         })
     };
@@ -101,7 +116,7 @@ class SongResultsPage extends React.Component {
             labels: ["Danceability", "Energy", "Speechiness", "Instrumentalness", "Valence"],
             datasets: [{
                 label: "Song features",
-                backgroundColor: 'midnightblue',
+                backgroundColor: 'darkred',
                 borderColor: 'rgb(255, 99, 132)',
                 data: [this.state.rawFeatures.danceability, this.state.rawFeatures.energy,
                    this.state.rawFeatures.speechiness, this.state.rawFeatures.instrumentalness, this.state.rawFeatures.valence]
@@ -174,11 +189,11 @@ class SongResultsPage extends React.Component {
     render() {
         return (
             <div className="Main">
-                <div style={{opacity: 0.25, position: "absolute", zIndex: "-2", width: "100vw", overflow: "hidden"}}>
+                <div style={{opacity: 0.8, position: "absolute", zIndex: "-2", width: "100vw", overflow: "hidden"}}>
                     {this.state.bgImage}{this.state.bgImage}{this.state.bgImage}
                 </div>
                 <div className="Header">
-                    Song Data for "{this.state.rawTrack.name}"
+                    <p>Song Data for "{this.state.rawTrack.name}"</p>
                     <p id="Song-card">{this.state.songCard}</p>
                 </div>
                 <div className="Container">

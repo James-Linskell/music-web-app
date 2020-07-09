@@ -1,5 +1,5 @@
 .Search {
-  background-color: #212120;
+  background-color: rgba(30, 30, 30, 1);
   background-image: url(../radiohead_spectro.png);
   background-size: 100%;
 }
@@ -22,7 +22,7 @@
 .Search-header {
   background-image: url(../radiohead_spectro.png);
   background-size: 100%;
-  background-color: #212120;
+  background-color: rgba(30, 30, 30, 1);
   display: flex;
   flex-direction: column;
   align-items: center;

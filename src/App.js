@@ -7,6 +7,7 @@ import PlaylistPage from "./routes/PlaylistPage";
 import AboutPage from "./routes/AboutPage";
 import SongResultsPage from "./routes/SongResultsPage";
 import PlaylistResultsPage from "./routes/PlaylistResultsPage";
+import './styles/App.css';
 
 /**
  * Main page of the app. Only handles routing, then gets passed to index.js for rendering.
@@ -19,6 +20,14 @@ class App extends React.Component {
     render() {
         return (
             <Router>
+                <nav className="Navbar">
+                    <ul>
+                        <li style={{float: "left", fontSize: "3vh"}}><a href="#home">SongMap</a></li>
+                        <li><a href="#news">News</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                </nav>
                 <Switch>
                     <Route path="/" exact component={SearchPage}/>
                     <Route path="/home" component={HomePage}/>

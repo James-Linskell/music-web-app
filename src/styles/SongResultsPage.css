@@ -1,5 +1,5 @@
 body {
-    background-color: #0d1a00;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .Main {
@@ -14,8 +14,28 @@ body {
     margin: 0vh;
 }
 
+.Header {
+    background-color: rgba(0, 0, 10, .88);
+    margin-right: 12vh;
+    margin-left: 12vh;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    padding-right: 3vh;
+    padding-left: 3vh;
+
+}
+
 .Container div {
-    background: rgba(40, 90, 51, .6);
+    background: rgba(0, 0, 10, .88);
+    transition: all 0.1s ease-in;
+}
+
+#Song-card {
+}
+
+.Container div:hover {
+    opacity: 0.99;
+    transform: scale(0.996);
 }
 
 .Container h2 {
@@ -26,7 +46,7 @@ body {
     font-size: 3vh;
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 1200px) {
     .Container {
         display: flex;
         flex-direction: column;
@@ -57,14 +77,23 @@ body {
         justify-content: center;
         align-items: center;
     }
+
+    .Header {
+        display: inline-block;
+        justify-content: center;
+        align-items: center;
+        margin: 3vh;
+    }
 }
 
-@media only screen and (min-width: 700px) {
+@media only screen and (min-width: 1200px) {
     .Container {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-gap: 2vh;
         margin: 2vh;
+        margin-left: 12vw;
+        margin-right: 12vw;
     }
 
     .Container div {

@@ -1,12 +1,13 @@
 body {
-    background-color: darkgrey;
+    background-color: #0d1a00;
 }
 
 .Main {
     color: white;
-    font-size: 5vh;
+    font-size: 4vh;
     text-align: center;
-    margin-top: 2vh
+    position: relative;
+    overflow: hidden;
 }
 
 .Chart {
@@ -14,7 +15,7 @@ body {
 }
 
 .Container div {
-    background: grey;
+    background: rgba(40, 90, 51, .6);
 }
 
 .Container h2 {
@@ -49,6 +50,13 @@ body {
     .Container p {
         margin: 0vh;
     }
+
+    #Song-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 @media only screen and (min-width: 700px) {
@@ -79,6 +87,16 @@ body {
     }
 
     .Container p {
+        margin: 4vh;
+    }
+
+    .Header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #Song-card {
         margin: 4vh;
     }
 }

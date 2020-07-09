@@ -2,6 +2,7 @@ import React from 'react';
 import FetchTrackFeatures from "../components/FetchTrackFeatures";
 import "../styles/SongResultsPage.css";
 import {Bar, HorizontalBar} from 'react-chartjs-2';
+import SongCard from "../components/SongCard";
 
 // https://www.youtube.com/watch?v=-qOe8lBAChE
 // https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout
@@ -18,7 +19,9 @@ class SongResultsPage extends React.Component {
             options: [],
             prompt: null,
             invalid: false,
-            modality: ""
+            modality: "",
+            songCard: null,
+            bgImage: null
         }
     }
 
@@ -42,6 +45,18 @@ class SongResultsPage extends React.Component {
         }
         console.log(data);
         this.setState({rawTrack: data});
+        this.setState({
+            songCard: <SongCard
+                name={this.state.rawTrack.name}
+                album={this.state.rawTrack.album.name}
+                artist={this.state.rawTrack.artists[0].name}
+                artwork={this.state.rawTrack.album.images[1].url}
+            />,
+            bgImage: <img
+                src={this.state.rawTrack.album.images[0].url}
+                style={{width: "100vw", height: "auto", overflow: "hidden", display: "block"}} alt="album art"
+            />
+        })
     };
 
     waitForFeatures = async () => {
@@ -159,7 +174,13 @@ class SongResultsPage extends React.Component {
     render() {
         return (
             <div className="Main">
-                Song Data for "{this.state.rawTrack.name}":
+                <div style={{opacity: 0.25, position: "absolute", zIndex: "-2", width: "100vw", overflow: "hidden"}}>
+                    {this.state.bgImage}{this.state.bgImage}{this.state.bgImage}
+                </div>
+                <div className="Header">
+                    Song Data for "{this.state.rawTrack.name}"
+                    <p id="Song-card">{this.state.songCard}</p>
+                </div>
                 <div className="Container">
                     <div>
                         <h2>Song Mood Features:</h2>

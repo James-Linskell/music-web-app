@@ -168,7 +168,7 @@ class SearchPage extends React.Component {
                   <button id="searchclick" type="submit">Search</button>
                 </form>
               </div>
-              <div style={{marginTop: "3vh", position: "absolute", top: "35vh"}}>
+              <div style={{marginTop: "3vh", position: "absolute", top: "40vh"}}>
                 {this.state.prompt}
               </div>
             </header>

@@ -1,8 +1,14 @@
 body {
-    background-color: rgba(0, 0, 0, 0.5);
+
+}
+
+hr {
+    border-top: 1px solid black;
+    border-bottom: 1px solid dimgrey;
 }
 
 .Main {
+    background-color: rgba(0, 0, 0, 0.3);
     color: white;
     font-size: 4vh;
     text-align: center;
@@ -16,13 +22,11 @@ body {
 
 .Header {
     background-color: rgba(0, 0, 10, .88);
-    margin-right: 12vh;
-    margin-left: 12vh;
-    margin-top: 5vh;
+    width: auto;
+    margin-top: 2vh;
     margin-bottom: 5vh;
     padding-right: 3vh;
     padding-left: 3vh;
-
 }
 
 .Container div {
@@ -30,16 +34,12 @@ body {
     transition: all 0.1s ease-in;
 }
 
-#Song-card {
-}
-
 .Container div:hover {
-    opacity: 0.99;
-    transform: scale(0.996);
+    opacity: 0.98;
 }
 
 .Container h2 {
-    font-size: 3vh;
+    font-size: 2.5vh;
 }
 
 .Container p {
@@ -64,7 +64,8 @@ body {
     .Container div h2 {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: left;
+        margin-left: 2vh;
     }
 
     .Container p {
@@ -94,6 +95,7 @@ body {
         margin: 2vh;
         margin-left: 12vw;
         margin-right: 12vw;
+        margin-bottom: 10vh;
     }
 
     .Container div {
@@ -103,7 +105,8 @@ body {
     .Container div h2 {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: left;
+        margin-left: 2vh;
     }
 
     .Container div:nth-of-type(1) {
@@ -117,15 +120,20 @@ body {
 
     .Container p {
         margin: 4vh;
+        display: block;
+        text-align: left;
+        font-size: 2.7vh;
     }
 
     .Header {
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 15vh;
     }
 
     #Song-card {
+        transform: scale(0.7);
         margin: 4vh;
     }
 }

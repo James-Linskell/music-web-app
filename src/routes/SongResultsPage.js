@@ -172,6 +172,7 @@ class SongResultsPage extends React.Component {
                 xAxes: [{
                     ticks: {
                         fontColor: "white",
+                        fontSize: 14
                     },
                     gridLines: {
                         display: false,
@@ -193,18 +194,20 @@ class SongResultsPage extends React.Component {
                     {this.state.bgImage}{this.state.bgImage}{this.state.bgImage}
                 </div>
                 <div className="Header">
-                    <p>Song Data for "{this.state.rawTrack.name}"</p>
+                    <p>Song Analysis</p>
                     <p id="Song-card">{this.state.songCard}</p>
                 </div>
                 <div className="Container">
                     <div>
                         <h2>Song Mood Features:</h2>
+                        <hr/>
                         <p>
                             <Bar className="Chart" data={this.state.data} options={this.state.options} />
                         </p>
                     </div>
                     <div>
                         <h2>Musical information:</h2>
+                        <hr/>
                         <p>Duration: {((this.state.rawFeatures.duration_ms) / 1000 / 60).toFixed(2)} minutes</p>
                         <p>Tempo: {Math.round(this.state.rawFeatures.tempo)} bpm</p>
                         <p>Time signature: {this.state.rawFeatures.time_signature}/4</p>
@@ -213,26 +216,32 @@ class SongResultsPage extends React.Component {
                     </div>
                     <div>
                         <h2>Sample 3</h2>
+                        <hr/>
                         <p></p>
                     </div>
                     <div>
                         <h2>Sample 4</h2>
+                        <hr/>
                         <p></p>
                     </div>
                     <div>
                         <h2>Sample 1</h2>
+                        <hr/>
                         <p></p>
                     </div>
                     <div>
                         <h2>Sample 2</h2>
+                        <hr/>
                         <p></p>
                     </div>
                     <div>
                         <h2>Sample 3</h2>
+                        <hr/>
                         <p></p>
                     </div>
                     <div>
                         <h2>Sample 4</h2>
+                        <hr/>
                         <p></p>
                     </div>
                 </div>

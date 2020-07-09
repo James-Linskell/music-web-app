@@ -190,7 +190,7 @@ class SongResultsPage extends React.Component {
     render() {
         return (
             <div className="Main">
-                <div style={{opacity: 0.8, position: "absolute", zIndex: "-2", width: "100vw", overflow: "hidden"}}>
+                <div style={{opacity: 0.6, position: "absolute", zIndex: "-2", width: "100vw", overflow: "hidden"}}>
                     {this.state.bgImage}{this.state.bgImage}{this.state.bgImage}
                 </div>
                 <div className="Header">

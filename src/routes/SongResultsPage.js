@@ -3,6 +3,7 @@ import FetchTrackFeatures from "../components/FetchTrackFeatures";
 import "../styles/SongResultsPage.css";
 import {Bar, HorizontalBar} from 'react-chartjs-2';
 import SongCard from "../components/SongCard";
+import { ComposableMap, Geographies, Geography } from "react-simple-maps"
 
 // https://www.youtube.com/watch?v=-qOe8lBAChE
 // https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout
@@ -21,7 +22,9 @@ class SongResultsPage extends React.Component {
             invalid: false,
             modality: "",
             songCard: null,
-            bgImage: null
+            bgImage: null,
+            explicit: null,
+            live: null
         }
     }
 
@@ -64,14 +67,22 @@ class SongResultsPage extends React.Component {
         if (data.artists[0].name.length > 40) {
             artist = data.artists[0].name.substring(0, 40) + '...'
         }
+        let expl = "Unknown";
+        if (data.explicit == true) {
+            expl = "Yes";
+        } else {
+            expl = "No";
+        }
         this.setState({
             songCard: <SongCard
                 name={name}
                 album={album}
                 artist={artist}
                 artwork={this.state.rawTrack.album.images[1].url}
-            />
+            />,
+            explicit: expl
         })
+
     };
 
     waitForFeatures = async () => {
@@ -85,8 +96,26 @@ class SongResultsPage extends React.Component {
             });
             return;
         }
+        let live = "Maybe";
+        if (data.liveness < 0.3) {
+            live = "No"
+        } else if (data.liveness > 0.5) {
+            live = "Yes"
+        }
+        let acoustic = "Maybe";
+        if (data.acousticness < 0.3) {
+            acoustic = "No";
+        } else if (data.acousticness < 0.5) {
+            acoustic = "Probably";
+        } else {
+            acoustic = "Yes";
+        }
         console.log(data);
-        this.setState({rawFeatures: data});
+        this.setState({
+            rawFeatures: data,
+            live: live,
+            acoustic: acoustic
+        });
         if (data.mode == 1) {
             this.setState({modality: "Major"})
         } else if (data.mode == 0) {
@@ -170,6 +199,7 @@ class SongResultsPage extends React.Component {
                     }
                 }],
                 xAxes: [{
+                    barPercentage: 0.5,
                     ticks: {
                         fontColor: "white",
                         fontSize: 14
@@ -208,21 +238,33 @@ class SongResultsPage extends React.Component {
                     <div>
                         <h2>Musical information:</h2>
                         <hr/>
-                        <p>Duration: {((this.state.rawFeatures.duration_ms) / 1000 / 60).toFixed(2)} minutes</p>
+                        <p>Length: {((this.state.rawFeatures.duration_ms) / 1000 / 60).toFixed(2)} minutes</p>
                         <p>Tempo: {Math.round(this.state.rawFeatures.tempo)} bpm</p>
                         <p>Time signature: {this.state.rawFeatures.time_signature}/4</p>
                         <p>Key: {this.state.rawFeatures.key}</p>
                         <p>Modality: {this.state.modality}</p>
-                    </div>
-                    <div>
-                        <h2>Sample 3</h2>
-                        <hr/>
+                        <p>Live: {this.state.live} (Liveness = {this.state.rawFeatures.liveness})</p>
+                        <p>Acoustic: {this.state.acoustic} (Acousticness = {this.state.rawFeatures.acousticness})</p>
                         <p></p>
                     </div>
                     <div>
-                        <h2>Sample 4</h2>
+                        <h2>Song details:</h2>
                         <hr/>
+                        <p>Name: {this.state.rawTrack.name}</p>
                         <p></p>
+                        <p>Explicit lyrics: {this.state.explicit}</p>
+                        <p>Popularity: {this.state.rawTrack.popularity}</p>
+                    </div>
+                    <div>
+                        <h2>Song preview:</h2>
+                        <hr/>
+                        <iframe
+                            id="Embed-song"
+                            src="https://open.spotify.com/embed?uri=spotify:track:6dGnYIeXmHdcikdzNNDMm2"
+                            height="80px"
+                            frameborder="0"
+                            allowtransparency="true"
+                        ></iframe>
                     </div>
                     <div>
                         <h2>Sample 1</h2>
@@ -237,7 +279,19 @@ class SongResultsPage extends React.Component {
                     <div>
                         <h2>Sample 3</h2>
                         <hr/>
-                        <p></p>
+                        <p>
+                            <ComposableMap style={{color: "white"}}>
+                                <Geographies geography="https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json">
+                                    {({geographies}) => geographies.map(geo =>
+                                        <Geography
+                                            key={geo.rsmKey}
+                                            geography={geo}
+                                            fill={"white"}
+                                        />
+                                    )}
+                                </Geographies>
+                            </ComposableMap>
+                        </p>
                     </div>
                     <div>
                         <h2>Sample 4</h2>

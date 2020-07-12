@@ -4,9 +4,26 @@ import "../styles/SongResultsPage.css";
 import {Bar, HorizontalBar} from 'react-chartjs-2';
 import SongCard from "../components/SongCard";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps"
+import Tooltip from "@material-ui/core/Tooltip";
+import { withStyles } from '@material-ui/core/styles';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+
 
 // https://www.youtube.com/watch?v=-qOe8lBAChE
 // https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout
+
+const LightTooltip = withStyles((theme) => ({
+    tooltip: {
+        backgroundColor: theme.palette.common.white,
+        color: 'rgba(0, 0, 0, 0.87)',
+        boxShadow: theme.shadows[1],
+        lineHeight: "25px",
+        textAlign: "center",
+    },
+    arrow: {
+        color: theme.palette.common.white,
+    }
+}))(Tooltip);
 
 // this.props.location.search gives the song id!!!
 class SongResultsPage extends React.Component {
@@ -24,7 +41,10 @@ class SongResultsPage extends React.Component {
             songCard: null,
             bgImage: null,
             explicit: null,
-            live: null
+            live: null,
+            instrumental: null,
+            musicality: null,
+            key: null
         }
     }
 
@@ -97,7 +117,7 @@ class SongResultsPage extends React.Component {
             return;
         }
         let live = "Maybe";
-        if (data.liveness < 0.3) {
+        if (data.liveness < 0.5) {
             live = "No"
         } else if (data.liveness > 0.5) {
             live = "Yes"
@@ -110,11 +130,54 @@ class SongResultsPage extends React.Component {
         } else {
             acoustic = "Yes";
         }
+        let instrumental = "Unknown";
+        if (data.instrumentalness < 0.5) {
+            instrumental = "No";
+        } else {
+            instrumental = "Yes";
+        }
+        let musicality = "Unknown";
+        if (data.speechiness < 0.33) {
+            musicality = "Musical";
+        } else if (data.speechiness < 0.66){
+            musicality = "Musical and spoken";
+        } else {
+            musicality = "Spoken word";
+        }
+        let key = "Unknown";
+        if (data.key == 0) {
+            key = "C";
+        } else if (data.key == 1) {
+            key = "C #";
+        } else if (data.key == 2) {
+            key = "D";
+        } else if (data.key == 3) {
+            key = "D #";
+        } else if (data.key == 4) {
+            key = "E";
+        } else if (data.key == 5) {
+            key = "F";
+        } else if (data.key == 6) {
+            key = "F #";
+        } else if (data.key == 7) {
+            key = "G";
+        } else if (data.key == 8) {
+            key = "G #";
+        } else if (data.key == 9) {
+            key = "A";
+        } else if (data.key == 10) {
+            key = "A #";
+        } else if (data.key == 11) {
+            key = "B";
+        }
         console.log(data);
         this.setState({
             rawFeatures: data,
             live: live,
-            acoustic: acoustic
+            acoustic: acoustic,
+            instrumental: instrumental,
+            musicality: musicality,
+            key: key
         });
         if (data.mode == 1) {
             this.setState({modality: "Major"})
@@ -142,34 +205,24 @@ class SongResultsPage extends React.Component {
 
     generateSongFeatures() {
         const chartData = {
-            labels: ["Danceability", "Energy", "Speechiness", "Instrumentalness", "Valence"],
+            labels: ["Danceability", "Energy", "Happiness"],
             datasets: [{
                 label: "Song features",
                 backgroundColor: 'darkred',
                 borderColor: 'rgb(255, 99, 132)',
                 data: [this.state.rawFeatures.danceability, this.state.rawFeatures.energy,
-                   this.state.rawFeatures.speechiness, this.state.rawFeatures.instrumentalness, this.state.rawFeatures.valence]
+                   this.state.rawFeatures.valence]
             }]
         }
         const chartOptions = {
             tooltips: {
                 callbacks: {
-                    title: function(tooltipItem, data) {
+                    title: function (tooltipItem, data) {
                         return data['labels'][tooltipItem[0]['index']];
                     },
-                    label: function(tooltipItem, data) {
+                    label: function (tooltipItem, data) {
                         return data['datasets'][0]['data'][tooltipItem['index']];
                     },
-                    afterLabel: function(tooltipItem, data) {
-                        var text = null;
-                        if (data.labels[tooltipItem.index] == "Energy") {
-                            text = "\nThe energy is...";
-                        }
-                        if (data.labels[tooltipItem.index] == "Danceability") {
-                            text = "\nThe danceability is...";
-                        }
-                        return text;
-                    }
                 },
                 backgroundColor: '#FFF',
                 titleFontSize: 16,
@@ -220,7 +273,7 @@ class SongResultsPage extends React.Component {
     render() {
         return (
             <div className="Main">
-                <div style={{opacity: 0.6, position: "absolute", zIndex: "-2", width: "100vw", overflow: "hidden"}}>
+                <div style={{opacity: 0.7, position: "absolute", zIndex: "-2", width: "100vw", overflow: "hidden"}}>
                     {this.state.bgImage}{this.state.bgImage}{this.state.bgImage}
                 </div>
                 <div className="Header">
@@ -228,31 +281,88 @@ class SongResultsPage extends React.Component {
                     <p id="Song-card">{this.state.songCard}</p>
                 </div>
                 <div className="Container">
+                    <div style={{display: "flex", fontSize: "2.5vh", padding: "1vh", textAlign: "left", paddingLeft: "3vh", alignContent: "left"}}><InfoOutlinedIcon style={{paddingRight: "0.3vw"}} /> Hover over an item for more information.</div>
                     <div>
-                        <h2>Song Mood Features:</h2>
+                        <h2>Song Mood Features:<button style={{display: "flex", marginLeft: "2vw"}}>What's this?</button></h2>
                         <hr/>
                         <p>
-                            <Bar className="Chart" data={this.state.data} options={this.state.options} />
+                            <HorizontalBar className="Chart" data={this.state.data} options={this.state.options}/>
                         </p>
                     </div>
                     <div>
-                        <h2>Musical information:</h2>
+                        <h2 style={{marginBottom: "0vh"}}>Musical information:</h2>
+                        <p style={{fontSize: "1.9vh", marginLeft: "2vh"}}></p>
                         <hr/>
-                        <p>Length: {((this.state.rawFeatures.duration_ms) / 1000 / 60).toFixed(2)} minutes</p>
-                        <p>Tempo: {Math.round(this.state.rawFeatures.tempo)} bpm</p>
-                        <p>Time signature: {this.state.rawFeatures.time_signature}/4</p>
-                        <p>Key: {this.state.rawFeatures.key}</p>
-                        <p>Modality: {this.state.modality}</p>
-                        <p>Live: {this.state.live} (Liveness = {this.state.rawFeatures.liveness})</p>
-                        <p>Acoustic: {this.state.acoustic} (Acousticness = {this.state.rawFeatures.acousticness})</p>
-                        <p></p>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            Length of the song.
+                        </p>}>
+                            <p>Length: {((this.state.rawFeatures.duration_ms) / 1000 / 60).toFixed(2)} minutes</p>
+                        </LightTooltip>
+                        <hr/>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            Tempo of the song in beats per minute.
+                        </p>}>
+                            <p>Tempo: {Math.round(this.state.rawFeatures.tempo)} bpm</p>
+                        </LightTooltip>
+                        <hr/>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            Time signature of the song.
+                        </p>}>
+                            <p>Time signature: {this.state.rawFeatures.time_signature}/4</p>
+                        </LightTooltip>
+                        <hr/>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            Musical key of the song.
+                        </p>}>
+                            <p>Key: {this.state.key}</p>
+                        </LightTooltip>
+                        <hr/>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            Modality of the song (Major or Minor).
+                        </p>}>
+                            <p>Modality: {this.state.modality}</p>
+                        </LightTooltip>
+                        <hr/>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            Whether the song is live or not. This is determined by the amount of 'audience noise' detected in the recording,
+                            on a scale of 0.0 - 1.0. The 'Liveness' rating for this track is {this.state.rawFeatures.liveness}.
+                        </p>}>
+                            <p>Live: {this.state.live}</p>
+                        </LightTooltip>
+                        <hr/>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            Whether the song is acoustic or not. Spotify gives songs an 'Acousticness' rating on a scale of 0.0 - 1.0.
+                            The closer to 1.0 this value is, the higher the probability that the track is acoustic. The Acousticness rating
+                            for this track is {this.state.rawFeatures.acousticness}.
+                        </p>}>
+                            <p>Acoustic: {this.state.acoustic}</p>
+                        </LightTooltip>
+                        <hr/>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            Whether the song is instrumental, or contains vocals. 'Instrumentalness' is given on a scale of 0.0 - 1.0.
+                            The closer to 1.0 this value is, the higher the probability that the track is purely instrumental. The
+                            'Instrumentalness' rating for this song is {this.state.rawFeatures.liveness}.
+                        </p>}>
+                        <p>Instrumental: {this.state.instrumental}</p>
+                        </LightTooltip>
+                        <hr/>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            The musicality of a song is a measure of whether it contains music or people talking. 'Speechiness' is given on a scale of 0.0 - 0.1,
+                            and songs with high Speechiness are less musical and contain more spoken words. For example, a podcast would have a 'Speechiness'
+                            value greater than 0.66, and a normal song containing singing would have a value below 0.33. Rap and poetry fall somewhere in the middle.
+                            The possibilities for Musicality are "Musical", "Musical and spoken", or "Spoken word". This track has a Speechiness value
+                            of {this.state.rawFeatures.speechiness}.
+                        </p>}>
+                        <p>Musicality: {this.state.musicality}</p>
+                        </LightTooltip>
                     </div>
                     <div>
                         <h2>Song details:</h2>
                         <hr/>
                         <p>Name: {this.state.rawTrack.name}</p>
-                        <p></p>
+                        <hr/>
                         <p>Explicit lyrics: {this.state.explicit}</p>
+                        <hr/>
                         <p>Popularity: {this.state.rawTrack.popularity}</p>
                     </div>
                     <div>
@@ -260,21 +370,12 @@ class SongResultsPage extends React.Component {
                         <hr/>
                         <iframe
                             id="Embed-song"
-                            src="https://open.spotify.com/embed?uri=spotify:track:6dGnYIeXmHdcikdzNNDMm2"
+                            src={"https://open.spotify.com/embed?uri=spotify:track:" +
+                            this.props.location.search.substring(1, this.props.location.search.length)}
                             height="80px"
                             frameborder="0"
                             allowtransparency="true"
                         ></iframe>
-                    </div>
-                    <div>
-                        <h2>Sample 1</h2>
-                        <hr/>
-                        <p></p>
-                    </div>
-                    <div>
-                        <h2>Sample 2</h2>
-                        <hr/>
-                        <p></p>
                     </div>
                     <div>
                         <h2>Sample 3</h2>
@@ -296,7 +397,24 @@ class SongResultsPage extends React.Component {
                     <div>
                         <h2>Sample 4</h2>
                         <hr/>
-                        <p></p>
+                        <h2>Energy</h2>
+                        <p>
+                            The 'Energy' of a song determines how energetic the song feels, on a scale of 0.0 - 1.0,
+                            with 1.0 being the most energetic. Energy is a measure of intensity and musical activity, with energetic
+                            tracks feeling fast, busy and noisy. Energy is calculated by taking into account the dynamic range,
+                            the loudness, the timbre, and the onset rate (rate of notes played).
+                        </p>
+                        <h2>Danceability</h2>
+                        <p>
+                            The 'Danceability' of a song describes how good a track is to dance to. This takes into account
+                            a number of musical elements including tempo, how stable the rhythm is, the strength of each beat,
+                            and how regular the musical pattern is. Dancibility is determined on a scale of 0.0 - 1.0, with 1.0 being
+                            the most danceable.
+                        </p>
+                        <h2>Happiness</h2>
+                        <p>
+                            Blablablabla.
+                        </p>
                     </div>
                 </div>
             </div>

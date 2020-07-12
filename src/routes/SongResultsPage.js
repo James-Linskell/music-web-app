@@ -32,7 +32,12 @@ class SongResultsPage extends React.Component {
         this.state = {
             rawFeatures: [],
             rawAnalysis: [],
-            rawTrack: [],
+            rawTrack: {
+                album: {
+                    id: "null"
+                }
+            },
+            rawAlbum: [],
             data: [],
             options: [],
             prompt: null,
@@ -44,7 +49,8 @@ class SongResultsPage extends React.Component {
             live: null,
             instrumental: null,
             musicality: null,
-            key: null
+            key: null,
+            artists: null
         }
     }
 
@@ -52,6 +58,7 @@ class SongResultsPage extends React.Component {
         await this.waitForFeatures();
         await this.waitForAnalysis();
         await this.waitFortrack();
+        await this.waitForAlbum();
         this.generateSongFeatures();
         this.setState({
             bgImage: <img
@@ -93,6 +100,12 @@ class SongResultsPage extends React.Component {
         } else {
             expl = "No";
         }
+        let artists = "";
+        data.artists.forEach(artist => {
+                artists += artist.name + ", "
+        });
+        // Remove final comma:
+        artists = artists.substring(0, (artists.length) - 2);
         this.setState({
             songCard: <SongCard
                 name={name}
@@ -100,7 +113,8 @@ class SongResultsPage extends React.Component {
                 artist={artist}
                 artwork={this.state.rawTrack.album.images[1].url}
             />,
-            explicit: expl
+            explicit: expl,
+            artists: artists
         })
 
     };
@@ -203,6 +217,26 @@ class SongResultsPage extends React.Component {
         this.setState({rawAnalysis: data});
     };
 
+    waitForAlbum = async () => {
+        if (this.state.invalid == true) {
+            return;
+        }
+        const songId = this.props.location.search;
+        const data = await FetchTrackFeatures.fetchData(this.state.rawTrack.album.id, 'albums/');
+        // Error handling if no search results are returned:
+        if (data.length === 0) {
+            this.setState({
+                prompt: "Invalid song ID",
+                invalid: true
+            });
+            return;
+        }
+        console.log(data);
+        this.setState({
+            rawAlbum: data,
+        });
+    };
+
     generateSongFeatures() {
         const chartData = {
             labels: ["Danceability", "Energy", "Happiness"],
@@ -242,9 +276,6 @@ class SongResultsPage extends React.Component {
                     ticks: {
                         display: true,
                         fontColor: "white",
-                        min: 0,
-                        max: 1,
-                        stepSize: 0.1
                     },
                     gridLines: {
                         display: false,
@@ -255,7 +286,10 @@ class SongResultsPage extends React.Component {
                     barPercentage: 0.5,
                     ticks: {
                         fontColor: "white",
-                        fontSize: 14
+                        fontSize: 14,
+                        min: 0,
+                        max: 1,
+                        stepSize: 0.1
                     },
                     gridLines: {
                         display: false,
@@ -294,12 +328,6 @@ class SongResultsPage extends React.Component {
                         <p style={{fontSize: "1.9vh", marginLeft: "2vh"}}></p>
                         <hr/>
                         <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
-                            Length of the song.
-                        </p>}>
-                            <p>Length: {((this.state.rawFeatures.duration_ms) / 1000 / 60).toFixed(2)} minutes</p>
-                        </LightTooltip>
-                        <hr/>
-                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
                             Tempo of the song in beats per minute.
                         </p>}>
                             <p>Tempo: {Math.round(this.state.rawFeatures.tempo)} bpm</p>
@@ -321,13 +349,6 @@ class SongResultsPage extends React.Component {
                             Modality of the song (Major or Minor).
                         </p>}>
                             <p>Modality: {this.state.modality}</p>
-                        </LightTooltip>
-                        <hr/>
-                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
-                            Whether the song is live or not. This is determined by the amount of 'audience noise' detected in the recording,
-                            on a scale of 0.0 - 1.0. The 'Liveness' rating for this track is {this.state.rawFeatures.liveness}.
-                        </p>}>
-                            <p>Live: {this.state.live}</p>
                         </LightTooltip>
                         <hr/>
                         <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
@@ -355,33 +376,64 @@ class SongResultsPage extends React.Component {
                         </p>}>
                         <p>Musicality: {this.state.musicality}</p>
                         </LightTooltip>
+                        <hr/>
                     </div>
                     <div>
                         <h2>Song details:</h2>
                         <hr/>
                         <p>Name: {this.state.rawTrack.name}</p>
                         <hr/>
+                        <p>Artists: {this.state.artists}</p>
+                        <hr/>
                         <p>Explicit lyrics: {this.state.explicit}</p>
                         <hr/>
                         <p>Popularity: {this.state.rawTrack.popularity}</p>
+                        <hr/>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            Length of the song.
+                        </p>}>
+                            <p>Length: {((this.state.rawFeatures.duration_ms) / 1000 / 60).toFixed(2)} minutes</p>
+                        </LightTooltip>
+                        <hr/>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            Whether the song is live or not. This is determined by the amount of 'audience noise' detected in the recording,
+                            on a scale of 0.0 - 1.0. The 'Liveness' rating for this track is {this.state.rawFeatures.liveness}.
+                        </p>}>
+                            <p>Live: {this.state.live}</p>
+                        </LightTooltip>
+                        <hr/>
                     </div>
-                    <div>
-                        <h2>Song preview:</h2>
+                    <div style={{paddingBottom: "0vh", marginBottom: "0vh"}}>
+                        <h2>Album preview:</h2>
                         <hr/>
                         <iframe
-                            id="Embed-song"
-                            src={"https://open.spotify.com/embed?uri=spotify:track:" +
-                            this.props.location.search.substring(1, this.props.location.search.length)}
-                            height="80px"
-                            frameborder="0"
-                            allowtransparency="true"
+                            src={"https://open.spotify.com/embed/album/" + this.state.rawTrack.album.id}
+                            width="350"
+                            height="350"
+                            frameBorder="0"
+                            allowTransparency="true"
+                            allow="encrypted-media"
                         ></iframe>
                     </div>
                     <div>
-                        <h2>Sample 3</h2>
+                        <h2>Album details:</h2>
+                        <hr/>
+                        <p>Name: {this.state.rawAlbum.name}</p>
+                        <hr/>
+                        <p>Release date: {this.state.rawAlbum.release_date}</p>
+                        <hr/>
+                        <p>Popularity: {this.state.rawAlbum.popularity}</p>
+                        <hr/>
+                        <p>Type: {this.state.rawAlbum.album_type}</p>
+                        <hr/>
+                        <p>Record label: {this.state.rawAlbum.label}</p>
+                        <hr/>
+                    </div>
+                    <div>
+                        <h2>Available regions:</h2>
                         <hr/>
                         <p>
-                            <ComposableMap style={{color: "white"}}>
+                            <ComposableMap style={{color: "white", height: "35vh", justifyContent: "center", width: "65vh"}}>
                                 <Geographies geography="https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json">
                                     {({geographies}) => geographies.map(geo =>
                                         <Geography

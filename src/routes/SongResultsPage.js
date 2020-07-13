@@ -140,7 +140,7 @@ class SongResultsPage extends React.Component {
         if (data.acousticness < 0.3) {
             acoustic = "No";
         } else if (data.acousticness < 0.5) {
-            acoustic = "Probably";
+            acoustic = "Maybe";
         } else {
             acoustic = "Yes";
         }
@@ -244,8 +244,8 @@ class SongResultsPage extends React.Component {
                 label: "Song features",
                 backgroundColor: 'darkred',
                 borderColor: 'rgb(255, 99, 132)',
-                data: [this.state.rawFeatures.danceability, this.state.rawFeatures.energy,
-                   this.state.rawFeatures.valence]
+                data: [(this.state.rawFeatures.danceability * 10).toFixed(2), (this.state.rawFeatures.energy * 10).toFixed(2),
+                    (this.state.rawFeatures.valence * 10).toFixed(2)]
             }]
         }
         const chartOptions = {
@@ -288,8 +288,8 @@ class SongResultsPage extends React.Component {
                         fontColor: "white",
                         fontSize: 14,
                         min: 0,
-                        max: 1,
-                        stepSize: 0.1
+                        max: 10,
+                        stepSize: 1
                     },
                     gridLines: {
                         display: false,
@@ -381,13 +381,33 @@ class SongResultsPage extends React.Component {
                     <div>
                         <h2>Song details:</h2>
                         <hr/>
-                        <p>Name: {this.state.rawTrack.name}</p>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            The name of the song.
+                        </p>}>
+                            <p>Name: {this.state.rawTrack.name}</p>
+                        </LightTooltip>
                         <hr/>
-                        <p>Artists: {this.state.artists}</p>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            All artists who created and collaborated on the song.
+                        </p>}>
+                            <p>Artists: {this.state.artists}</p>
+                        </LightTooltip>
                         <hr/>
-                        <p>Explicit lyrics: {this.state.explicit}</p>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            Whether the lyrics contain explicit content or not..
+                        </p>}>
+                            <p>Explicit lyrics: {this.state.explicit}</p>
+                        </LightTooltip>
                         <hr/>
-                        <p>Popularity: {this.state.rawTrack.popularity}</p>
+                        <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
+                            How popular the song is. This is a number between 0 and 100, with 100 being the most popular.
+                            Popularity is based on the total number of recent plays, meaning songs which were popular in the
+                            past might now have a low popularity rating. The popularity is relative, with the most popular
+                            song on Spotify having a popularity of 100, so songs with popularity ratings that seem quite low may actually
+                            be relatively popular.
+                        </p>}>
+                            <p>Popularity: {this.state.rawTrack.popularity}</p>
+                        </LightTooltip>
                         <hr/>
                         <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
                             Length of the song.
@@ -452,25 +472,28 @@ class SongResultsPage extends React.Component {
                         </p>
                     </div>
                     <div>
-                        <h2>Sample 4</h2>
+                        <h2>Mood features explained:</h2>
                         <hr/>
+                        <p>All mood feature data is taken from Spotify, who use algorithms to calculate the numbers shown.</p>
                         <h2>Energy</h2>
                         <p>
-                            The 'Energy' of a song determines how energetic the song feels, on a scale of 0.0 - 1.0,
-                            with 1.0 being the most energetic. Energy is a measure of intensity and musical activity, with energetic
+                            The 'Energy' of a song determines how energetic the song feels, and is a measure of intensity and musical activity, with energetic
                             tracks feeling fast, busy and noisy. Energy is calculated by taking into account the dynamic range,
-                            the loudness, the timbre, and the onset rate (rate of notes played).
+                            the loudness, the timbre, and the onset rate (rate of notes played). Energy is determined on a scale of 0 - 10,
+                            with 10 being the most energetic.
                         </p>
                         <h2>Danceability</h2>
                         <p>
                             The 'Danceability' of a song describes how good a track is to dance to. This takes into account
                             a number of musical elements including tempo, how stable the rhythm is, the strength of each beat,
-                            and how regular the musical pattern is. Dancibility is determined on a scale of 0.0 - 1.0, with 1.0 being
+                            and how regular the musical pattern is. Dancibility is determined on a scale of 0 - 10, with 10 being
                             the most danceable.
                         </p>
                         <h2>Happiness</h2>
                         <p>
-                            Blablablabla.
+                            The happiness or 'Valence' of a song is how positive it sounds. Tracks with high valence sound more positive
+                            (happy, cheerful, euphoric) while tracks with low valence sound more negative (sad, depressed, angry).
+                            Happiness is determined on a scale of 0 - 10, with 10 being the most positive sounding.
                         </p>
                     </div>
                 </div>

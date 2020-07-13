@@ -8,7 +8,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { withStyles } from '@material-ui/core/styles';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
-
 // https://www.youtube.com/watch?v=-qOe8lBAChE
 // https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout
 
@@ -35,7 +34,8 @@ class SongResultsPage extends React.Component {
             rawTrack: {
                 album: {
                     id: "null"
-                }
+                },
+                available_markets: []
             },
             rawAlbum: [],
             data: [],
@@ -114,7 +114,7 @@ class SongResultsPage extends React.Component {
                 artwork={this.state.rawTrack.album.images[1].url}
             />,
             explicit: expl,
-            artists: artists
+            artists: artists,
         })
 
     };
@@ -432,15 +432,20 @@ class SongResultsPage extends React.Component {
                     <div>
                         <h2>Available regions:</h2>
                         <hr/>
-                        <p>
-                            <ComposableMap style={{color: "white", height: "35vh", justifyContent: "center", width: "65vh"}}>
+                        <p style={{justifyContent: "center", display: "flex"}}>
+                            <ComposableMap style={{color: "white", height: "42vh", marginRight: "2vw"}}>
                                 <Geographies geography="https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json">
-                                    {({geographies}) => geographies.map(geo =>
-                                        <Geography
-                                            key={geo.rsmKey}
-                                            geography={geo}
-                                            fill={"white"}
-                                        />
+                                    {({geographies}) => geographies.map(geo => {
+                                            const d = this.state.rawTrack.available_markets.find(s => s === geo.properties.ISO_A2);
+                                            console.log(d);
+                                            return (
+                                                <Geography
+                                                    key={geo.rsmKey}
+                                                    geography={geo}
+                                                    fill={d ? "darkred" : "white"}
+                                                />
+                                            );
+                                        }
                                     )}
                                 </Geographies>
                             </ComposableMap>

@@ -1,9 +1,10 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Redirect, Switch} from "react-router-dom";
 import HomePage from "./routes/HomePage";
-import SearchPage from "./routes/SearchPage";
+import SongSearchPage from "./routes/SongSearchPage";
 import SongPage from "./routes/SongPage";
 import PlaylistPage from "./routes/PlaylistPage";
+import PlaylistSearchPage from "./routes/PlaylistSearchPage";
 import AboutPage from "./routes/AboutPage";
 import SongResultsPage from "./routes/SongResultsPage";
 import PlaylistResultsPage from "./routes/PlaylistResultsPage";
@@ -29,13 +30,12 @@ class App extends React.Component {
                     </ul>
                 </nav>
                 <Switch>
-                    <Route path="/" exact component={SearchPage}/>
-                    <Route path="/home" component={HomePage}/>
-                    <Route path="/songs" component={SongPage}/>
+                    <Route path="/" exact component={HomePage}/>
+                    <Route path="/songs" component={SongResultsPage}/>
                     <Route path="/playlists" component={PlaylistPage}/>
                     <Route path="/about" component={AboutPage}/>
-                    <Route path="/song" component={SongResultsPage}/>
-                    <Route path="/playlist" exact component={PlaylistResultsPage}/>
+                    <Route path="/song" component={SongSearchPage}/>
+                    <Route path="/playlist" exact component={PlaylistSearchPage}/>
                 </Switch>
             </Router>
         )

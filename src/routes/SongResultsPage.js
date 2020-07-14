@@ -95,7 +95,7 @@ class SongResultsPage extends React.Component {
             artist = data.artists[0].name.substring(0, 40) + '...'
         }
         let expl = "Unknown";
-        if (data.explicit == true) {
+        if (data.explicit === true) {
             expl = "Yes";
         } else {
             expl = "No";
@@ -159,29 +159,29 @@ class SongResultsPage extends React.Component {
             musicality = "Spoken word";
         }
         let key = "Unknown";
-        if (data.key == 0) {
+        if (data.key === 0) {
             key = "C";
-        } else if (data.key == 1) {
+        } else if (data.key === 1) {
             key = "C #";
-        } else if (data.key == 2) {
+        } else if (data.key === 2) {
             key = "D";
-        } else if (data.key == 3) {
+        } else if (data.key === 3) {
             key = "D #";
-        } else if (data.key == 4) {
+        } else if (data.key === 4) {
             key = "E";
-        } else if (data.key == 5) {
+        } else if (data.key === 5) {
             key = "F";
-        } else if (data.key == 6) {
+        } else if (data.key === 6) {
             key = "F #";
-        } else if (data.key == 7) {
+        } else if (data.key === 7) {
             key = "G";
-        } else if (data.key == 8) {
+        } else if (data.key === 8) {
             key = "G #";
-        } else if (data.key == 9) {
+        } else if (data.key === 9) {
             key = "A";
-        } else if (data.key == 10) {
+        } else if (data.key === 10) {
             key = "A #";
-        } else if (data.key == 11) {
+        } else if (data.key === 11) {
             key = "B";
         }
         console.log(data);
@@ -193,15 +193,15 @@ class SongResultsPage extends React.Component {
             musicality: musicality,
             key: key
         });
-        if (data.mode == 1) {
+        if (data.mode === 1) {
             this.setState({modality: "Major"})
-        } else if (data.mode == 0) {
+        } else if (data.mode === 0) {
             this.setState({modality: "Minor"})
         }
     };
 
     waitForAnalysis = async () => {
-        if (this.state.invalid == true) {
+        if (this.state.invalid === true) {
             return;
         }
         const songId = this.props.location.search;
@@ -218,7 +218,7 @@ class SongResultsPage extends React.Component {
     };
 
     waitForAlbum = async () => {
-        if (this.state.invalid == true) {
+        if (this.state.invalid === true) {
             return;
         }
         const songId = this.props.location.search;
@@ -325,7 +325,7 @@ class SongResultsPage extends React.Component {
                     </div>
                     <div>
                         <h2 style={{marginBottom: "0vh"}}>Musical information:</h2>
-                        <p style={{fontSize: "1.9vh", marginLeft: "2vh"}}></p>
+                        <p style={{fontSize: "1.9vh", marginLeft: "2vh"}}/>
                         <hr/>
                         <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
                             Tempo of the song in beats per minute.

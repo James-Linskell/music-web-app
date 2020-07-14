@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import FetchSearchData from '../components/FetchSearchData';
 import SongCard from "../components/SongCard";
 
-class SearchPage extends React.Component {
+class SongSearchPage extends React.Component {
   /**
    * Default constructor for main app.
    * @param props
@@ -94,7 +94,7 @@ class SearchPage extends React.Component {
   onCardClick(songId) {
     console.log("Click successful!! ID: " + songId)
     this.props.history.push({
-      pathname: '/song',
+      pathname: '/songs',
       search: songId
     });
   }
@@ -139,7 +139,7 @@ class SearchPage extends React.Component {
       }
 
       cardGrid.push(
-          <p key={i} ><SongCard
+          <p key={i} className="Card-p"><SongCard
               buttonClick={this.onCardClick.bind(this, songId)}
               name={name}
               album={album}
@@ -180,4 +180,4 @@ class SearchPage extends React.Component {
   }
 }
 
-export default SearchPage;
+export default SongSearchPage;

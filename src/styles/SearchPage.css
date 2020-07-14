@@ -63,15 +63,6 @@
   justify-content: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .Cards {
   margin-left: 5vh;
   margin-right: 5vh;
@@ -79,17 +70,51 @@
   clear: both;
   align-items: center;
   text-align: center;
-  color: red;
   align-self: center;
 }
 
-.Cards p:hover {
+.Cards-p:hover {
   background-color: white;
   z-index: 1;
 }
 
-.Cards p {
+.Card-p {
   display: inline-block;
+  margin-right: 0.5vw;
+  margin-left: 0.5vw;
+  margin-top: 0vh;
+}
+
+.Playlist-p {
+  display: inline-block;
+  margin-right: 0.5vw;
+  margin-left: 0.5vw;
+  margin-top: 0vh;
+  margin-bottom: 0vh;
+}
+
+.Cards h2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 350px;
+  height: 100px;
+  margin-bottom: 0vh;
+  margin-left: 0.5vw;
+}
+
+.Cards h2:hover {
+  background-color: lightgrey;
+  color: black;
+  z-index: -3;
+}
+
+.Cards iframe {
+  display: inline-block;
+  margin: 0vw;
+  padding: 0vh;
 }
 
 .Footer {

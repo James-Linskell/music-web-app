@@ -123,7 +123,7 @@ function checkValidServiceWorker(swUrl, config) {
     })
     .catch(() => {
       console.log(
-        'No internet connection found. SearchPage is running in offline mode.'
+        'No internet connection found. SongSearchPage is running in offline mode.'
       );
     });
 }

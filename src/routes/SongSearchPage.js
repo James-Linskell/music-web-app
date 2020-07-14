@@ -91,12 +91,26 @@ class SongSearchPage extends React.Component {
    * history object prop 'props.location.search'.
    * @param songId
    */
-  onCardClick(songId) {
+  onCardClick(songId, name, album, artist, art) {
     console.log("Click successful!! ID: " + songId)
-    this.props.history.push({
-      pathname: '/songs',
-      search: songId
-    });
+    if (this.props.chain === "song") {
+      this.props.history.push({
+        pathname: '/songs',
+        search: songId
+      });
+    }
+    if (this.props.chain === "playlist") {
+      this.props.history.push({
+        pathname: '/song-playlist',
+        search: songId,
+        state: {
+          name: name,
+          album: album,
+          artist: artist,
+          art: art
+        }
+      });
+    }
   }
 
   generateSongInfo() {
@@ -140,7 +154,7 @@ class SongSearchPage extends React.Component {
 
       cardGrid.push(
           <p key={i} className="Card-p"><SongCard
-              buttonClick={this.onCardClick.bind(this, songId)}
+              buttonClick={this.onCardClick.bind(this, songId, name, album, artist, data[i].art)}
               name={name}
               album={album}
               artist={artist}
@@ -161,7 +175,9 @@ class SongSearchPage extends React.Component {
           <div className="Search">
             <header className="Search-header" >
               <img src={hellify} className="Search-logo" alt="logo"/>
-              <p>Search for a song to get started!</p>
+              <p>Search for a song</p>
+              <p>or</p>
+              <p>Enter a Spotify song link</p>
               <div className="searchbar">
                 <form onSubmit={this.handleSubmit}>
                   <input className="Search-box" type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>

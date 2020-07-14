@@ -32,10 +32,15 @@ class App extends React.Component {
                 <Switch>
                     <Route path="/" exact component={HomePage}/>
                     <Route path="/songs" component={SongResultsPage}/>
-                    <Route path="/playlists" component={PlaylistPage}/>
+                    <Route path="/playlists" component={PlaylistResultsPage}/>
+                    <Route path="/song-playlist" component={PlaylistSearchPage}/>
                     <Route path="/about" component={AboutPage}/>
-                    <Route path="/song" component={SongSearchPage}/>
-                    <Route path="/playlist" exact component={PlaylistSearchPage}/>
+                    <Route path="/song"   render={(props) => (
+                        <SongSearchPage {...props} chain="song" />
+                    )}/>
+                    <Route path="/playlist" render={(props) => (
+                        <SongSearchPage {...props} chain="playlist" />
+                    )}/>
                 </Switch>
             </Router>
         )

@@ -6,7 +6,8 @@ class PlaylistResultsPage extends React.Component {
     render() {
         return (
             <div>
-                Song Analyser
+                <p>Song: {this.props.location.search.substring(1, this.props.location.search.length)}</p>
+                <p>Playlist: {this.props.location.hash.substring(1, this.props.location.hash.length)}</p>
             </div>
         )
     }

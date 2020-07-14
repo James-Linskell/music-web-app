@@ -94,8 +94,9 @@ class PlaylistSearchPage extends React.Component {
     onCardClick(playlistId) {
         console.log("Click successful!! ID: " + playlistId)
         this.props.history.push({
-            pathname: '/playlist',
-            search: playlistId
+            pathname: '/playlists',
+            search: this.props.location.search,
+            hash: playlistId
         });
     }
 
@@ -150,13 +151,32 @@ class PlaylistSearchPage extends React.Component {
             <Router>
                 <div className="Search">
                     <header className="Search-header" >
-                        <img src={hellify} className="Search-logo" alt="logo"/>
-                        <p>Search for a Playlist</p>
-                        <div className="searchbar">
-                            <form onSubmit={this.handleSubmit}>
-                                <input className="Search-box" type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>
-                                <button id="searchclick" type="submit">Search</button>
-                            </form>
+                        <div className="Grid">
+                            <div>
+                                <p>
+                                    <img src={hellify} className="Search-logo" alt="logo"/>
+                                </p>
+                                <p>Search for a playlist</p>
+                                <p>or</p>
+                                <p>Enter a Spotify playlist link</p>
+                                <p></p>
+                                <div className="searchbar">
+                                    <form onSubmit={this.handleSubmit}>
+                                        <input className="Search-box" type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>
+                                        <button id="searchclick" type="submit">Search</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Song being analysed:</p>
+                                <p className="Card-p"><SongCard
+                                    name={this.props.location.state.name}
+                                    album={this.props.location.state.album}
+                                    artist={this.props.location.state.artist}
+                                    artwork={this.props.location.state.art}
+                                    songId={this.props.location.state.songId}
+                                /></p>
+                            </div>
                         </div>
                         <div style={{marginTop: "3vh", position: "absolute", top: "40vh"}}>
                             {this.state.prompt}

@@ -123,7 +123,7 @@ class PlaylistSearchPage extends React.Component {
             let plId = data[i].playlistId;
 
             cardGrid.push(
-                <p className="Playlist-p">
+                <p className="Playlist-p" key={i}>
                     <h2 onClick={this.onCardClick.bind(this, plId)} >
                         Select Playlist
                     </h2>

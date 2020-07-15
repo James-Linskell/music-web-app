@@ -32,6 +32,7 @@ class FetchTrackFeatures {
         const url = endpoint + ty + id;
 
         const response = await fetch(url, myOptions)
+        console.log(url);
         data = await response.json();
         return data;
     }

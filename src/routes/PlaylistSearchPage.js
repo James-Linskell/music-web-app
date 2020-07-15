@@ -91,13 +91,20 @@ class PlaylistSearchPage extends React.Component {
      * history object prop 'props.location.search'.
      * @param songId
      */
-    onCardClick(playlistId) {
+    onCardClick(playlistId, name, album, artist, art) {
         console.log("Click successful!! ID: " + playlistId)
         this.props.history.push({
             pathname: '/playlists',
             search: this.props.location.search,
-            hash: playlistId
+            hash: playlistId,
+            state: {
+                name: name,
+                album: album,
+                artist: artist,
+                art: art
+            }
         });
+        console.log(this.props.location.state);
     }
 
     generatePlaylistInfo() {
@@ -124,7 +131,12 @@ class PlaylistSearchPage extends React.Component {
 
             cardGrid.push(
                 <p className="Playlist-p" key={i}>
-                    <h2 onClick={this.onCardClick.bind(this, plId)} >
+                    <h2 onClick={this.onCardClick.bind(this, plId,
+                        this.props.location.state.name,
+                        this.props.location.state.album,
+                        this.props.location.state.artist,
+                        this.props.location.state.art
+                    )}>
                         Select Playlist
                     </h2>
                     <p className="Playlist-p" >

@@ -20,13 +20,17 @@ class PlaylistResultsPage extends React.Component {
             plId.substring(1, this.props.location.hash.length) + '/tracks');
         let plTrackIds = '';
         let n = 0;
+        console.log(plTracks);
         plTracks.items.forEach(track => {
             n++;
+            // Limit results to chosen song + 100 songs from playlist:
+            if (n === 100) {
+                return;
+            }
             plTrackIds += track.track.id + ','
         });
         // Remove final comma:
         plTrackIds = plTrackIds.substring(0, (plTrackIds.length) - 1);
-
         // Index 0 is the song being fitted to the playlist:
         const featureData = await FetchTrackFeatures.fetchData(this.props.location.search.substring(1, this.props.location.search.length) +
         ',' + plTrackIds, 'audio-features/?ids=');

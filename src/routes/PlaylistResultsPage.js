@@ -2,7 +2,7 @@ import React from 'react';
 import {BrowserRouter as Router, Route} from "react-router-dom";
 import FetchTrackFeatures from "../components/FetchTrackFeatures";
 import SongCard from "../components/SongCard";
-import '../styles/SongResultsPage.css'
+import '../styles/PlaylistResultsPage.css'
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import {HorizontalBar} from "react-chartjs-2";
 import Histogram from "../components/Histogram";
@@ -14,7 +14,10 @@ class PlaylistResultsPage extends React.Component {
         this.state = {
             danceHist: null,
             energyHist: null,
-            valenceHist: null
+            valenceHist: null,
+            score: [],
+            chartData: [],
+            chartOptions: []
         }
     }
 
@@ -53,14 +56,120 @@ class PlaylistResultsPage extends React.Component {
         }
         console.log(featureData);
         console.log(this.props.location.state);
-        this.simplifyData(featureData);
+        let fit = await this.simplifyData(featureData);
 
         // Grad bg colours from album cover:
         const result = await analyze(this.props.location.state.art)
         console.log(`The dominant color is ${result[0].color} with ${result[0].count} occurrence(s)`)
         console.log(`The secondary color is ${result[1].color} with ${result[1].count} occurrence(s)`)
         console.log(`Palette: ${result[2].color} with ${result[1].count}`);
+
+        let scores = [];
+
+        for (let i = 0; i < 3; i++) {
+            if (fit.sigmas[i] === 1 && fit.stDevs[i] <= 0.15) {
+                scores[i] = 4;
+            } else if (fit.sigmas[i] === 1 && fit.stDevs[i] > 0.15) {
+                scores[i] = 3;
+            } else if (fit.sigmas[i] === 2 && fit.stDevs[i] > 0.15) {
+                scores[i] = 2;
+            } else if (fit.sigmas[i] === 2 && fit.stDevs[i] <= 0.15) {
+                scores[i] = 1;
+            } else {
+                scores[i] = 0;
+            }
+        }
+        console.log("Score: ", scores);
+        let totalScore = [scores.reduce((a, b) => a + b, 0)];
+        this.setState({
+            score: totalScore
+        })
+        this.generateScoreChart(totalScore);
+        console.log(totalScore);
     };
+
+    generateScoreChart(score) {
+        const chartData = {
+            labels: ["Score"],
+            datasets: [{
+                label: "Song Score",
+                backgroundColor: 'darkred',
+                borderColor: 'rgb(255, 99, 132)',
+                data: score
+            }]
+        }
+        // Colour the bar:
+        if (score > 10) {
+            chartData.datasets[0].backgroundColor = "#1E9600";
+        } else if (score > 8) {
+            chartData.datasets[0].backgroundColor = "#77b300";
+        } else if (score > 6) {
+            chartData.datasets[0].backgroundColor = "#bfff00";
+        } else if (score > 5) {
+            chartData.datasets[0].backgroundColor = "#ffcc00";
+        } else if (score > 3) {
+            chartData.datasets[0].backgroundColor = "#ff751a";
+        } else if (score > 2) {
+            chartData.datasets[0].backgroundColor = "#cc2900";
+        } else {
+            chartData.datasets[0].backgroundColor = "#e60000";
+        }
+
+        const chartOptions = {
+            tooltips: {
+                callbacks: {
+                    title: function (tooltipItem, data) {
+                        return data['labels'][tooltipItem[0]['index']];
+                    },
+                    label: function (tooltipItem, data) {
+                        return data['datasets'][0]['data'][tooltipItem['index']];
+                    },
+                },
+                backgroundColor: '#FFF',
+                titleFontSize: 16,
+                titleFontColor: '#0066ff',
+                bodyFontColor: '#000',
+                bodyFontSize: 14,
+                displayColors: false,
+            },
+            legend: {
+                display: false,
+                labels: {
+                    fontColor: "white",
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        display: true,
+                        fontColor: "white",
+                    },
+                    gridLines: {
+                        display: false,
+                        drawBorder: false
+                    }
+                }],
+                xAxes: [{
+                    barPercentage: 0.5,
+                    ticks: {
+                        fontColor: "white",
+                        fontSize: 14,
+                        min: 0,
+                        max: 12,
+                        stepSize: 1
+                    },
+                    gridLines: {
+                        display: false,
+                        drawBorder: false
+                    }
+                }]
+            },
+        }
+        this.setState({
+            chartData: chartData,
+            chartOptions: chartOptions
+        })
+    }
 
     simplifyData = async (data) => {
         let dance = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -264,7 +373,7 @@ class PlaylistResultsPage extends React.Component {
     //CHANGE: get new audio data every time, or the user can't bookmark this page ///////////////////////////////////////////
     render() {
         return (
-            <div className="Main">
+            <div className="Main-play">
                 <div style={{opacity: 0.7, position: "absolute", zIndex: "-2", width: "100vw", overflow: "hidden"}}>
                     <img
                         src={this.props.location.state.art}
@@ -276,29 +385,43 @@ class PlaylistResultsPage extends React.Component {
                         src={this.props.location.state.art}
                         style={{width: "100vw", height: "auto", overflow: "hidden", display: "block"}} alt="album art"/>
                 </div>
-                <div className="Header">
+                <div className="Header-play">
                     <p>Playlist Analysis</p>
+                    <p id="Song-card-play">
+                        <SongCard
+                            name={this.props.location.state.name}
+                            album={this.props.location.state.album}
+                            artist={this.props.location.state.artist}
+                            artwork={this.props.location.state.art}
+                        />
+                    </p>
                 </div>
-                <div className="Container">
+                <div className="Container-play">
                     <div style={{display: "flex", fontSize: "2.5vh", padding: "1vh", textAlign: "left", paddingLeft: "3vh", alignContent: "left"}}><InfoOutlinedIcon style={{paddingRight: "0.3vw"}} /> Hover over an item for more information.</div>
                     <div>
-                        <h2>Song Mood Features:<button style={{display: "flex", marginLeft: "2vw"}}>What's this?</button></h2>
+                        <h2>Song Fit:<button style={{display: "flex", marginLeft: "2vw"}}>What's this?</button></h2>
                         <hr/>
                         <p>
-                            <div className='myDiv'/>
+                            <HorizontalBar className="Chart" data={this.state.chartData} options={this.state.chartOptions} height="60vh"/>
                         </p>
                         <div style={{ display: 'flex', maxWidth: 900 }}>
                         </div>
                     </div>
-                    <div className="Chart">
-                        {this.state.danceHist}
+                    <div>
+                        Some info?
                     </div>
-                    <div style={{maxWidth: "50vw"}}>
-                        {this.state.energyHist}
+                    <div className="Chart-play">
+                        <p>{this.state.danceHist}</p>
                     </div>
-                    <div style={{maxWidth: "50vw"}}>
-                        {this.state.valenceHist}
+                    <div>Danceability info</div>
+                    <div>
+                        <p>{this.state.energyHist}</p>
                     </div>
+                    <div>Energy info</div>
+                    <div>
+                        <p>{this.state.valenceHist}</p>
+                    </div>
+                    <div>Valence info</div>
                 </div>
             </div>
         )

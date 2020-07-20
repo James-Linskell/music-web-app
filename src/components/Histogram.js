@@ -28,7 +28,7 @@ class Histogram extends React.Component {
             }]
         }
         // Set colour of comparison song:
-        chartData.datasets[0].backgroundColor[this.props.songIndex] = "darkblue";
+        chartData.datasets[0].backgroundColor[this.props.songIndex] = "darkgreen";
 
         const chartOptions = {
             tooltips: {

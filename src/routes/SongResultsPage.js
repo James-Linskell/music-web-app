@@ -457,7 +457,6 @@ class SongResultsPage extends React.Component {
                                 <Geographies geography="https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json">
                                     {({geographies}) => geographies.map(geo => {
                                             const d = this.state.rawTrack.available_markets.find(s => s === geo.properties.ISO_A2);
-                                            console.log(d);
                                             return (
                                                 <Geography
                                                     key={geo.rsmKey}

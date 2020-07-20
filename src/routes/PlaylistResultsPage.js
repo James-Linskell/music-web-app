@@ -6,7 +6,7 @@ import '../styles/SongResultsPage.css'
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import {HorizontalBar} from "react-chartjs-2";
 import Histogram from "../components/Histogram";
-
+import analyze from 'rgbaster';
 
 class PlaylistResultsPage extends React.Component {
     constructor() {
@@ -54,6 +54,12 @@ class PlaylistResultsPage extends React.Component {
         console.log(featureData);
         console.log(this.props.location.state);
         this.simplifyData(featureData);
+
+        // Grad bg colours from album cover:
+        const result = await analyze(this.props.location.state.art)
+        console.log(`The dominant color is ${result[0].color} with ${result[0].count} occurrence(s)`)
+        console.log(`The secondary color is ${result[1].color} with ${result[1].count} occurrence(s)`)
+        console.log(`Palette: ${result[2].color} with ${result[1].count}`);
     };
 
     simplifyData = async (data) => {
@@ -217,9 +223,7 @@ class PlaylistResultsPage extends React.Component {
         let stDevs = [Math.sqrt(danceArray.map(x => Math.pow(x-means[0],2)).reduce((a,b) => a+b)/n),
             Math.sqrt(energyArray.map(x => Math.pow(x-means[1],2)).reduce((a,b) => a+b)/n),
             Math.sqrt(valenceArray.map(x => Math.pow(x-means[2],2)).reduce((a,b) => a+b)/n)]
-
-        console.log("valence: " + values[2]);
-        console.log("valence mean: " + means[2]);
+        let sigmas = [];
 
         /*
          * todo:
@@ -235,19 +239,26 @@ class PlaylistResultsPage extends React.Component {
 
             console.log("Standard deviation: " + stDevs[i]);
             if ((means[i] - stDevs[i]) <= values[i] && values[i] <= (means[i] + stDevs[i])) {
-                console.log("Acurracy: 1 sigma");
+                sigmas[i] = 1;
             } else if ((means[i] - (2 * stDevs[i])) <= values[i] && values[i] <= (means[i] + (2 * stDevs[i]))) {
-                console.log("Acurracy: 2 sigma");
+                sigmas[i] = 2;
             } else {
-                console.log("Accuracy: does not fit")
+                sigmas[i] = 3;
             }
         }
+        let fit = {
+            stDevs,
+            sigmas
+        };
 
         this.setState({
             danceHist: <Histogram data={dance} songIndex={danceIndex}/>,
             energyHist: <Histogram data={energy} songIndex={energyIndex}/>,
             valenceHist: <Histogram data={valence} songIndex={valenceIndex}/>
         })
+
+        console.log(fit);
+        return fit;
     }
 
     //CHANGE: get new audio data every time, or the user can't bookmark this page ///////////////////////////////////////////
@@ -279,9 +290,15 @@ class PlaylistResultsPage extends React.Component {
                         <div style={{ display: 'flex', maxWidth: 900 }}>
                         </div>
                     </div>
-                </div>
-                <div style={{maxWidth: "50vw"}}>
-                    {this.state.danceHist}{this.state.energyHist}{this.state.valenceHist}
+                    <div className="Chart">
+                        {this.state.danceHist}
+                    </div>
+                    <div style={{maxWidth: "50vw"}}>
+                        {this.state.energyHist}
+                    </div>
+                    <div style={{maxWidth: "50vw"}}>
+                        {this.state.valenceHist}
+                    </div>
                 </div>
             </div>
         )

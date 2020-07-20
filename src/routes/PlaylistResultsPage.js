@@ -7,6 +7,7 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import {HorizontalBar} from "react-chartjs-2";
 import Histogram from "../components/Histogram";
 import analyze from 'rgbaster';
+import * as Vibrant from 'node-vibrant';
 
 class PlaylistResultsPage extends React.Component {
     constructor() {
@@ -63,6 +64,17 @@ class PlaylistResultsPage extends React.Component {
         console.log(`The dominant color is ${result[0].color} with ${result[0].count} occurrence(s)`)
         console.log(`The secondary color is ${result[1].color} with ${result[1].count} occurrence(s)`)
         console.log(`Palette: ${result[2].color} with ${result[1].count}`);
+
+        // Get bg colours using Vibrant promise:
+        Vibrant.from(this.props.location.state.art).getPalette()
+            .then((palette) => {
+                console.log(palette);
+                let rgb = palette.Vibrant.getRgb();
+                console.log(rgb);
+            this.setState({
+                albumColours: `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.8)`
+            })}
+        )
 
         let scores = [];
 
@@ -373,17 +385,8 @@ class PlaylistResultsPage extends React.Component {
     //CHANGE: get new audio data every time, or the user can't bookmark this page ///////////////////////////////////////////
     render() {
         return (
-            <div className="Main-play">
+            <div className="Main-play" style={{backgroundColor: this.state.albumColours}}>
                 <div style={{opacity: 0.7, position: "absolute", zIndex: "-2", width: "100vw", overflow: "hidden"}}>
-                    <img
-                        src={this.props.location.state.art}
-                        style={{width: "100vw", height: "auto", overflow: "hidden", display: "block"}} alt="album art"/>
-                    <img
-                        src={this.props.location.state.art}
-                        style={{width: "100vw", height: "auto", overflow: "hidden", display: "block"}} alt="album art"/>
-                    <img
-                        src={this.props.location.state.art}
-                        style={{width: "100vw", height: "auto", overflow: "hidden", display: "block"}} alt="album art"/>
                 </div>
                 <div className="Header-play">
                     <p>Playlist Analysis</p>
@@ -408,7 +411,9 @@ class PlaylistResultsPage extends React.Component {
                         </div>
                     </div>
                     <div>
-                        Some info?
+                        <h2>Song score:</h2>
+                        <hr/>
+                        <p>Score: {(this.state.score/12) * 100} %</p>
                     </div>
                     <div className="Chart-play">
                         <p>{this.state.danceHist}</p>

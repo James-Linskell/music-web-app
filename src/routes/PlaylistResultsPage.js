@@ -212,27 +212,35 @@ class PlaylistResultsPage extends React.Component {
             n++;
         });
 
-        const danceMean = danceArray.reduce((a,b) => a+b)/n;
-        const danceStdev = Math.sqrt(danceArray.map(x => Math.pow(x-danceMean,2)).reduce((a,b) => a+b)/n);
-        console.log("Standard deviation: " + danceStdev);
-        console.log("Mean: " + danceMean);
-        console.log("Value: " + data.audio_features[0].danceability);
-        const energyMean = energyArray.reduce((a,b) => a+b)/n;
-        const energyStdev = Math.sqrt(energyArray.map(x => Math.pow(x-energyMean,2)).reduce((a,b) => a+b)/n);
-        const valenceMean = danceArray.reduce((a,b) => a+b)/n;
-        const valenceStdev = Math.sqrt(danceArray.map(x => Math.pow(x-valenceMean,2)).reduce((a,b) => a+b)/n);
-        
-        let danceVal = data.audio_features[0].danceability;
-        let energyVal = data.audio_features[0].energy;
-        let valenceVal = data.audio_features[0].danceability;
-        console.log(danceVal);
+        let values = [data.audio_features[0].danceability, data.audio_features[0].energy, data.audio_features[0].valence];
+        let means = [danceArray.reduce((a,b) => a+b)/n, energyArray.reduce((a,b) => a+b)/n, valenceArray.reduce((a,b) => a+b)/n];
+        let stDevs = [Math.sqrt(danceArray.map(x => Math.pow(x-means[0],2)).reduce((a,b) => a+b)/n),
+            Math.sqrt(energyArray.map(x => Math.pow(x-means[1],2)).reduce((a,b) => a+b)/n),
+            Math.sqrt(valenceArray.map(x => Math.pow(x-means[2],2)).reduce((a,b) => a+b)/n)]
 
-        if ((danceMean - danceStdev) <= danceVal && danceVal <= (danceMean + danceStdev)) {
-            console.log("Acurracy: 1 sigma");
-        } else if ((danceMean - (2 * danceStdev)) < danceVal && danceVal < (danceMean + (2 * danceStdev))) {
-            console.log("Acurracy: 2 sigma");
-        } else if ((danceMean - (3 * danceStdev)) < danceVal && danceVal < (danceMean + (3 * danceStdev))) {
-            console.log("Acurracy: 3 sigma");
+        console.log("valence: " + values[2]);
+        console.log("valence mean: " + means[2]);
+
+        /*
+         * todo:
+         *  If there is a high variance AND sigma > 2, it is a bad fit.
+         *  If there is a high variance AND sigma < 2, it is a quite good fit.
+         *  If there is a low variance AND sigma < 2, it is an excellent fit.
+         *  If there is a low variance AND sigma > 2, it is a terrible fit.
+         */
+        for (let i = 0; i < 3; i++) {
+            if (stDevs[i] > 0.15) {
+                console.log("There is a high variance in the data.")
+            }
+
+            console.log("Standard deviation: " + stDevs[i]);
+            if ((means[i] - stDevs[i]) <= values[i] && values[i] <= (means[i] + stDevs[i])) {
+                console.log("Acurracy: 1 sigma");
+            } else if ((means[i] - (2 * stDevs[i])) <= values[i] && values[i] <= (means[i] + (2 * stDevs[i]))) {
+                console.log("Acurracy: 2 sigma");
+            } else {
+                console.log("Accuracy: does not fit")
+            }
         }
 
         this.setState({

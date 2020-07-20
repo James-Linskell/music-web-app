@@ -6,7 +6,6 @@ import '../styles/PlaylistResultsPage.css'
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import {HorizontalBar} from "react-chartjs-2";
 import Histogram from "../components/Histogram";
-import analyze from 'rgbaster';
 import * as Vibrant from 'node-vibrant';
 
 class PlaylistResultsPage extends React.Component {
@@ -55,15 +54,6 @@ class PlaylistResultsPage extends React.Component {
             });
             return;
         }
-        console.log(featureData);
-        console.log(this.props.location.state);
-        let fit = await this.simplifyData(featureData);
-
-        // Grad bg colours from album cover:
-        const result = await analyze(this.props.location.state.art)
-        console.log(`The dominant color is ${result[0].color} with ${result[0].count} occurrence(s)`)
-        console.log(`The secondary color is ${result[1].color} with ${result[1].count} occurrence(s)`)
-        console.log(`Palette: ${result[2].color} with ${result[1].count}`);
 
         // Get bg colours using Vibrant promise:
         Vibrant.from(this.props.location.state.art).getPalette()
@@ -76,6 +66,7 @@ class PlaylistResultsPage extends React.Component {
             })}
         )
 
+        let fit = await this.simplifyData(featureData);
         let scores = [];
 
         for (let i = 0; i < 3; i++) {

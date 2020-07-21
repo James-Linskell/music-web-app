@@ -112,8 +112,13 @@ hr {
     .Container-play div h2 {
         display: flex;
         align-items: center;
-        justify-content: left;
-        margin-left: 2vh;
+        justify-content: center;
+    }
+
+    .Container-play div h2 h2 {
+        padding: 0vh;
+        margin: 0vh;
+        margin-left: 1vw;
     }
 
     .Container-play div:nth-of-type(1) {
@@ -158,7 +163,25 @@ hr {
         grid-row: 7/9;
     }
 
+    .Container-play div:nth-of-type(10) {
+        grid-column: 1/5;
+    }
+
     .Container-play p {
+        margin-left: 3vh;
+        margin-right: 3vh;
+        margin-top: 1vh;
+        margin-bottom: 1vh;
+        padding: 0.5vmax;
+        padding-top: 1vmax;
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4vmax;
+    }
+
+    #Detail p {
         margin-left: 3vh;
         margin-right: 3vh;
         margin-top: 1vh;
@@ -166,6 +189,13 @@ hr {
         display: block;
         text-align: left;
         font-size: 2.3vh;
+    }
+
+    #Detail h2 {
+        display: block;
+        margin-left: 2vw;
+        text-align: left;
+        justify-content: left;
     }
 
     .Header-play {

@@ -4,6 +4,7 @@ import FetchTrackFeatures from "../components/FetchTrackFeatures";
 import SongCard from "../components/SongCard";
 import '../styles/PlaylistResultsPage.css'
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import {HorizontalBar} from "react-chartjs-2";
 import Histogram from "../components/Histogram";
 import * as Vibrant from 'node-vibrant';
@@ -17,7 +18,15 @@ class PlaylistResultsPage extends React.Component {
             valenceHist: null,
             score: [],
             chartData: [],
-            chartOptions: []
+            chartOptions: [],
+            featureInfo1: [],
+            featureInfo2: [],
+            featureInfoColour: [],
+            errorVis: "hidden",
+            fit: {
+                stDevs: [0, 0, 0],
+                sigmas: [0, 0, 0]
+            }
         }
     }
 
@@ -60,7 +69,6 @@ class PlaylistResultsPage extends React.Component {
             .then((palette) => {
                 console.log(palette);
                 let rgb = palette.Vibrant.getRgb();
-                console.log(rgb);
             this.setState({
                 albumColours: `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.8)`
             })}
@@ -68,24 +76,63 @@ class PlaylistResultsPage extends React.Component {
 
         let fit = await this.simplifyData(featureData);
         let scores = [];
+        let featureInfo1 = [];
+        let featureInfo2 = [];
+        let featureInfoColour = [];
 
         for (let i = 0; i < 3; i++) {
+            let feat = "";
+            if (i === 0) {
+                feat = "Danceability";
+            } else if (i === 1) {
+                feat = "Energy";
+            } else {
+                feat = "Positivity";
+            }
+
             if (fit.sigmas[i] === 1 && fit.stDevs[i] <= 0.15) {
                 scores[i] = 4;
+                featureInfo1[i] = "Perfect fit!"
+                featureInfo2[i] = `The ${feat} of your chosen song fits the chosen playlist perfectly! The playlist songs
+                all have very a similiar ${feat}, and your chosen song sits right in the middle of the distribution.`;
+                featureInfoColour[i] = "#1E9600";
             } else if (fit.sigmas[i] === 1 && fit.stDevs[i] > 0.15) {
                 scores[i] = 3;
-            } else if (fit.sigmas[i] === 2 && fit.stDevs[i] > 0.15) {
+                featureInfo1[i] = "Great fit!"
+                featureInfo2[i] = `The ${feat} of your chosen song fits the chosen playlist very well. The playlist songs
+                don't follow a close pattern for ${feat}, and the values vary a lot. This means ${feat} isn't so important
+                for this playlist, but your song still fits well!`;
+                featureInfoColour[i] = "#77b300";
+            } else if ((fit.sigmas[i] === 2 || fit.sigmas[i] === 3) && fit.stDevs[i] > 0.15) {
                 scores[i] = 2;
+                featureInfo1[i] = "Average fit"
+                featureInfo2[i] = `The ${feat} of your chosen song isn't a great fit. The playlist songs don't
+                follow a close pattern for ${feat} however, so ${feat} isn't that important for this playlist. There is a lot of
+                variation, so your song could potentially still fit here!`;
+                featureInfoColour[i] = "#ffcc00";
             } else if (fit.sigmas[i] === 2 && fit.stDevs[i] <= 0.15) {
                 scores[i] = 1;
+                featureInfo1[i] = "Poor fit";
+                featureInfo2[i] = `The ${feat} of your chosen song doesn't fit the chosen playlist well. The ${feat} of the songs on this
+                playlist follow a very tight pattern, and your song's ${feat} doesn't follow this pattern. This is a sign
+                that your song may not be right for this playlist.`;
+                featureInfoColour[i] = "#cc2900";
             } else {
                 scores[i] = 0;
+                featureInfo1[i] = "Terrible fit";
+                featureInfo2[i] = `The ${feat} of your chosen song does not fit the playlist well. It falls very far outside
+                the distribution. This is a sign that your song probably isn't right for this playlist.`;
+                featureInfoColour[i] = "#e60000";
             }
         }
         console.log("Score: ", scores);
         let totalScore = [scores.reduce((a, b) => a + b, 0)];
         this.setState({
-            score: totalScore
+            score: totalScore,
+            featureInfo1: featureInfo1,
+            featureInfo2: featureInfo2,
+            featureInfoColour: featureInfoColour,
+            fit: fit
         })
         this.generateScoreChart(totalScore);
         console.log(totalScore);
@@ -330,6 +377,12 @@ class PlaylistResultsPage extends React.Component {
             n++;
         });
 
+        if (n < 20) {
+            this.setState({
+                errorVis: "visible"
+            })
+        }
+
         let values = [data.audio_features[0].danceability, data.audio_features[0].energy, data.audio_features[0].valence];
         let means = [danceArray.reduce((a,b) => a+b)/n, energyArray.reduce((a,b) => a+b)/n, valenceArray.reduce((a,b) => a+b)/n];
         let stDevs = [Math.sqrt(danceArray.map(x => Math.pow(x-means[0],2)).reduce((a,b) => a+b)/n),
@@ -391,7 +444,7 @@ class PlaylistResultsPage extends React.Component {
                     </p>
                 </div>
                 <div className="Container-play">
-                    <div style={{display: "flex", fontSize: "2.5vh", padding: "1vh", textAlign: "left", paddingLeft: "3vh", alignContent: "left"}}><InfoOutlinedIcon style={{paddingRight: "0.3vw"}} /> Hover over an item for more information.</div>
+                    <div style={{display: "flex", fontSize: "2.5vh", padding: "1vh", textAlign: "left", paddingLeft: "3vh", alignContent: "left", color: "red", visibility: this.state.errorVis}}><ErrorOutlineIcon style={{paddingRight: "0.3vw"}} />This playlist has less than 20 songs. Choose a playlist with more songs for a more accurate analysis.</div>
                     <div>
                         <h2>Song Fit:<button style={{display: "flex", marginLeft: "2vw"}}>What's this?</button></h2>
                         <hr/>
@@ -409,15 +462,46 @@ class PlaylistResultsPage extends React.Component {
                     <div className="Chart-play">
                         <p>{this.state.danceHist}</p>
                     </div>
-                    <div>Danceability info</div>
+                    <div>
+                        <h2>Danceability:<h2 style={{color: this.state.featureInfoColour[0]}}>{this.state.featureInfo1[0]}</h2></h2>
+                        <hr/>
+                        <p>{this.state.featureInfo2[0]}</p>
+                    </div>
                     <div>
                         <p>{this.state.energyHist}</p>
                     </div>
-                    <div>Energy info</div>
+                    <div>
+                        <h2>Energy:<h2 style={{color: this.state.featureInfoColour[1]}}>{this.state.featureInfo1[1]}</h2></h2>
+                        <hr/>
+                        <p>{this.state.featureInfo2[1]}</p>
+                    </div>
                     <div>
                         <p>{this.state.valenceHist}</p>
                     </div>
-                    <div>Valence info</div>
+                    <div>
+                        <h2>Positivity:<h2 style={{color: this.state.featureInfoColour[2]}}>{this.state.featureInfo1[2]}</h2></h2>
+                        <hr/>
+                        <p>{this.state.featureInfo2[2]}</p>
+                    </div>
+                    <div id="Detail">
+                        <h2>Detailed information:</h2>
+                        <hr/>
+                        <h2>Danceability</h2>
+                        <p>
+                            The standard deviation of Danceability values for the songs in this playlist is {this.state.fit.stDevs[0].toFixed(3)}.
+                            The danceability of your song falls within {this.state.fit.sigmas[0]} σ (sigma) of the distribution.
+                        </p>
+                        <h2>Energy</h2>
+                        <p>
+                            The standard deviation of Energy values for the songs in this playlist is {this.state.fit.stDevs[1].toFixed(3)}.
+                            The Energy of your song falls within {this.state.fit.sigmas[1]} σ (sigma) of the distribution.
+                        </p>
+                        <h2>Positivity</h2>
+                        <p>
+                            The standard deviation of Positivity values for the songs in this playlist is {this.state.fit.stDevs[2].toFixed(3)}.
+                            The Positivity of your song falls within {this.state.fit.sigmas[2]} σ (sigma) of the distribution.
+                        </p>
+                    </div>
                 </div>
             </div>
         )

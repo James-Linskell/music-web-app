@@ -9,6 +9,7 @@ import {HorizontalBar} from "react-chartjs-2";
 import Histogram from "../components/Histogram";
 import * as Vibrant from 'node-vibrant';
 import BackgroundSvgPaths from "../components/BackgroundSvgPaths";
+import ColorThief from 'color-thief';
 
 class PlaylistResultsPage extends React.Component {
     constructor() {
@@ -59,7 +60,7 @@ class PlaylistResultsPage extends React.Component {
         plTrackIds = plTrackIds.substring(0, (plTrackIds.length) - 1);
         // Index 0 is the song being fitted to the playlist:
         const featureData = await FetchTrackFeatures.fetchData(this.props.location.search.substring(1, this.props.location.search.length) +
-        ',' + plTrackIds, 'audio-features/?ids=');
+            ',' + plTrackIds, 'audio-features/?ids=');
         // Error handling if no search results are returned:
         if (featureData.length === 0) {
             this.setState({
@@ -70,20 +71,27 @@ class PlaylistResultsPage extends React.Component {
         }
 
         // Get bg colours using Vibrant promise:
-        Vibrant.from(this.props.location.state.art).getPalette()
-            .then((palette) => {
-                console.log(palette);
-                let rgb1 = palette.Vibrant.getRgb();
-                let rgb2 = palette.DarkMuted.getRgb();
-                let rgb3 = palette.DarkVibrant.getRgb();
-                let rgb4 = palette.LightVibrant.getRgb();
-            this.setState({
-                albumColours1: `rgba(${rgb1[0]}, ${rgb1[1]}, ${rgb1[2]}, 0.6)`,
-                albumColours2: `rgba(${rgb2[0]}, ${rgb2[1]}, ${rgb2[2]}, 0.6)`,
-                albumColours3: `rgba(${rgb3[0]}, ${rgb3[1]}, ${rgb3[2]}, 0.6)`,
-                albumColours4: `rgba(${rgb4[0]}, ${rgb4[1]}, ${rgb4[2]}, 0.6)`
-            })}
-        )
+        const img = document.querySelector('img');
+        img.crossOrigin = "Anonymous";
+        const colorThief = new ColorThief();
+        // Make sure image is finished loading
+        img.addEventListener('load', function() {
+            let colour = colorThief.getColor(img);
+            Vibrant.from(img).getPalette()
+                .then((palette) => {
+                    console.log(palette);
+                    let rgb1 = palette.Vibrant.getRgb();
+                    let rgb2 = palette.DarkMuted.getRgb();
+                    let rgb3 = palette.DarkVibrant.getRgb();
+                    let rgb4 = palette.LightVibrant.getRgb();
+                    this.setState({
+                        albumColours1: `rgba(${rgb1[0]}, ${rgb1[1]}, ${rgb1[2]}, 1)`,
+                        albumColours2: `rgba(${rgb2[0]}, ${rgb2[1]}, ${rgb2[2]}, 1)`,
+                        albumColours3: `rgba(${rgb3[0]}, ${rgb3[1]}, ${rgb3[2]}, 1)`,
+                        albumColours4: `rgba(${rgb4[0]}, ${rgb4[1]}, ${rgb4[2]}, 1)`
+                    })}
+                )
+        }.bind(this));
 
         let fit = await this.simplifyData(featureData);
         let scores = [];

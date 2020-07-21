@@ -8,6 +8,7 @@ import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import {HorizontalBar} from "react-chartjs-2";
 import Histogram from "../components/Histogram";
 import * as Vibrant from 'node-vibrant';
+import BackgroundSvgPaths from "../components/BackgroundSvgPaths";
 
 class PlaylistResultsPage extends React.Component {
     constructor() {
@@ -26,7 +27,11 @@ class PlaylistResultsPage extends React.Component {
             fit: {
                 stDevs: [0, 0, 0],
                 sigmas: [0, 0, 0]
-            }
+            },
+            albumColours1: "white",
+            albumColours2: "white",
+            albumColours3: "white",
+            albumColours4: "white",
         }
     }
 
@@ -68,9 +73,15 @@ class PlaylistResultsPage extends React.Component {
         Vibrant.from(this.props.location.state.art).getPalette()
             .then((palette) => {
                 console.log(palette);
-                let rgb = palette.Vibrant.getRgb();
+                let rgb1 = palette.Vibrant.getRgb();
+                let rgb2 = palette.DarkMuted.getRgb();
+                let rgb3 = palette.DarkVibrant.getRgb();
+                let rgb4 = palette.LightVibrant.getRgb();
             this.setState({
-                albumColours: `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.8)`
+                albumColours1: `rgba(${rgb1[0]}, ${rgb1[1]}, ${rgb1[2]}, 0.6)`,
+                albumColours2: `rgba(${rgb2[0]}, ${rgb2[1]}, ${rgb2[2]}, 0.6)`,
+                albumColours3: `rgba(${rgb3[0]}, ${rgb3[1]}, ${rgb3[2]}, 0.6)`,
+                albumColours4: `rgba(${rgb4[0]}, ${rgb4[1]}, ${rgb4[2]}, 0.6)`
             })}
         )
 
@@ -429,78 +440,86 @@ class PlaylistResultsPage extends React.Component {
     //CHANGE: get new audio data every time, or the user can't bookmark this page ///////////////////////////////////////////
     render() {
         return (
-            <div className="Main-play" style={{backgroundColor: this.state.albumColours}}>
-                <div style={{opacity: 0.7, position: "absolute", zIndex: "-2", width: "100vw", overflow: "hidden"}}>
+            <div className="Main-play" style={{backgroundColor: this.state.albumColours1}}>
+                <div style={{width: "1vw", marginLeft: "-1vw"}}>
+                    <BackgroundSvgPaths fill={this.state.albumColours2}/>
+                    <BackgroundSvgPaths fill={this.state.albumColours3} shiftDown="-100vh"/>
+                    <BackgroundSvgPaths fill={this.state.albumColours4} shiftDown="100vh"/>
+                    <BackgroundSvgPaths fill={this.state.albumColours2} shiftDown="200vh"/>
                 </div>
-                <div className="Header-play">
-                    <p>Playlist Analysis</p>
-                    <p id="Song-card-play">
-                        <SongCard
-                            name={this.props.location.state.name}
-                            album={this.props.location.state.album}
-                            artist={this.props.location.state.artist}
-                            artwork={this.props.location.state.art}
-                        />
-                    </p>
-                </div>
-                <div className="Container-play">
-                    <div style={{display: "flex", fontSize: "2.5vh", padding: "1vh", textAlign: "left", paddingLeft: "3vh", alignContent: "left", color: "red", visibility: this.state.errorVis}}><ErrorOutlineIcon style={{paddingRight: "0.3vw"}} />This playlist has less than 20 songs. Choose a playlist with more songs for a more accurate analysis.</div>
-                    <div>
-                        <h2>Song Fit:<button style={{display: "flex", marginLeft: "2vw"}}>What's this?</button></h2>
-                        <hr/>
-                        <p>
-                            <HorizontalBar className="Chart" data={this.state.chartData} options={this.state.chartOptions} height="60vh"/>
+                <div>
+                    <div className="Header-play">
+                        <p>Playlist Analysis</p>
+                        <p id="Song-card-play">
+                            <SongCard
+                                name={this.props.location.state.name}
+                                album={this.props.location.state.album}
+                                artist={this.props.location.state.artist}
+                                artwork={this.props.location.state.art}
+                            />
                         </p>
-                        <div style={{ display: 'flex', maxWidth: 900 }}>
+                    </div>
+                    <div className="Container-play">
+                        <div style={{display: "flex", margin: "0vh", fontSize: "2.5vh", padding: "0vh", textAlign: "left", paddingLeft: "3vh", alignContent: "left", color: "red", visibility: this.state.errorVis}}><ErrorOutlineIcon style={{paddingRight: "0.3vw"}} />This playlist has less than 20 songs. Choose a playlist with more songs for a more accurate analysis.</div>
+                        <div>
+                            <h2>Song Fit:<button style={{display: "flex", marginLeft: "2vw"}}>What's this?</button></h2>
+                            <hr/>
+                            <p>information</p>
+                            <p>
+                                <HorizontalBar className="Chart" data={this.state.chartData} options={this.state.chartOptions} height="60vh"/>
+                            </p>
+                            <p>
+                                information
+                            </p>
                         </div>
-                    </div>
-                    <div>
-                        <h2>Song score:</h2>
-                        <hr/>
-                        <p>Score: {(this.state.score/12) * 100} %</p>
-                    </div>
-                    <div className="Chart-play">
-                        <p>{this.state.danceHist}</p>
-                    </div>
-                    <div>
-                        <h2>Danceability:<h2 style={{color: this.state.featureInfoColour[0]}}>{this.state.featureInfo1[0]}</h2></h2>
-                        <hr/>
-                        <p>{this.state.featureInfo2[0]}</p>
-                    </div>
-                    <div>
-                        <p>{this.state.energyHist}</p>
-                    </div>
-                    <div>
-                        <h2>Energy:<h2 style={{color: this.state.featureInfoColour[1]}}>{this.state.featureInfo1[1]}</h2></h2>
-                        <hr/>
-                        <p>{this.state.featureInfo2[1]}</p>
-                    </div>
-                    <div>
-                        <p>{this.state.valenceHist}</p>
-                    </div>
-                    <div>
-                        <h2>Positivity:<h2 style={{color: this.state.featureInfoColour[2]}}>{this.state.featureInfo1[2]}</h2></h2>
-                        <hr/>
-                        <p>{this.state.featureInfo2[2]}</p>
-                    </div>
-                    <div id="Detail">
-                        <h2>Detailed information:</h2>
-                        <hr/>
-                        <h2>Danceability</h2>
-                        <p>
-                            The standard deviation of Danceability values for the songs in this playlist is {this.state.fit.stDevs[0].toFixed(3)}.
-                            The danceability of your song falls within {this.state.fit.sigmas[0]} σ (sigma) of the distribution.
-                        </p>
-                        <h2>Energy</h2>
-                        <p>
-                            The standard deviation of Energy values for the songs in this playlist is {this.state.fit.stDevs[1].toFixed(3)}.
-                            The Energy of your song falls within {this.state.fit.sigmas[1]} σ (sigma) of the distribution.
-                        </p>
-                        <h2>Positivity</h2>
-                        <p>
-                            The standard deviation of Positivity values for the songs in this playlist is {this.state.fit.stDevs[2].toFixed(3)}.
-                            The Positivity of your song falls within {this.state.fit.sigmas[2]} σ (sigma) of the distribution.
-                        </p>
+                        <div>
+                            <h2>Song score:</h2>
+                            <hr/>
+                            <p>Score: {(this.state.score/12) * 100} %</p>
+                        </div>
+                        <div className="Chart-play">
+                            <p>{this.state.danceHist}</p>
+                        </div>
+                        <div>
+                            <h2>Danceability:<h2 style={{color: this.state.featureInfoColour[0]}}>{this.state.featureInfo1[0]}</h2></h2>
+                            <hr/>
+                            <p>{this.state.featureInfo2[0]}</p>
+                        </div>
+                        <div>
+                            <p>{this.state.energyHist}</p>
+                        </div>
+                        <div>
+                            <h2>Energy:<h2 style={{color: this.state.featureInfoColour[1]}}>{this.state.featureInfo1[1]}</h2></h2>
+                            <hr/>
+                            <p>{this.state.featureInfo2[1]}</p>
+                        </div>
+                        <div>
+                            <p>{this.state.valenceHist}</p>
+                        </div>
+                        <div>
+                            <h2>Positivity:<h2 style={{color: this.state.featureInfoColour[2]}}>{this.state.featureInfo1[2]}</h2></h2>
+                            <hr/>
+                            <p>{this.state.featureInfo2[2]}</p>
+                        </div>
+                        <div id="Detail">
+                            <h2>Detailed information:</h2>
+                            <hr/>
+                            <h2>Danceability</h2>
+                            <p>
+                                The standard deviation of Danceability values for the songs in this playlist is {this.state.fit.stDevs[0].toFixed(3)}.
+                                The danceability of your song falls within {this.state.fit.sigmas[0]} σ (sigma) of the distribution.
+                            </p>
+                            <h2>Energy</h2>
+                            <p>
+                                The standard deviation of Energy values for the songs in this playlist is {this.state.fit.stDevs[1].toFixed(3)}.
+                                The Energy of your song falls within {this.state.fit.sigmas[1]} σ (sigma) of the distribution.
+                            </p>
+                            <h2>Positivity</h2>
+                            <p>
+                                The standard deviation of Positivity values for the songs in this playlist is {this.state.fit.stDevs[2].toFixed(3)}.
+                                The Positivity of your song falls within {this.state.fit.sigmas[2]} σ (sigma) of the distribution.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

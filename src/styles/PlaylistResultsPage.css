@@ -2,6 +2,10 @@ body {
 
 }
 
+.cls-1 {
+    fill:red;
+}
+
 hr {
     border-top: 1px solid black;
     border-bottom: 1px solid dimgrey;
@@ -25,17 +29,20 @@ hr {
 }
 
 .Header-play {
-    background-color: rgba(0, 0, 10, .88);
+    background: rgba(0, 0, 10, .88);
     margin-top: 2vh;
     margin-bottom: 5vh;
     padding-right: 3vh;
     padding-left: 3vh;
+    position: relative;
+
 }
 
 .Container-play div {
     background: rgba(0, 0, 10, .88);
     transition: all 0.1s ease-in;
     padding-bottom: 1vh;
+    z-index: 2;
 }
 
 .Container-play div:hover {
@@ -102,11 +109,15 @@ hr {
     .Container-play {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-gap: 2vh;
+        grid-row-gap: 2vh;
         margin: 2vh;
         margin-left: 12vw;
         margin-right: 12vw;
         margin-bottom: 15vh;
+    }
+    .Container-play div {
+        margin-bottom: 3vh;
+        padding: 5vh;
     }
 
     .Container-play div h2 {

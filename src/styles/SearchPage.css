@@ -77,17 +77,17 @@
   align-self: center;
 }
 
-.Cards-p:hover {
-  background-color: white;
-  z-index: 1;
-}
-
 .Card-p {
   display: inline-block;
   margin-right: 0.5vw;
   margin-left: 0.5vw;
   margin-top: 0vh;
   cursor: pointer;
+}
+
+.Card-p:hover {
+  background-color: white;
+  z-index: 1;
 }
 
 .Playlist-p {

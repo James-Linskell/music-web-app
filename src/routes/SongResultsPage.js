@@ -7,9 +7,9 @@ import { ComposableMap, Geographies, Geography } from "react-simple-maps"
 import Tooltip from "@material-ui/core/Tooltip";
 import { withStyles } from '@material-ui/core/styles';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-
-// https://www.youtube.com/watch?v=-qOe8lBAChE
-// https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout
+import ColorThief from "color-thief";
+import * as Vibrant from "node-vibrant";
+import BackgroundSvgPaths from "../components/BackgroundSvgPaths";
 
 const LightTooltip = withStyles((theme) => ({
     tooltip: {
@@ -23,6 +23,11 @@ const LightTooltip = withStyles((theme) => ({
         color: theme.palette.common.white,
     }
 }))(Tooltip);
+
+const RGB_Linear_Shade=(p,c)=>{
+    var i=parseInt,r=Math.round,[a,b,c,d]=c.split(","),P=p<0,t=P?0:255*p,P=P?1+p:1-p;
+    return"rgb"+(d?"a(":"(")+r(i(a[3]=="a"?a.slice(5):a.slice(4))*P+t)+","+r(i(b)*P+t)+","+r(i(c)*P+t)+(d?","+d:")");
+}
 
 // this.props.location.search gives the song id!!!
 class SongResultsPage extends React.Component {
@@ -50,7 +55,11 @@ class SongResultsPage extends React.Component {
             instrumental: null,
             musicality: null,
             key: null,
-            artists: null
+            artists: null,
+            albumColours1: "white",
+            albumColours2: "white",
+            albumColours3: "white",
+            albumColours4: "white",
         }
     }
 
@@ -60,12 +69,36 @@ class SongResultsPage extends React.Component {
         await this.waitFortrack();
         await this.waitForAlbum();
         this.generateSongFeatures();
-        this.setState({
-            bgImage: <img
-            src={this.state.rawTrack.album.images[0].url}
-            style={{width: "100vw", height: "auto", overflow: "hidden", display: "block"}} alt="album art"
-            />
-        })
+        this.setBgColours();
+    }
+
+    setBgColours() {
+        // Get bg colours using Vibrant promise:
+        const img = document.querySelector('img');
+        img.crossOrigin = "Anonymous";
+        const colorThief = new ColorThief();
+        // Make sure image is finished loading
+        img.addEventListener('load', function() {
+            let colour = colorThief.getColor(img);
+            Vibrant.from(img).getPalette()
+                .then((palette) => {
+                    console.log(palette);
+                    let rgb1 = palette.Vibrant.getRgb();
+                    let rgb2 = palette.DarkVibrant.getRgb();
+                    let rgb3 = palette.DarkMuted.getRgb();
+                    let rgb4 = palette.Muted.getRgb();
+                    rgb1 = RGB_Linear_Shade(0.3, ("rgb(" + rgb1[0] + "," + rgb1[1] + "," + rgb1[2] + ")"));
+                    rgb2 = RGB_Linear_Shade(0.3, ("rgb(" + rgb2[0] + "," + rgb2[1] + "," + rgb2[2] + ")"));
+                    rgb3 = RGB_Linear_Shade(0.3, ("rgb(" + rgb3[0] + "," + rgb3[1] + "," + rgb3[2] + ")"));
+                    rgb4 = RGB_Linear_Shade(0.3, ("rgb(" + rgb4[0] + "," + rgb4[1] + "," + rgb4[2] + ")"));
+                    this.setState({
+                        albumColours1: rgb1,
+                        albumColours2: rgb2,
+                        albumColours3: rgb3,
+                        albumColours4: rgb4
+                    })}
+                )
+        }.bind(this));
     }
 
     waitFortrack = async () => {
@@ -306,9 +339,12 @@ class SongResultsPage extends React.Component {
 
     render() {
         return (
-            <div className="Main">
-                <div style={{opacity: 0.7, position: "absolute", zIndex: "-2", width: "100vw", overflow: "hidden"}}>
-                    {this.state.bgImage}{this.state.bgImage}{this.state.bgImage}
+            <div className="Main" style={{backgroundColor: this.state.albumColours1}}>
+                <div style={{width: "1vw", marginLeft: "-1vw"}}>
+                    <BackgroundSvgPaths fill={this.state.albumColours2}/>
+                    <BackgroundSvgPaths fill={this.state.albumColours3} shiftDown="-100vh"/>
+                    <BackgroundSvgPaths fill={this.state.albumColours4} shiftDown="100vh"/>
+                    <BackgroundSvgPaths fill={this.state.albumColours2} shiftDown="200vh"/>
                 </div>
                 <div className="Header">
                     <p>Song Analysis</p>

@@ -11,6 +11,11 @@ import * as Vibrant from 'node-vibrant';
 import BackgroundSvgPaths from "../components/BackgroundSvgPaths";
 import ColorThief from 'color-thief';
 
+const RGB_Linear_Shade=(p,c)=>{
+    var i=parseInt,r=Math.round,[a,b,c,d]=c.split(","),P=p<0,t=P?0:255*p,P=P?1+p:1-p;
+    return"rgb"+(d?"a(":"(")+r(i(a[3]=="a"?a.slice(5):a.slice(4))*P+t)+","+r(i(b)*P+t)+","+r(i(c)*P+t)+(d?","+d:")");
+}
+
 class PlaylistResultsPage extends React.Component {
     constructor() {
         super();
@@ -81,14 +86,18 @@ class PlaylistResultsPage extends React.Component {
                 .then((palette) => {
                     console.log(palette);
                     let rgb1 = palette.Vibrant.getRgb();
-                    let rgb2 = palette.DarkMuted.getRgb();
-                    let rgb3 = palette.DarkVibrant.getRgb();
-                    let rgb4 = palette.LightVibrant.getRgb();
+                    let rgb2 = palette.DarkVibrant.getRgb();
+                    let rgb3 = palette.DarkMuted.getRgb();
+                    let rgb4 = palette.Muted.getRgb();
+                    rgb1 = RGB_Linear_Shade(0.3, ("rgb(" + rgb1[0] + "," + rgb1[1] + "," + rgb1[2] + ")"));
+                    rgb2 = RGB_Linear_Shade(0.3, ("rgb(" + rgb2[0] + "," + rgb2[1] + "," + rgb2[2] + ")"));
+                    rgb3 = RGB_Linear_Shade(0.3, ("rgb(" + rgb3[0] + "," + rgb3[1] + "," + rgb3[2] + ")"));
+                    rgb4 = RGB_Linear_Shade(0.3, ("rgb(" + rgb4[0] + "," + rgb4[1] + "," + rgb4[2] + ")"));
                     this.setState({
-                        albumColours1: `rgba(${rgb1[0]}, ${rgb1[1]}, ${rgb1[2]}, 1)`,
-                        albumColours2: `rgba(${rgb2[0]}, ${rgb2[1]}, ${rgb2[2]}, 1)`,
-                        albumColours3: `rgba(${rgb3[0]}, ${rgb3[1]}, ${rgb3[2]}, 1)`,
-                        albumColours4: `rgba(${rgb4[0]}, ${rgb4[1]}, ${rgb4[2]}, 1)`
+                        albumColours1: rgb1,
+                        albumColours2: rgb2,
+                        albumColours3: rgb3,
+                        albumColours4: rgb4
                     })}
                 )
         }.bind(this));
@@ -144,6 +153,23 @@ class PlaylistResultsPage extends React.Component {
                 featureInfoColour[i] = "#e60000";
             }
         }
+
+        /*let summaryString = "The ";
+        for (let i = 0; i < 3; i++) {
+            let feat = "";
+            if (i === 0) {
+                feat = "Danceability";
+            } else if (i === 1) {
+                feat = "Energy";
+            } else {
+                feat = "Positivity";
+            }
+            if (featureInfo1[i] === ("Perfect fit!" || "Great fit!")) {
+                summaryString += feat + ", ";
+            }
+
+        }*/
+
         console.log("Score: ", scores);
         let totalScore = [scores.reduce((a, b) => a + b, 0)];
         this.setState({
@@ -210,7 +236,7 @@ class PlaylistResultsPage extends React.Component {
             scales: {
                 yAxes: [{
                     ticks: {
-                        display: true,
+                        display: false,
                         fontColor: "white",
                     },
                     gridLines: {
@@ -219,9 +245,11 @@ class PlaylistResultsPage extends React.Component {
                     }
                 }],
                 xAxes: [{
+                    display: false,
                     barPercentage: 0.5,
                     ticks: {
-                        fontColor: "white",
+                        display: false,
+                        fontColor: "black",
                         fontSize: 14,
                         min: 0,
                         max: 12,
@@ -456,34 +484,24 @@ class PlaylistResultsPage extends React.Component {
                     <BackgroundSvgPaths fill={this.state.albumColours2} shiftDown="200vh"/>
                 </div>
                 <div>
-                    <div className="Header-play">
-                        <p>Playlist Analysis</p>
-                        <p id="Song-card-play">
-                            <SongCard
-                                name={this.props.location.state.name}
-                                album={this.props.location.state.album}
-                                artist={this.props.location.state.artist}
-                                artwork={this.props.location.state.art}
-                            />
-                        </p>
-                    </div>
                     <div className="Container-play">
                         <div style={{display: "flex", margin: "0vh", fontSize: "2.5vh", padding: "0vh", textAlign: "left", paddingLeft: "3vh", alignContent: "left", color: "red", visibility: this.state.errorVis}}><ErrorOutlineIcon style={{paddingRight: "0.3vw"}} />This playlist has less than 20 songs. Choose a playlist with more songs for a more accurate analysis.</div>
                         <div>
-                            <h2>Song Fit:<button style={{display: "flex", marginLeft: "2vw"}}>What's this?</button></h2>
-                            <hr/>
-                            <p>information</p>
-                            <p>
+                            <h2>{this.props.location.state.name}</h2>
+                            <h2>{this.props.location.state.artist}</h2>
+                            <p/>
+                            <p>{}</p>
+                            <p style={{backgroundColor: "white", padding: "0vh", paddingLeft: "0.25vw", margin: "1vw"}}>
                                 <HorizontalBar className="Chart" data={this.state.chartData} options={this.state.chartOptions} height="60vh"/>
                             </p>
                             <p>
-                                information
+                                <p style={{fontSize: "6vh"}}>{Math.round((this.state.score/12) * 100)}% Fit!</p>
                             </p>
                         </div>
-                        <div>
-                            <h2>Song score:</h2>
-                            <hr/>
-                            <p>Score: {(this.state.score/12) * 100} %</p>
+                        <div style={{margin: "0hv", padding: "0vh", justifyContent: "center", display: "flex"}}>
+                            <p>
+                                <img src={this.props.location.state.art} style={{margin: "2vh", height: "auto", width: "45vh", border: "0.3vh solid dimgrey"}}/>
+                            </p>
                         </div>
                         <div className="Chart-play">
                             <p>{this.state.danceHist}</p>
@@ -510,19 +528,37 @@ class PlaylistResultsPage extends React.Component {
                             <p>{this.state.featureInfo2[2]}</p>
                         </div>
                         <div id="Detail">
-                            <h2>Detailed information:</h2>
+                            <h2>Mood features explained:</h2>
                             <hr/>
-                            <h2>Danceability</h2>
-                            <p>
-                                The standard deviation of Danceability values for the songs in this playlist is {this.state.fit.stDevs[0].toFixed(3)}.
-                                The danceability of your song falls within {this.state.fit.sigmas[0]} σ (sigma) of the distribution.
-                            </p>
+                            <p>All mood feature data is taken from Spotify, who use algorithms to calculate the numbers shown.</p>
                             <h2>Energy</h2>
+                            <p>
+                                The 'Energy' of a song determines how energetic the song feels, and is a measure of intensity and musical activity, with energetic
+                                tracks feeling fast, busy and noisy. Energy is calculated by taking into account the dynamic range,
+                                the loudness, the timbre, and the onset rate (rate of notes played). Energy is determined on a scale of 0 - 10,
+                                with 10 being the most energetic.
+                            </p>
                             <p>
                                 The standard deviation of Energy values for the songs in this playlist is {this.state.fit.stDevs[1].toFixed(3)}.
                                 The Energy of your song falls within {this.state.fit.sigmas[1]} σ (sigma) of the distribution.
                             </p>
-                            <h2>Positivity</h2>
+                            <h2>Danceability</h2>
+                            <p>
+                                The 'Danceability' of a song describes how good a track is to dance to. This takes into account
+                                a number of musical elements including tempo, how stable the rhythm is, the strength of each beat,
+                                and how regular the musical pattern is. Dancibility is determined on a scale of 0 - 10, with 10 being
+                                the most danceable.
+                            </p>
+                            <p>
+                                The standard deviation of Danceability values for the songs in this playlist is {this.state.fit.stDevs[0].toFixed(3)}.
+                                The danceability of your song falls within {this.state.fit.sigmas[0]} σ (sigma) of the distribution.
+                            </p>
+                            <h2>Happiness</h2>
+                            <p>
+                                The happiness or 'Valence' of a song is how positive it sounds. Tracks with high valence sound more positive
+                                (happy, cheerful, euphoric) while tracks with low valence sound more negative (sad, depressed, angry).
+                                Happiness is determined on a scale of 0 - 10, with 10 being the most positive sounding.
+                            </p>
                             <p>
                                 The standard deviation of Positivity values for the songs in this playlist is {this.state.fit.stDevs[2].toFixed(3)}.
                                 The Positivity of your song falls within {this.state.fit.sigmas[2]} σ (sigma) of the distribution.

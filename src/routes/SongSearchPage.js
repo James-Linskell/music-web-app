@@ -2,8 +2,9 @@ import React from 'react';
 import hellify from '../hellify.png';
 import '../styles/SearchPage.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import FetchSearchData from '../components/FetchSearchData';
+import FetchData from '../Helpers/FetchData';
 import SongCard from "../components/SongCard";
+import GenerateInfo from '../Helpers/GenerateInfo'
 
 class SongSearchPage extends React.Component {
   /**
@@ -59,7 +60,8 @@ class SongSearchPage extends React.Component {
         prompt: "Searching for results..."
       });
     }, 1000);
-    const data = await FetchSearchData.fetchData(this.state.searchQuery, 'track');
+    // Get search results:
+    const data = await FetchData.fetchData(this.state.searchQuery, 'search','track');
     // Clear all timeouts (as search is complete):
     let id = setTimeout(function() {}, 0);
     while (id--) {
@@ -68,6 +70,7 @@ class SongSearchPage extends React.Component {
         prompt: null
       });
     }
+    // Set state to returned data:
     this.setState({songListRaw: data})
     // Error handling if no search results are returned:
     if (data.tracks.items.length === 0) {
@@ -77,7 +80,8 @@ class SongSearchPage extends React.Component {
       });
       return;
     }
-    this.generateSongInfo();
+    const songs = GenerateInfo.generateSongInfo(this.state.songListRaw.tracks.items);
+    this.setState({simplifiedSongList: songs});
     this.setState({
       results:
           <div className="Cards" >
@@ -92,7 +96,6 @@ class SongSearchPage extends React.Component {
    * @param songId
    */
   onCardClick(songId, name, album, artist, art) {
-    console.log("Click successful!! ID: " + songId)
     if (this.props.chain === "song") {
       this.props.history.push({
         pathname: '/songs',
@@ -111,22 +114,6 @@ class SongSearchPage extends React.Component {
         }
       });
     }
-  }
-
-  generateSongInfo() {
-    const songs = []
-
-    this.state.songListRaw.tracks.items.forEach(song => {
-          songs.push({
-            name: song.name,
-            artist: song.artists[0].name,
-            album: song.album.name,
-            art: song.album.images[1].url,
-            songId: song.id
-          });
-        }
-    );
-    this.setState({simplifiedSongList: songs})
   }
 
   populateGrid(data) {
@@ -184,7 +171,7 @@ class SongSearchPage extends React.Component {
                   <button id="searchclick" type="submit">Search</button>
                 </form>
               </div>
-              <div style={{marginTop: "3vh", position: "absolute", top: "40vh"}}>
+              <div style={{marginTop: "3vh", position: "absolute", top: "45vh"}}>
                 {this.state.prompt}
               </div>
             </header>

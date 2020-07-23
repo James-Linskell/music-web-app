@@ -1,9 +1,6 @@
 import React from 'react';
-import {BrowserRouter as Router, Route} from "react-router-dom";
-import FetchTrackFeatures from "../components/FetchTrackFeatures";
-import SongCard from "../components/SongCard";
+import FetchData from "../Helpers/FetchData";
 import '../styles/PlaylistResultsPage.css'
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import {HorizontalBar} from "react-chartjs-2";
 import Histogram from "../components/Histogram";
@@ -45,10 +42,14 @@ class PlaylistResultsPage extends React.Component {
         this.waitFortracks();
     }
 
+    /*
+ * todo:
+ *  refactor some of this to helper
+ */
     waitFortracks = async () => {
         const songId = this.props.location.search;
         const plId = this.props.location.hash;
-        const plTracks = await FetchTrackFeatures.fetchData('', 'playlists/' +
+        const plTracks = await FetchData.fetchData('', 'analysis', 'playlists/' +
             plId.substring(1, this.props.location.hash.length) + '/tracks');
         let plTrackIds = '';
         let n = 0;
@@ -64,8 +65,8 @@ class PlaylistResultsPage extends React.Component {
         // Remove final comma:
         plTrackIds = plTrackIds.substring(0, (plTrackIds.length) - 1);
         // Index 0 is the song being fitted to the playlist:
-        const featureData = await FetchTrackFeatures.fetchData(this.props.location.search.substring(1, this.props.location.search.length) +
-            ',' + plTrackIds, 'audio-features/?ids=');
+        const featureData = await FetchData.fetchData(this.props.location.search.substring(1, this.props.location.search.length) +
+            ',' + plTrackIds, 'analysis', 'audio-features/?ids=');
         // Error handling if no search results are returned:
         if (featureData.length === 0) {
             this.setState({
@@ -154,23 +155,6 @@ class PlaylistResultsPage extends React.Component {
             }
         }
 
-        /*let summaryString = "The ";
-        for (let i = 0; i < 3; i++) {
-            let feat = "";
-            if (i === 0) {
-                feat = "Danceability";
-            } else if (i === 1) {
-                feat = "Energy";
-            } else {
-                feat = "Positivity";
-            }
-            if (featureInfo1[i] === ("Perfect fit!" || "Great fit!")) {
-                summaryString += feat + ", ";
-            }
-
-        }*/
-
-        console.log("Score: ", scores);
         let totalScore = [scores.reduce((a, b) => a + b, 0)];
         this.setState({
             score: totalScore,
@@ -180,9 +164,12 @@ class PlaylistResultsPage extends React.Component {
             fit: fit
         })
         this.generateScoreChart(totalScore);
-        console.log(totalScore);
     };
 
+    /*
+ * todo:
+ *  maybe refactor this to helper
+ */
     generateScoreChart(score) {
         const chartData = {
             labels: ["Score"],
@@ -268,6 +255,10 @@ class PlaylistResultsPage extends React.Component {
         })
     }
 
+    /*
+ * todo:
+ *  refactor this to helper
+ */
     simplifyData = async (data) => {
         let dance = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         let energy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

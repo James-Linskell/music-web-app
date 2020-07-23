@@ -2,8 +2,6 @@ import React from 'react';
 import {BrowserRouter as Router, Route, Redirect, Switch, Link } from "react-router-dom";
 import HomePage from "./routes/HomePage";
 import SongSearchPage from "./routes/SongSearchPage";
-import SongPage from "./routes/SongPage";
-import PlaylistPage from "./routes/PlaylistPage";
 import PlaylistSearchPage from "./routes/PlaylistSearchPage";
 import AboutPage from "./routes/AboutPage";
 import SongResultsPage from "./routes/SongResultsPage";

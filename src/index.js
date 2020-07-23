@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './styles/index.css';
-import SongSearchPage from './routes/SongSearchPage';
 import * as serviceWorker from './serviceWorker';
 import App from './App';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import FetchTrackFeatures from "../components/FetchTrackFeatures";
+import FetchData from "../Helpers/FetchData";
 import "../styles/SongResultsPage.css";
 import {Bar, HorizontalBar} from 'react-chartjs-2';
 import SongCard from "../components/SongCard";
@@ -24,6 +24,10 @@ const LightTooltip = withStyles((theme) => ({
     }
 }))(Tooltip);
 
+/*
+ * todo:
+ *  refactor this to helper
+ */
 const RGB_Linear_Shade=(p,c)=>{
     var i=parseInt,r=Math.round,[a,b,c,d]=c.split(","),P=p<0,t=P?0:255*p,P=P?1+p:1-p;
     return"rgb"+(d?"a(":"(")+r(i(a[3]=="a"?a.slice(5):a.slice(4))*P+t)+","+r(i(b)*P+t)+","+r(i(c)*P+t)+(d?","+d:")");
@@ -101,9 +105,13 @@ class SongResultsPage extends React.Component {
         }.bind(this));
     }
 
+    /*
+     * todo:
+     *  refactor some of this to helper
+     */
     waitFortrack = async () => {
         const songId = this.props.location.search;
-        const data = await FetchTrackFeatures.fetchData(songId.substring(1, songId.length), 'tracks/');
+        const data = await FetchData.fetchData(songId.substring(1, songId.length), 'analysis', 'tracks/');
         // Error handling if no search results are returned:
         if (data.length === 0) {
             this.setState({
@@ -152,9 +160,13 @@ class SongResultsPage extends React.Component {
 
     };
 
+    /*
+ * todo:
+ *  refactor some of this to helper
+ */
     waitForFeatures = async () => {
         const songId = this.props.location.search;
-        const data = await FetchTrackFeatures.fetchData(songId.substring(1, songId.length), 'audio-features/');
+        const data = await FetchData.fetchData(songId.substring(1, songId.length), 'analysis', 'audio-features/');
         // Error handling if no search results are returned:
         if (data.length === 0) {
             this.setState({
@@ -238,7 +250,7 @@ class SongResultsPage extends React.Component {
             return;
         }
         const songId = this.props.location.search;
-        const data = await FetchTrackFeatures.fetchData(songId.substring(1, songId.length), 'audio-analysis/');
+        const data = await FetchData.fetchData(songId.substring(1, songId.length), 'analysis', 'audio-analysis/');
         // Error handling if no search results are returned:
         if (data.length === 0) {
             this.setState({
@@ -255,7 +267,7 @@ class SongResultsPage extends React.Component {
             return;
         }
         const songId = this.props.location.search;
-        const data = await FetchTrackFeatures.fetchData(this.state.rawTrack.album.id, 'albums/');
+        const data = await FetchData.fetchData(this.state.rawTrack.album.id, 'analysis', 'albums/');
         // Error handling if no search results are returned:
         if (data.length === 0) {
             this.setState({

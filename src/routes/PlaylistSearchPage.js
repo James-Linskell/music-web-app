@@ -2,8 +2,9 @@ import React from 'react';
 import hellify from '../hellify.png';
 import '../styles/SearchPage.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import FetchSearchData from '../components/FetchSearchData';
+import FetchData from '../Helpers/FetchData';
 import SongCard from "../components/SongCard";
+import GenerateInfo from "../Helpers/GenerateInfo";
 
 class PlaylistSearchPage extends React.Component {
     /**
@@ -59,7 +60,8 @@ class PlaylistSearchPage extends React.Component {
                 prompt: "Searching for results..."
             });
         }, 1000);
-        const data = await FetchSearchData.fetchData(this.state.searchQuery, 'playlist');
+        // Fetch search data:
+        const data = await FetchData.fetchData(this.state.searchQuery,'search','playlist');
         // Clear all timeouts (as search is complete):
         let id = setTimeout(function() {}, 0);
         while (id--) {
@@ -68,6 +70,7 @@ class PlaylistSearchPage extends React.Component {
                 prompt: null
             });
         }
+        // Set state to returned data:
         this.setState({playlistsRaw: data})
         // Error handling if no search results are returned:
         if (data.playlists.items.length === 0) {
@@ -77,7 +80,8 @@ class PlaylistSearchPage extends React.Component {
             });
             return;
         }
-        this.generatePlaylistInfo();
+        const playlists = GenerateInfo.generatePlaylistInfo(this.state.playlistsRaw.playlists.items);
+        this.setState({playlistIds: playlists});
         this.setState({
             results:
                 <div className="Cards" style={{gridGap: "5vh"}}>
@@ -92,7 +96,6 @@ class PlaylistSearchPage extends React.Component {
      * @param songId
      */
     onCardClick(playlistId, name, album, artist, art) {
-        console.log("Click successful!! ID: " + playlistId)
         this.props.history.push({
             pathname: '/playlists',
             search: this.props.location.search,
@@ -105,18 +108,6 @@ class PlaylistSearchPage extends React.Component {
             }
         });
         console.log(this.props.location.state);
-    }
-
-    generatePlaylistInfo() {
-        const playlists = []
-
-        this.state.playlistsRaw.playlists.items.forEach(playlist => {
-                playlists.push({
-                    playlistId: playlist.id
-                });
-            }
-        );
-        this.setState({playlistIds: playlists})
     }
 
     populateGrid(data) {
@@ -190,7 +181,7 @@ class PlaylistSearchPage extends React.Component {
                                 /></p>
                             </div>
                         </div>
-                        <div style={{marginTop: "3vh", position: "absolute", top: "40vh"}}>
+                        <div style={{marginTop: "3vh", position: "absolute", top: "45vh"}}>
                             {this.state.prompt}
                         </div>
                     </header>

@@ -16,8 +16,8 @@ hr {
     color: white;
     font-size: 4vh;
     text-align: center;
-    position: relative;
     overflow: hidden;
+    position: relative;
 }
 
 .Chart-play {
@@ -26,16 +26,6 @@ hr {
 
 hr {
     margin: 0;
-}
-
-.Header-play {
-    background: rgba(0, 0, 10, .88);
-    margin-top: 2vh;
-    margin-bottom: 5vh;
-    padding-right: 3vh;
-    padding-left: 3vh;
-    position: relative;
-
 }
 
 .Container-play div {
@@ -85,15 +75,6 @@ hr {
         justify-content: center;
         align-items: center;
         margin-top: 2vh;
-    }
-
-    #Song-card-play {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        transform: scale(0.7);
-        transform: scale(0.7);
     }
 }
 
@@ -207,18 +188,5 @@ hr {
         margin-left: 2vw;
         text-align: left;
         justify-content: left;
-    }
-
-    .Header-play {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 15vh;
-    }
-
-    #Song-card-play {
-        transform: scale(0.7);
-        margin: 4vh;
-        border: 2px solid dimgrey;
     }
 }

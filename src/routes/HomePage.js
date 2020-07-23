@@ -25,20 +25,18 @@ class HomePage extends React.Component {
                         <div>
                             <h1>Find the right playlist for your song</h1>
                             <p>
-                                Analyse Spotify playlists to see how well your song fits.
-                                See how well your song fits in a specific playlist, or let our algorithms analyse
-                                hundreds of playlists to see which one is best for your music.
+                                Choose a song and see how well it fits in a given playlist.
                             </p>
                         </div>
                         <div>
                             <Link to="/song" >
-                                <button>Analyse a song</button><button>Compare two songs</button>
+                                <button>Analyse a song</button>
                             </Link>
 
                         </div>
                         <div>
                             <Link to="/playlist">
-                                <button>Choose a playlist</button><button>Discover playlists</button>
+                                <button>Choose a playlist</button>
                             </Link>
                         </div>
                     </div>

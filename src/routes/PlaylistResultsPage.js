@@ -437,13 +437,6 @@ class PlaylistResultsPage extends React.Component {
             Math.sqrt(valenceArray.map(x => Math.pow(x-means[2],2)).reduce((a,b) => a+b)/n)]
         let sigmas = [];
 
-        /*
-         * todo:
-         *  If there is a high variance AND sigma > 2, it is a bad fit.
-         *  If there is a high variance AND sigma < 2, it is a quite good fit.
-         *  If there is a low variance AND sigma < 2, it is an excellent fit.
-         *  If there is a low variance AND sigma > 2, it is a terrible fit.
-         */
         for (let i = 0; i < 3; i++) {
             if (stDevs[i] > 0.15) {
                 console.log("There is a high variance in the data.")
@@ -490,9 +483,8 @@ class PlaylistResultsPage extends React.Component {
                             <h2>{this.props.location.state.name}</h2>
                             <h2>{this.props.location.state.artist}</h2>
                             <p/>
-                            <p>{}</p>
                             <p style={{backgroundColor: "white", padding: "0vh", paddingLeft: "0.25vw", margin: "1vw"}}>
-                                <HorizontalBar className="Chart" data={this.state.chartData} options={this.state.chartOptions} height="60vh"/>
+                                <HorizontalBar data={this.state.chartData} options={this.state.chartOptions} height="60vh"/>
                             </p>
                             <p>
                                 <p style={{fontSize: "6vh"}}>{Math.round((this.state.score/12) * 100)}% Fit!</p>

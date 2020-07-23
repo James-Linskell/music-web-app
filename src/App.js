@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Redirect, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Route, Redirect, Switch, Link } from "react-router-dom";
 import HomePage from "./routes/HomePage";
 import SongSearchPage from "./routes/SongSearchPage";
 import SongPage from "./routes/SongPage";
@@ -24,10 +24,11 @@ class App extends React.Component {
             <Router>
                 <nav className="Navbar">
                     <ul>
-                        <li style={{float: "left", fontSize: "3vh"}}><a href="#home">SongMap</a></li>
-                        <li><a href="#news">News</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="#about">About</a></li>
+                        <li style={{float: "left", fontSize: "3vh"}}><Link to="/">SongMap</Link></li>
+                        <li><Link to="/about">About</Link></li>
+                        <li><Link to="/contact">Contact</Link></li>
+                        <li><Link to="/playlist">Playlist Analyser</Link></li>
+                        <li><Link to="/song">Song Analyser</Link></li>
                     </ul>
                 </nav>
                 <Switch>

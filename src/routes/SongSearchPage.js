@@ -175,7 +175,9 @@ class SongSearchPage extends React.Component {
                 {this.state.prompt}
               </div>
             </header>
-            {this.state.results}
+            <div style={{marginTop: "4vh"}}>
+              {this.state.results}
+            </div>
             <div id="footer" style={{height: "36.6vh"}}/>
           </div>
         </Router>

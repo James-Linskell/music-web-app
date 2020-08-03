@@ -57,7 +57,7 @@ class PlaylistResultsPage extends React.Component {
         plTracks.items.forEach(track => {
             n++;
             // Limit results to chosen song + 100 songs from playlist:
-            if (n === 100) {
+            if (n === 100 || track.track === null) {
                 return;
             }
             plTrackIds += track.track.id + ','
@@ -415,11 +415,11 @@ class PlaylistResultsPage extends React.Component {
             n++;
         });
 
-        if (n < 20) {
-            this.setState({
-                errorVis: "visible"
-            })
-        }
+        // if (n < 20) {
+        //     this.setState({
+        //         errorVis: "visible"
+        //     })
+        // }
 
         let values = [data.audio_features[0].danceability, data.audio_features[0].energy, data.audio_features[0].valence];
         let means = [danceArray.reduce((a,b) => a+b)/n, energyArray.reduce((a,b) => a+b)/n, valenceArray.reduce((a,b) => a+b)/n];

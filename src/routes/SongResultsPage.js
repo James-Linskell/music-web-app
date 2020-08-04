@@ -1,7 +1,7 @@
 import React from 'react';
 import FetchData from "../Helpers/FetchData";
 import "../styles/SongResultsPage.css";
-import {Bar, HorizontalBar} from 'react-chartjs-2';
+import {HorizontalBar} from 'react-chartjs-2';
 import SongCard from "../components/SongCard";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps"
 import Tooltip from "@material-ui/core/Tooltip";
@@ -10,7 +10,12 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import ColorThief from "color-thief";
 import * as Vibrant from "node-vibrant";
 import BackgroundSvgPaths from "../components/BackgroundSvgPaths";
+import LightenColours from "../Helpers/LightenColours";
 
+/**
+ * Styles the Material-UI tooltips used on the page.
+ * @type {React.ComponentType<Omit<JSX.LibraryManagedAttributes<*, React.ComponentProps<*>>, keyof ({theme: Theme} & {classes: ClassNameMap<ClassKeyOfStyles<"arrow"|"tooltip">>}) | {classes: ClassNameMap<ClassKeyOfStyles<"arrow"|"tooltip">>}> & StyledComponentProps<"arrow"|"tooltip">>}
+ */
 const LightTooltip = withStyles((theme) => ({
     tooltip: {
         backgroundColor: theme.palette.common.white,
@@ -24,16 +29,6 @@ const LightTooltip = withStyles((theme) => ({
     }
 }))(Tooltip);
 
-/*
- * todo:
- *  refactor this to helper
- */
-const RGB_Linear_Shade=(p,c)=>{
-    var i=parseInt,r=Math.round,[a,b,c,d]=c.split(","),P=p<0,t=P?0:255*p,P=P?1+p:1-p;
-    return"rgb"+(d?"a(":"(")+r(i(a[3]=="a"?a.slice(5):a.slice(4))*P+t)+","+r(i(b)*P+t)+","+r(i(c)*P+t)+(d?","+d:")");
-}
-
-// this.props.location.search gives the song id!!!
 class SongResultsPage extends React.Component {
     constructor(props) {
         super(props);
@@ -69,13 +64,16 @@ class SongResultsPage extends React.Component {
 
     componentDidMount = async () =>  {
         await this.waitForFeatures();
-        await this.waitForAnalysis();
         await this.waitFortrack();
         await this.waitForAlbum();
-        this.generateSongFeatures();
+        this.generateCharts();
         this.setBgColours();
     }
 
+    /**
+     * Pulls colour palette from the album artwork for the chosen song using Vibrant library, then sets the most prominent
+     * colours to the page state. These colours are then rendered as the background once the promise has been fulfilled.
+     */
     setBgColours() {
         // Get bg colours using Vibrant promise:
         const img = document.querySelector('img');
@@ -91,10 +89,10 @@ class SongResultsPage extends React.Component {
                     let rgb2 = palette.DarkVibrant.getRgb();
                     let rgb3 = palette.DarkMuted.getRgb();
                     let rgb4 = palette.Muted.getRgb();
-                    rgb1 = RGB_Linear_Shade(0.3, ("rgb(" + rgb1[0] + "," + rgb1[1] + "," + rgb1[2] + ")"));
-                    rgb2 = RGB_Linear_Shade(0.3, ("rgb(" + rgb2[0] + "," + rgb2[1] + "," + rgb2[2] + ")"));
-                    rgb3 = RGB_Linear_Shade(0.3, ("rgb(" + rgb3[0] + "," + rgb3[1] + "," + rgb3[2] + ")"));
-                    rgb4 = RGB_Linear_Shade(0.3, ("rgb(" + rgb4[0] + "," + rgb4[1] + "," + rgb4[2] + ")"));
+                    rgb1 = LightenColours.RGB_Linear_Shade(0.3, ("rgb(" + rgb1[0] + "," + rgb1[1] + "," + rgb1[2] + ")"));
+                    rgb2 = LightenColours.RGB_Linear_Shade(0.3, ("rgb(" + rgb2[0] + "," + rgb2[1] + "," + rgb2[2] + ")"));
+                    rgb3 = LightenColours.RGB_Linear_Shade(0.3, ("rgb(" + rgb3[0] + "," + rgb3[1] + "," + rgb3[2] + ")"));
+                    rgb4 = LightenColours.RGB_Linear_Shade(0.3, ("rgb(" + rgb4[0] + "," + rgb4[1] + "," + rgb4[2] + ")"));
                     this.setState({
                         albumColours1: rgb1,
                         albumColours2: rgb2,
@@ -105,9 +103,8 @@ class SongResultsPage extends React.Component {
         }.bind(this));
     }
 
-    /*
-     * todo:
-     *  refactor some of this to helper
+    /**
+     * Fetches track data from my API, pre-processes the data, and generates a song card of the data.
      */
     waitFortrack = async () => {
         const songId = this.props.location.search;
@@ -120,42 +117,29 @@ class SongResultsPage extends React.Component {
             });
             return;
         }
-        console.log(data);
         this.setState({rawTrack: data});
-        let name = data.name;
-        let album = data.album.name;
-        let artist = data.artists[0].name;
-        // Truncate info if it is too long to fit on card:
-        if (data.name.length > 30) {
-            name = data.name.substring(0, 30) + '...'
-        }
-        if (data.album.name.length > 20) {
-            album = data.album.name.substring(0, 20) + '...'
-        }
-        if (data.artists[0].name.length > 40) {
-            artist = data.artists[0].name.substring(0, 40) + '...'
-        }
-        let expl = "Unknown";
-        if (data.explicit === true) {
-            expl = "Yes";
-        } else {
-            expl = "No";
-        }
-        let artists = "";
-        data.artists.forEach(artist => {
-                artists += artist.name + ", "
+
+        // Fetch my API endpoint for sorting and truncating track data for song card:
+        const sortTrackData = await fetch('/api/songSort/truncate', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         });
-        // Remove final comma:
-        artists = artists.substring(0, (artists.length) - 2);
+        let response = await sortTrackData.json();
+
+        // Generate songcard and save it to state:
         this.setState({
             songCard: <SongCard
-                name={name}
-                album={album}
-                artist={artist}
+                name={response.name}
+                album={response.album}
+                artist={response.artist}
                 artwork={this.state.rawTrack.album.images[1].url}
             />,
-            explicit: expl,
-            artists: artists,
+            explicit: response.expl,
+            artists: response.artists,
         })
 
     };
@@ -175,91 +159,31 @@ class SongResultsPage extends React.Component {
             });
             return;
         }
-        let live = "Maybe";
-        if (data.liveness < 0.5) {
-            live = "No"
-        } else if (data.liveness > 0.5) {
-            live = "Yes"
-        }
-        let acoustic = "Maybe";
-        if (data.acousticness < 0.3) {
-            acoustic = "No";
-        } else if (data.acousticness < 0.5) {
-            acoustic = "Maybe";
-        } else {
-            acoustic = "Yes";
-        }
-        let instrumental = "Unknown";
-        if (data.instrumentalness < 0.5) {
-            instrumental = "No";
-        } else {
-            instrumental = "Yes";
-        }
-        let musicality = "Unknown";
-        if (data.speechiness < 0.33) {
-            musicality = "Musical";
-        } else if (data.speechiness < 0.66){
-            musicality = "Musical and spoken";
-        } else {
-            musicality = "Spoken word";
-        }
-        let key = "Unknown";
-        if (data.key === 0) {
-            key = "C";
-        } else if (data.key === 1) {
-            key = "C #";
-        } else if (data.key === 2) {
-            key = "D";
-        } else if (data.key === 3) {
-            key = "D #";
-        } else if (data.key === 4) {
-            key = "E";
-        } else if (data.key === 5) {
-            key = "F";
-        } else if (data.key === 6) {
-            key = "F #";
-        } else if (data.key === 7) {
-            key = "G";
-        } else if (data.key === 8) {
-            key = "G #";
-        } else if (data.key === 9) {
-            key = "A";
-        } else if (data.key === 10) {
-            key = "A #";
-        } else if (data.key === 11) {
-            key = "B";
-        }
-        console.log(data);
+
+        // Fetch my API endpoint for sorting track feature data:
+        const sortTrackData = await fetch('/api/songSort/sortFeatures', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        let response = await sortTrackData.json();
+
         this.setState({
             rawFeatures: data,
-            live: live,
-            acoustic: acoustic,
-            instrumental: instrumental,
-            musicality: musicality,
-            key: key
+            live: response.live,
+            acoustic: response.acoustic,
+            instrumental: response.instrumental,
+            musicality: response.musicality,
+            key: response.key
         });
         if (data.mode === 1) {
             this.setState({modality: "Major"})
         } else if (data.mode === 0) {
             this.setState({modality: "Minor"})
         }
-    };
-
-    waitForAnalysis = async () => {
-        if (this.state.invalid === true) {
-            return;
-        }
-        const songId = this.props.location.search;
-        const data = await FetchData.fetchData(songId.substring(1, songId.length), 'analysis', 'audio-analysis/');
-        // Error handling if no search results are returned:
-        if (data.length === 0) {
-            this.setState({
-                prompt: "Invalid song ID",
-                invalid: true
-            });
-            return;
-        }
-        this.setState({rawAnalysis: data});
     };
 
     waitForAlbum = async () => {
@@ -282,71 +206,18 @@ class SongResultsPage extends React.Component {
         });
     };
 
-    generateSongFeatures() {
-        const chartData = {
-            labels: ["Danceability", "Energy", "Happiness"],
-            datasets: [{
-                label: "Song features",
-                backgroundColor: 'darkred',
-                borderColor: 'rgb(255, 99, 132)',
-                data: [(this.state.rawFeatures.danceability * 10).toFixed(2), (this.state.rawFeatures.energy * 10).toFixed(2),
-                    (this.state.rawFeatures.valence * 10).toFixed(2)]
-            }]
-        }
-        const chartOptions = {
-            tooltips: {
-                callbacks: {
-                    title: function (tooltipItem, data) {
-                        return data['labels'][tooltipItem[0]['index']];
-                    },
-                    label: function (tooltipItem, data) {
-                        return data['datasets'][0]['data'][tooltipItem['index']];
-                    },
-                },
-                backgroundColor: '#FFF',
-                titleFontSize: 16,
-                titleFontColor: '#0066ff',
-                bodyFontColor: '#000',
-                bodyFontSize: 14,
-                displayColors: false,
+    generateCharts = async () => {
+        // Fetch my API endpoint for generating track feature chart:
+        const sortTrackData = await fetch('/api/songSort/generateChart', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-            legend: {
-                display: false,
-                labels: {
-                    fontColor: "white",
-                }
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        display: true,
-                        fontColor: "white",
-                    },
-                    gridLines: {
-                        display: false,
-                        drawBorder: false
-                    }
-                }],
-                xAxes: [{
-                    barPercentage: 0.5,
-                    ticks: {
-                        fontColor: "white",
-                        fontSize: 14,
-                        min: 0,
-                        max: 10,
-                        stepSize: 1
-                    },
-                    gridLines: {
-                        display: false,
-                        drawBorder: false
-                    }
-                }]
-            },
-        }
-        this.setState({
-            data: chartData,
-            options: chartOptions
-        })
+            body: JSON.stringify(this.state.rawFeatures)
+        });
+        let response = await sortTrackData.json();
+        this.setState(response);
     }
 
     render() {

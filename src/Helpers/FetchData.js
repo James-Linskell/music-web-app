@@ -1,25 +1,28 @@
+/**
+ * Helper class with methods which formulate and make calls to the spotify web API.
+ */
 class FetchData {
     /**
-     * Calls Spotify API using token. Takes an input string, a call type string (search, features etc.) and a string
-     * for search type (track, artist, playlist etc) (if applicable).
-     * @returns {Promise<void>}
+     * Calls my node server which requests a Spotify client access token.
+     * @returns {Promise} Json body containing Spotify client token and test message
+     */
+    static getToken = async () => {
+        const response = await fetch('/authenticate');
+        const body = await response.json();
+
+        if (response.status !== 200) {
+            throw Error(body.message)
+        }
+        return body;
+    };
+    /**
+     * Calls Spotify API using client access token. Takes an input string, a call type string (search or analysis) and a string
+     * for search type ('tracks/artists/playlists' for searches or 'audio-features/?ids=' for audio data).
+     * @returns {Promise} Spotify search or audio analysis data
      */
     static fetchData = async (input, type, searchType) => {
         let data = '';
-        /**
-         * Calls my node server which requests a Spotify client access token.
-         * @returns {Promise<any>} Json body containing Spotify client token and test message
-         */
-        const getToken = async () => {
-            const response = await fetch('/authenticate');
-            const body = await response.json();
-
-            if (response.status !== 200) {
-                throw Error(body.message)
-            }
-            return body;
-        };
-        const requestToken = await getToken();
+        const requestToken = await this.getToken();
         const token = requestToken.myToken;
         var myOptions = {
             headers: {
@@ -40,7 +43,6 @@ class FetchData {
             const id = input;
             url = endpoint + ty + id;
         }
-
         const response = await fetch(url, myOptions)
         data = await response.json();
         return data;

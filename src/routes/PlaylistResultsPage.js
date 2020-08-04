@@ -7,11 +7,7 @@ import Histogram from "../components/Histogram";
 import * as Vibrant from 'node-vibrant';
 import BackgroundSvgPaths from "../components/BackgroundSvgPaths";
 import ColorThief from 'color-thief';
-
-const RGB_Linear_Shade=(p,c)=>{
-    var i=parseInt,r=Math.round,[a,b,c,d]=c.split(","),P=p<0,t=P?0:255*p,P=P?1+p:1-p;
-    return"rgb"+(d?"a(":"(")+r(i(a[3]=="a"?a.slice(5):a.slice(4))*P+t)+","+r(i(b)*P+t)+","+r(i(c)*P+t)+(d?","+d:")");
-}
+import LightenColours from "../Helpers/LightenColours";
 
 class PlaylistResultsPage extends React.Component {
     /**
@@ -45,18 +41,14 @@ class PlaylistResultsPage extends React.Component {
         this.waitFortracks();
     }
 
-    /*
- * todo:
- *  refactor some of this to helper
- */
     waitFortracks = async () => {
         // Fetch track data from my API:
         const plTracks = await FetchData.fetchData('', 'analysis', 'playlists/' +
             this.props.location.hash.substring(1, this.props.location.hash.length) + '/tracks');
         let plTrackIds = '';
+        // Initialise counter for number of songs:
         let n = 0;
-        console.log(plTracks);
-        // Generate search string:
+        // Generate search string from all track ids:
         plTracks.items.forEach(track => {
             n++;
             // Limit results to chosen song + 100 songs from playlist:
@@ -67,7 +59,7 @@ class PlaylistResultsPage extends React.Component {
         });
         // Remove final comma:
         plTrackIds = plTrackIds.substring(0, (plTrackIds.length) - 1);
-        // Index 0 is the song being fitted to the playlist:
+        // Index 0 is the song being fitted to the playlist.
         // Fetch feature data from my API:
         const featureData = await FetchData.fetchData(this.props.location.search.substring(1, this.props.location.search.length) +
             ',' + plTrackIds, 'analysis', 'audio-features/?ids=');
@@ -79,10 +71,10 @@ class PlaylistResultsPage extends React.Component {
             });
             return;
         }
-        this.getBgColours();
-        console.log(featureData);
+        this.setBgColours();
 
-        const sortData = await fetch('/plSort', {
+        // Fetch my API endpoint for sorting and pre-processing the data:
+        const sortData = await fetch('/api/plSort', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -90,117 +82,40 @@ class PlaylistResultsPage extends React.Component {
             },
             body: JSON.stringify(featureData)
         });
-
+        // Receive the sorted json data:
         let response = await sortData.json();
-        console.log(response);
 
-        // Set state to returned data:
+        // Fetch my API endpoint for generating the final fit score chart:
+        const generateScore = await fetch('/api/plFit/web', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(response.score)
+        });
+        let finalScore = await generateScore.json();
+
+        // Generate histograms and set the returned data to state:
         this.setState({
             score: response.score,
             featureInfo1: response.featureInfo1,
             featureInfo2: response.featureInfo2,
             featureInfoColour: response.featureInfoColour,
-            fit: response.simplify.fit
-        })
-        this.generateScoreChart(response.score);
-
-        this.setState({
+            fit: response.simplify.fit,
             danceHist: <Histogram data={response.simplify.datasets.dance} songIndex={response.simplify.index.danceIndex}/>,
             energyHist: <Histogram data={response.simplify.datasets.energy} songIndex={response.simplify.index.energyIndex}/>,
-            valenceHist: <Histogram data={response.simplify.datasets.valence} songIndex={response.simplify.index.valenceIndex}/>
+            valenceHist: <Histogram data={response.simplify.datasets.valence} songIndex={response.simplify.index.valenceIndex}/>,
+            chartData: finalScore.chartData,
+            chartOptions: finalScore.chartOptions
         })
     };
 
-    /*
- * todo:
- *  maybe refactor this to helper
- */
-    generateScoreChart(score) {
-        const chartData = {
-            labels: ["Score"],
-            datasets: [{
-                label: "Song Score",
-                backgroundColor: 'darkred',
-                borderColor: 'rgb(255, 99, 132)',
-                data: score
-            }]
-        }
-        // Colour the bar:
-        if (score > 10) {
-            chartData.datasets[0].backgroundColor = "#1E9600";
-        } else if (score > 8) {
-            chartData.datasets[0].backgroundColor = "#77b300";
-        } else if (score > 6) {
-            chartData.datasets[0].backgroundColor = "#bfff00";
-        } else if (score > 5) {
-            chartData.datasets[0].backgroundColor = "#ffcc00";
-        } else if (score > 3) {
-            chartData.datasets[0].backgroundColor = "#ff751a";
-        } else if (score > 2) {
-            chartData.datasets[0].backgroundColor = "#cc2900";
-        } else {
-            chartData.datasets[0].backgroundColor = "#e60000";
-        }
-
-        const chartOptions = {
-            tooltips: {
-                callbacks: {
-                    title: function (tooltipItem, data) {
-                        return data['labels'][tooltipItem[0]['index']];
-                    },
-                    label: function (tooltipItem, data) {
-                        return data['datasets'][0]['data'][tooltipItem['index']];
-                    },
-                },
-                backgroundColor: '#FFF',
-                titleFontSize: 16,
-                titleFontColor: '#0066ff',
-                bodyFontColor: '#000',
-                bodyFontSize: 14,
-                displayColors: false,
-            },
-            legend: {
-                display: false,
-                labels: {
-                    fontColor: "white",
-                }
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        display: false,
-                        fontColor: "white",
-                    },
-                    gridLines: {
-                        display: false,
-                        drawBorder: false
-                    }
-                }],
-                xAxes: [{
-                    display: false,
-                    barPercentage: 0.5,
-                    ticks: {
-                        display: false,
-                        fontColor: "black",
-                        fontSize: 14,
-                        min: 0,
-                        max: 12,
-                        stepSize: 1
-                    },
-                    gridLines: {
-                        display: false,
-                        drawBorder: false
-                    }
-                }]
-            },
-        }
-        this.setState({
-            chartData: chartData,
-            chartOptions: chartOptions
-        })
-    }
-
-    getBgColours() {
+    /**
+     * Pulls colour palette from the album artwork for the chosen song using Vibrant library, then sets the most prominent
+     * colours to the page state. These colours are then rendered as the background once the promise has been fulfilled.
+     */
+    setBgColours() {
         // Get bg colours using Vibrant promise:
         const img = document.querySelector('img');
         img.crossOrigin = "Anonymous";
@@ -210,15 +125,14 @@ class PlaylistResultsPage extends React.Component {
             let colour = colorThief.getColor(img);
             Vibrant.from(img).getPalette()
                 .then((palette) => {
-                    console.log(palette);
                     let rgb1 = palette.Vibrant.getRgb();
                     let rgb2 = palette.DarkVibrant.getRgb();
                     let rgb3 = palette.DarkMuted.getRgb();
                     let rgb4 = palette.Muted.getRgb();
-                    rgb1 = RGB_Linear_Shade(0.3, ("rgb(" + rgb1[0] + "," + rgb1[1] + "," + rgb1[2] + ")"));
-                    rgb2 = RGB_Linear_Shade(0.3, ("rgb(" + rgb2[0] + "," + rgb2[1] + "," + rgb2[2] + ")"));
-                    rgb3 = RGB_Linear_Shade(0.3, ("rgb(" + rgb3[0] + "," + rgb3[1] + "," + rgb3[2] + ")"));
-                    rgb4 = RGB_Linear_Shade(0.3, ("rgb(" + rgb4[0] + "," + rgb4[1] + "," + rgb4[2] + ")"));
+                    rgb1 = LightenColours.RGB_Linear_Shade(0.3, ("rgb(" + rgb1[0] + "," + rgb1[1] + "," + rgb1[2] + ")"));
+                    rgb2 = LightenColours.RGB_Linear_Shade(0.3, ("rgb(" + rgb2[0] + "," + rgb2[1] + "," + rgb2[2] + ")"));
+                    rgb3 = LightenColours.RGB_Linear_Shade(0.3, ("rgb(" + rgb3[0] + "," + rgb3[1] + "," + rgb3[2] + ")"));
+                    rgb4 = LightenColours.RGB_Linear_Shade(0.3, ("rgb(" + rgb4[0] + "," + rgb4[1] + "," + rgb4[2] + ")"));
                     this.setState({
                         albumColours1: rgb1,
                         albumColours2: rgb2,

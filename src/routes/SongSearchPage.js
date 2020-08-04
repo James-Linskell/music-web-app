@@ -116,6 +116,12 @@ class SongSearchPage extends React.Component {
     }
   }
 
+  /**
+   * todo:
+   *  move to node server TRUNCATECARDDATA METHOD
+   * @param data
+   * @returns {null|[]}
+   */
   populateGrid(data) {
     // Else generate cards.
     if (data == null) {

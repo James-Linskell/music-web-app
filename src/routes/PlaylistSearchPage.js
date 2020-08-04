@@ -107,7 +107,6 @@ class PlaylistSearchPage extends React.Component {
                 art: art
             }
         });
-        console.log(this.props.location.state);
     }
 
     populateGrid(data) {

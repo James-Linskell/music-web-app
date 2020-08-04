@@ -59,6 +59,7 @@ class SongResultsPage extends React.Component {
             albumColours2: "white",
             albumColours3: "white",
             albumColours4: "white",
+            embedAlbum: null,
         }
     }
 
@@ -117,7 +118,17 @@ class SongResultsPage extends React.Component {
             });
             return;
         }
-        this.setState({rawTrack: data});
+        this.setState({
+            rawTrack: data,
+            embedAlbum: <iframe
+                src={"https://open.spotify.com/embed/album/" + data.album.id}
+                width="350"
+                height="350"
+                frameBorder="0"
+                allowTransparency="true"
+                allow="encrypted-media"
+            ></iframe>
+        });
 
         // Fetch my API endpoint for sorting and truncating track data for song card:
         const sortTrackData = await fetch('/api/songSort/truncate', {
@@ -345,14 +356,7 @@ class SongResultsPage extends React.Component {
                     <div style={{paddingBottom: "0vh", marginBottom: "0vh"}}>
                         <h2>Album preview:</h2>
                         <hr/>
-                        <iframe
-                            src={"https://open.spotify.com/embed/album/" + this.state.rawTrack.album.id}
-                            width="350"
-                            height="350"
-                            frameBorder="0"
-                            allowTransparency="true"
-                            allow="encrypted-media"
-                        ></iframe>
+                        {this.state.embedAlbum}
                     </div>
                     <div>
                         <h2>Album details:</h2>

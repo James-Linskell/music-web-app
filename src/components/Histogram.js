@@ -35,7 +35,7 @@ class Histogram extends React.Component {
         console.log(response);
 
         this.setState({
-            histogram: <Bar className="Chart" data={response.chartData} options={response.chartOptions}/>
+            histogram: <Bar className="Chart" data={response.chartData} options={response.chartOptions} height="300vh" width="550vw"/>
         })
     }
 

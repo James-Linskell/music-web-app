@@ -21,7 +21,7 @@ class ContactPage extends React.Component {
                 <div className="Contact-title">Contact</div>
                 <p>Please use the links below to get in touch with any feedback or queries.</p>
                 <p></p>
-                <p>Currently looking for employment.</p>
+                <p></p>
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
                 <div className="Socials">
                     <a href="https://www.linkedin.com/in/james-linskell-187382188" className="fa fa-linkedin"></a>

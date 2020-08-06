@@ -7,7 +7,6 @@ class AboutPage extends React.Component {
             <div className="About">
                 <div>About</div>
                 <div>Oops! Something went wrong. Go back to the home page to continue.</div>
-                <a href="#" className="fa fa-twitter"></a>
             </div>
         )
     }

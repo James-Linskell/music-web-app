@@ -30,10 +30,10 @@ class PlaylistResultsPage extends React.Component {
                 stDevs: [0, 0, 0],
                 sigmas: [0, 0, 0]
             },
-            albumColours1: "white",
-            albumColours2: "white",
-            albumColours3: "white",
-            albumColours4: "white",
+            albumColours1: "rgba(0, 0, 10, 0.2)",
+            albumColours2: "rgba(0, 0, 10, 0.2)",
+            albumColours3: "rgba(0, 0, 10, 0.2)",
+            albumColours4: "rgba(0, 0, 10, 0.2)",
             propsToState: ""
         }
     }
@@ -48,6 +48,7 @@ class PlaylistResultsPage extends React.Component {
                 }
             );
         }
+        window.scrollTo(0, -document.body.scrollHeight);
     }
 
     waitFortracks = async () => {
@@ -224,7 +225,7 @@ class PlaylistResultsPage extends React.Component {
                             <p>
                                 The 'Danceability' of a song describes how good a track is to dance to. This takes into account
                                 a number of musical elements including tempo, how stable the rhythm is, the strength of each beat,
-                                and how regular the musical pattern is. Dancibility is determined on a scale of 0 - 10, with 10 being
+                                and how regular the musical pattern is. Danceability is determined on a scale of 0 - 10, with 10 being
                                 the most danceable.
                             </p>
                             <p>
@@ -233,9 +234,9 @@ class PlaylistResultsPage extends React.Component {
                             </p>
                             <h2>Positivity</h2>
                             <p>
-                                The happiness or 'Valence' of a song is how positive it sounds. Tracks with high valence sound more positive
+                                The Positivity or 'Valence' of a song is how positive it sounds. Tracks with high valence sound more positive
                                 (happy, cheerful, euphoric) while tracks with low valence sound more negative (sad, depressed, angry).
-                                Happiness is determined on a scale of 0 - 10, with 10 being the most positive sounding.
+                                Positivity is determined on a scale of 0 - 10, with 10 being the most positive sounding.
                             </p>
                             <p>
                                 The standard deviation of Positivity values for the songs in this playlist is {this.state.fit.stDevs[2].toFixed(3)}.

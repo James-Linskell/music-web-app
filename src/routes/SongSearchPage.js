@@ -44,7 +44,7 @@ class SongSearchPage extends React.Component {
     } else {
       this.setState({
         title: "Playlist Analyser",
-        searchTitle: "First choose a playlist, then choose a song. Search for a song to get started."
+        searchTitle: "First choose a song, then choose a playlist. Search for a song to get started."
       });
     }
   }
@@ -136,6 +136,7 @@ class SongSearchPage extends React.Component {
         }
       });
     }
+    window.scrollTo(0, -document.body.scrollHeight);
   }
 
   populateGrid(data) {

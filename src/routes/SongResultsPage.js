@@ -55,10 +55,10 @@ class SongResultsPage extends React.Component {
             musicality: null,
             key: null,
             artists: null,
-            albumColours1: "white",
-            albumColours2: "white",
-            albumColours3: "white",
-            albumColours4: "white",
+            albumColours1: "rgba(0, 0, 10, 0.2)",
+            albumColours2: "rgba(0, 0, 10, 0.2)",
+            albumColours3: "rgba(0, 0, 10, 0.2)",
+            albumColours4: "rgba(0, 0, 10, 0.2)",
             embedAlbum: null,
         }
     }
@@ -197,6 +197,10 @@ class SongResultsPage extends React.Component {
         }
     };
 
+    /**
+     * Calls the FetchData helper and returns album analysis results from Spotify for a given album id. Saves the album
+     * data to state.
+     */
     waitForAlbum = async () => {
         if (this.state.invalid === true) {
             return;
@@ -217,6 +221,16 @@ class SongResultsPage extends React.Component {
         });
     };
 
+    /**
+     * Scrolls to the bottom of the page to bring the mood feature descriptions into view.
+     */
+    featureInfoClick() {
+        window.scrollTo(0,document.body.scrollHeight);
+    }
+
+    /**
+     * Calls the Node server which generates options for creating a chart of mood features, and saves these options to state.
+     */
     generateCharts = async () => {
         // Fetch my API endpoint for generating track feature chart:
         const sortTrackData = await fetch('/api/songSort/generateChart', {
@@ -231,6 +245,9 @@ class SongResultsPage extends React.Component {
         this.setState(response);
     }
 
+    /**
+     * Renders the song results page.
+     */
     render() {
         return (
             <div className="Main" style={{backgroundColor: this.state.albumColours1}}>
@@ -247,7 +264,7 @@ class SongResultsPage extends React.Component {
                 <div className="Container">
                     <div style={{display: "flex", fontSize: "2.5vh", padding: "1vh", textAlign: "left", paddingLeft: "3vh", alignContent: "left"}}><InfoOutlinedIcon style={{paddingRight: "0.3vw"}} /> Hover over an item for more information.</div>
                     <div>
-                        <h2>Song Mood Features:<button style={{display: "flex", marginLeft: "2vw"}}>What's this?</button></h2>
+                        <h2>Song Mood Features:<button style={{display: "flex", marginLeft: "2vw"}} onClick={this.featureInfoClick}>What's this?</button></h2>
                         <hr/>
                         <p>
                             <HorizontalBar className="Chart" data={this.state.data} options={this.state.options}/>
@@ -292,7 +309,7 @@ class SongResultsPage extends React.Component {
                         <LightTooltip arrow="true" enterTouchDelay="100" title={<p className="Tooltip">
                             Whether the song is instrumental, or contains vocals. 'Instrumentalness' is given on a scale of 0.0 - 1.0.
                             The closer to 1.0 this value is, the higher the probability that the track is purely instrumental. The
-                            'Instrumentalness' rating for this song is {this.state.rawFeatures.liveness}.
+                            'Instrumentalness' rating for this song is {this.state.rawFeatures.instrumental}.
                         </p>}>
                         <p>Instrumental: {this.state.instrumental}</p>
                         </LightTooltip>
@@ -408,14 +425,14 @@ class SongResultsPage extends React.Component {
                         <p>
                             The 'Danceability' of a song describes how good a track is to dance to. This takes into account
                             a number of musical elements including tempo, how stable the rhythm is, the strength of each beat,
-                            and how regular the musical pattern is. Dancibility is determined on a scale of 0 - 10, with 10 being
+                            and how regular the musical pattern is. Danceability is determined on a scale of 0 - 10, with 10 being
                             the most danceable.
                         </p>
                         <h2>Positivity</h2>
                         <p>
-                            The happiness or 'Valence' of a song is how positive it sounds. Tracks with high valence sound more positive
+                            The positivity or 'Valence' of a song is how positive it sounds. Tracks with high valence sound more positive
                             (happy, cheerful, euphoric) while tracks with low valence sound more negative (sad, depressed, angry).
-                            Happiness is determined on a scale of 0 - 10, with 10 being the most positive sounding.
+                            Positivity is determined on a scale of 0 - 10, with 10 being the most positive sounding.
                         </p>
                     </div>
                 </div>

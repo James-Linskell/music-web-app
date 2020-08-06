@@ -38,6 +38,7 @@ class PlaylistSearchPage extends React.Component {
                 }
             );
         }
+        window.scrollTo(0, -document.body.scrollHeight);
     }
 
     /**
@@ -109,6 +110,7 @@ class PlaylistSearchPage extends React.Component {
      * @param songId
      */
     onCardClick(playlistId, name, album, artist, art) {
+        window.scrollTo(0, -document.body.scrollHeight);
         this.props.history.push({
             pathname: '/playlists',
             search: this.props.location.search,
@@ -196,7 +198,7 @@ class PlaylistSearchPage extends React.Component {
                         </div>
                     </header>
                     {this.state.results}
-                    <div id="footer" style={{height: "36.6vh"}}/>
+                    <div id="footer" style={{height: "1.9vh"}}/>
                 </div>
             </Router>
         );

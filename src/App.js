@@ -26,7 +26,7 @@ class App extends React.Component {
             <Router>
                 <nav className="Navbar">
                     <ul>
-                        <li style={{float: "left", fontSize: "3vh"}}><Link to="/">SongMap</Link></li>
+                        <li style={{float: "left", fontSize: "3vh"}}><Link to="/">Songmap</Link></li>
                         <li><Link to="/about">About</Link></li>
                         <li><Link to="/contact">Contact</Link></li>
                         <li><Link to="/">Home</Link></li>

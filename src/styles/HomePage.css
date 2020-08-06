@@ -17,15 +17,30 @@
     color: white;
 }
 
-.Container-home {
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 10vw;
-    font-size: 3vh;
-    margin-left: 12vw;
-    margin-right: 12vw;
+
+@media only screen and (min-width: 768px) {
+    .Container-home {
+        display: grid;
+        align-items: center;
+        justify-items: center;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 10vw;
+        font-size: 3vh;
+        margin-left: 12vw;
+        margin-right: 12vw;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .Container-home {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-items: center;
+        font-size: 3vh;
+        margin-left: 12vw;
+        margin-right: 12vw;
+    }
 }
 
 .Container-home button {

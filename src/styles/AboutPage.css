@@ -8,8 +8,15 @@
     flex-direction: column;
 }
 
-.About div {
+.About-title {
     margin: 3vh;
     font-size: 4vh;
+    display: inline-block;
+}
 
+.About-info {
+    width: 70vw;
+    text-align: center;
+    line-height: 1.6;
+    font-size: 3vh;
 }

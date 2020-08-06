@@ -1,0 +1,15 @@
+.Not-found {
+    background-color: #212120;
+    color: white;
+    height: 73.6vh;
+    display: flex;
+    align-items: center;
+    padding-top: 20vh;
+    flex-direction: column;
+}
+
+.Not-found div {
+    margin: 3vh;
+    font-size: 4vh;
+
+}

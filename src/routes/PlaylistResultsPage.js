@@ -34,11 +34,20 @@ class PlaylistResultsPage extends React.Component {
             albumColours2: "white",
             albumColours3: "white",
             albumColours4: "white",
+            propsToState: ""
         }
     }
 
     componentDidMount() {
-        this.waitFortracks();
+        if (typeof this.props.location.state !== "undefined") {
+            this.setState({propsToState: this.props.location.state})
+            this.waitFortracks();
+        } else {
+            this.props.history.push({
+                pathname: '/404',
+                }
+            );
+        }
     }
 
     waitFortracks = async () => {
@@ -157,8 +166,8 @@ class PlaylistResultsPage extends React.Component {
                     <div className="Container-play">
                         <div style={{display: "flex", margin: "0vh", fontSize: "2.5vh", padding: "0vh", textAlign: "left", paddingLeft: "3vh", alignContent: "left", color: "red", visibility: this.state.errorVis}}><ErrorOutlineIcon style={{paddingRight: "0.3vw"}} />This playlist has less than 20 songs. Choose a playlist with more songs for a more accurate analysis.</div>
                         <div>
-                            <h2>{this.props.location.state.name}</h2>
-                            <h2>{this.props.location.state.artist}</h2>
+                            <h2>{this.state.propsToState.name}</h2>
+                            <h2>{this.state.propsToState.artist}</h2>
                             <p/>
                             <p style={{backgroundColor: "white", padding: "0vh", paddingLeft: "0.25vw", margin: "1vw"}}>
                                 <HorizontalBar data={this.state.chartData} options={this.state.chartOptions} height="60vh"/>
@@ -169,7 +178,7 @@ class PlaylistResultsPage extends React.Component {
                         </div>
                         <div style={{margin: "0hv", padding: "0vh", justifyContent: "center", display: "flex"}}>
                             <p>
-                                <img src={this.props.location.state.art} style={{margin: "2vh", height: "auto", width: "45vh", border: "0.3vh solid dimgrey"}}/>
+                                <img src={this.state.propsToState.art} style={{margin: "2vh", height: "auto", width: "45vh", border: "0.3vh solid dimgrey"}}/>
                             </p>
                         </div>
                         <div className="Chart-play">

@@ -1,7 +1,7 @@
 import React from 'react';
 import "../styles/BackgroundSvgPaths.css";
 
-
+// Generated at https://convert.ing-now.com/mp3-audio-waveform-graphic-generator/
 class BackgroundWavesSvgPaths extends React.Component {
     render() {
         return (

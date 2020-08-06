@@ -5,8 +5,9 @@ class AboutPage extends React.Component {
     render() {
         return (
             <div className="About">
-                <div>404 Not Found</div>
+                <div>About</div>
                 <div>Oops! Something went wrong. Go back to the home page to continue.</div>
+                <a href="#" className="fa fa-twitter"></a>
             </div>
         )
     }

@@ -1,5 +1,5 @@
 .Contact {
-    background-color: rgba(0, 0, 0, 0.86);
+    background-color: rgba(0, 0, 10, 0.86);
     color: white;
     height: 73.6vh;
     display: flex;
@@ -11,5 +11,68 @@
 .Contact div {
     margin: 3vh;
     font-size: 4vh;
+}
 
+.Contact p {
+    font-size: 3vh;
+    margin: 1.5vh;
+    padding: 0vh;
+}
+
+.Socials {
+    flex-direction: column;
+}
+
+.Email {
+    margin-top: 7vh;
+    font-size: 2.5vh;
+}
+
+.Socials a {
+    margin-left: 2vh;
+    margin-right: 2vh;
+}
+
+/* Social media links */
+
+/* CREDIT TO W3SCHOOLS https://www.w3schools.com/howto/howto_css_social_media_buttons.asp */
+
+/* Style all font awesome icons */
+.fa {
+    padding: 20px;
+    font-size: 30px;
+    width: 50px;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* Add a hover effect if you want */
+.fa:hover {
+    opacity: 0.7;
+}
+
+/* Set a specific color for each brand */
+
+/* Facebook */
+.fa-facebook {
+    background: #3B5998;
+    color: white;
+}
+
+/* GitHub */
+.fa-github {
+    background: rgba(0, 0, 0, 0.55);
+    color: white;
+}
+
+/* Linkedin */
+.fa-linkedin {
+    background: #007bb5;
+    color: white;
+}
+
+/* Linkedin */
+.fa-email {
+    background: rebeccapurple;
+    color: white;
 }

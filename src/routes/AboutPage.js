@@ -13,7 +13,7 @@ class AboutPage extends React.Component {
                     song sounds, as well as extracting musical features like the key and tempo, and many other features.
                     Although the details of these algorithms are protected intellectual property and kept secret, Spotify
                     does make the results of the analysis available for anyone to access from their web interface. This
-                    website uses Spotify's web interface to interpret and visualise data for songs and playlists. the
+                    website uses Spotify's web interface to interpret and visualise data for songs and playlists. The
                     Song Analyser lets you see detailed data for a single song, and the Playlist Analyser lets you compare
                     a song's features to all the other songs in a chosen playlist, calculating how well your song fits in
                     the playlist.

@@ -20,11 +20,33 @@ class SongSearchPage extends React.Component {
       searchQuery: '',
       previousSearchQuery: '',
       results: <div className="Margin" ></div>,
-      prompt: null
+      prompt: null,
+      title: "",
+      searchTitle: "Search for a song to get started."
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onCardClick = this.onCardClick.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (nextProps.clicked === true) {
+      console.log("RELOADED");
+    }
+  }
+
+
+  componentDidMount() {
+    if (this.props.chain === "song") {
+      this.setState({
+        title: "Song Analyser",
+      });
+    } else {
+      this.setState({
+        title: "Playlist Analyser",
+        searchTitle: "First choose a playlist, then choose a song. Search for a song to get started."
+      });
+    }
   }
 
   /**
@@ -161,24 +183,22 @@ class SongSearchPage extends React.Component {
         <Router>
           <div className="Search">
             <header className="Search-header" >
+              <p className="Title">{this.state.title}</p>
               <img src={hellify} className="Search-logo" alt="logo"/>
-              <p>Search for a song</p>
-              <p>or</p>
-              <p>Enter a Spotify song link</p>
+              <p>{this.state.searchTitle}</p>
               <div className="searchbar">
                 <form onSubmit={this.handleSubmit}>
                   <input className="Search-box" type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>
                   <button id="searchclick" type="submit">Search</button>
                 </form>
               </div>
-              <div style={{marginTop: "3vh", position: "absolute", top: "45vh"}}>
+              <div style={{marginTop: "3vh", position: "absolute", top: "50vh"}}>
                 {this.state.prompt}
               </div>
             </header>
             <div style={{marginTop: "4vh"}}>
               {this.state.results}
             </div>
-            <div id="footer" style={{height: "36.6vh"}}/>
           </div>
         </Router>
     );

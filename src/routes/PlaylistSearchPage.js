@@ -20,11 +20,24 @@ class PlaylistSearchPage extends React.Component {
             searchQuery: '',
             previousSearchQuery: '',
             results: <div className="Margin"></div>,
-            prompt: null
+            prompt: null,
+            propsToState: ""
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onCardClick = this.onCardClick.bind(this);
+    }
+
+    componentDidMount() {
+        if (typeof this.props.location.state !== "undefined") {
+            this.setState({propsToState: this.props.location.state})
+            return;
+        } else {
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+        }
     }
 
     /**
@@ -122,10 +135,10 @@ class PlaylistSearchPage extends React.Component {
             cardGrid.push(
                 <p className="Playlist-p" key={i}>
                     <h2 onClick={this.onCardClick.bind(this, plId,
-                        this.props.location.state.name,
-                        this.props.location.state.album,
-                        this.props.location.state.artist,
-                        this.props.location.state.art
+                        this.state.propsToState.name,
+                        this.state.propsToState.album,
+                        this.state.propsToState.artist,
+                        this.state.propsToState.art
                     )}>
                         Select Playlist
                     </h2>
@@ -159,8 +172,6 @@ class PlaylistSearchPage extends React.Component {
                                     <img src={hellify} className="Search-logo" alt="logo"/>
                                 </p>
                                 <p>Search for a playlist</p>
-                                <p>or</p>
-                                <p>Enter a Spotify playlist link</p>
                                 <p></p>
                                 <div className="searchbar">
                                     <form onSubmit={this.handleSubmit}>
@@ -172,15 +183,15 @@ class PlaylistSearchPage extends React.Component {
                             <div>
                                 <p>Song being analysed:</p>
                                 <p className="Card-p"><SongCard
-                                    name={this.props.location.state.name}
-                                    album={this.props.location.state.album}
-                                    artist={this.props.location.state.artist}
-                                    artwork={this.props.location.state.art}
-                                    songId={this.props.location.state.songId}
+                                    name={this.state.propsToState.name}
+                                    album={this.state.propsToState.album}
+                                    artist={this.state.propsToState.artist}
+                                    artwork={this.state.propsToState.art}
+                                    songId={this.state.propsToState.songId}
                                 /></p>
                             </div>
                         </div>
-                        <div style={{marginTop: "3vh", position: "absolute", top: "45vh"}}>
+                        <div style={{marginTop: "3vh", position: "absolute", top: "50vh"}}>
                             {this.state.prompt}
                         </div>
                     </header>

@@ -12,7 +12,7 @@ hr {
 }
 
 .Main-play {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.86);
     color: white;
     font-size: 4vh;
     text-align: center;
@@ -43,6 +43,10 @@ hr {
     padding: 0vh;
 }
 
+.Container-play div p {
+    margin: 0vh;
+}
+
 @media only screen and (max-width: 1200px) {
     .Container-play {
         flex-direction: column;
@@ -54,6 +58,7 @@ hr {
 
     .Container-play div {
         margin-bottom: 2vh;
+        padding: 5vh;
         width: auto;
         height: auto;
     }
@@ -61,7 +66,7 @@ hr {
     .Container-play div h2 {
         display: flex;
         align-items: center;
-        justify-content: left;
+        justify-content: center;
         margin-left: 2vh;
     }
 

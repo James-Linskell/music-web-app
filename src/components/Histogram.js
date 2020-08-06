@@ -45,6 +45,13 @@ class Histogram extends React.Component {
             width = "500vh";
             height = "300vh";
         }
+        if (this.props.type === "dance") {
+            response.chartOptions.scales.xAxes[0].scaleLabel.labelString = "Danceability";
+        } else if (this.props.type === "energy") {
+            response.chartOptions.scales.xAxes[0].scaleLabel.labelString = "Energy";
+        } else {
+            response.chartOptions.scales.xAxes[0].scaleLabel.labelString = "Positivity";
+        }
 
 
         this.setState({

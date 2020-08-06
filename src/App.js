@@ -4,6 +4,7 @@ import HomePage from "./routes/HomePage";
 import SongSearchPage from "./routes/SongSearchPage";
 import PlaylistSearchPage from "./routes/PlaylistSearchPage";
 import AboutPage from "./routes/AboutPage";
+import ContactPage from "./routes/ContactPage";
 import SongResultsPage from "./routes/SongResultsPage";
 import PlaylistResultsPage from "./routes/PlaylistResultsPage";
 import './styles/App.css';
@@ -15,6 +16,9 @@ import NotFound from "./routes/NotFound";
 class App extends React.Component {
     constructor() {
         super();
+        this.state = {
+            clicked: false
+        }
     }
 
     render() {
@@ -25,8 +29,7 @@ class App extends React.Component {
                         <li style={{float: "left", fontSize: "3vh"}}><Link to="/">SongMap</Link></li>
                         <li><Link to="/about">About</Link></li>
                         <li><Link to="/contact">Contact</Link></li>
-                        <li><Link to="/playlist">Playlist Analyser</Link></li>
-                        <li><Link to="/song">Song Analyser</Link></li>
+                        <li><Link to="/">Home</Link></li>
                     </ul>
                 </nav>
                 <Switch>
@@ -35,6 +38,7 @@ class App extends React.Component {
                     <Route path="/playlists" component={PlaylistResultsPage}/>
                     <Route path="/song-playlist" component={PlaylistSearchPage}/>
                     <Route path="/about" component={AboutPage}/>
+                    <Route path="/contact" component={ContactPage}/>
                     <Route path="/404" component={NotFound}/>
                     <Route path="/song"   render={(props) => (
                         <SongSearchPage {...props} chain="song" />

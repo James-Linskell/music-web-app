@@ -1,4 +1,4 @@
-.Not-found {
+.About {
     background-color: rgba(0, 0, 0, 0.86);
     color: white;
     height: 73.6vh;
@@ -8,7 +8,7 @@
     flex-direction: column;
 }
 
-.Not-found div {
+.About div {
     margin: 3vh;
     font-size: 4vh;
 

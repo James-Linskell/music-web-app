@@ -112,9 +112,9 @@ class PlaylistResultsPage extends React.Component {
             featureInfo2: response.featureInfo2,
             featureInfoColour: response.featureInfoColour,
             fit: response.simplify.fit,
-            danceHist: <Histogram data={response.simplify.datasets.dance} songIndex={response.simplify.index.danceIndex}/>,
-            energyHist: <Histogram data={response.simplify.datasets.energy} songIndex={response.simplify.index.energyIndex}/>,
-            valenceHist: <Histogram data={response.simplify.datasets.valence} songIndex={response.simplify.index.valenceIndex}/>,
+            danceHist: <Histogram data={response.simplify.datasets.dance} songIndex={response.simplify.index.danceIndex} type="dance"/>,
+            energyHist: <Histogram data={response.simplify.datasets.energy} songIndex={response.simplify.index.energyIndex} type="energy"/>,
+            valenceHist: <Histogram data={response.simplify.datasets.valence} songIndex={response.simplify.index.valenceIndex} type="valence"/>,
             chartData: finalScore.chartData,
             chartOptions: finalScore.chartOptions
         })
@@ -231,7 +231,7 @@ class PlaylistResultsPage extends React.Component {
                                 The standard deviation of Danceability values for the songs in this playlist is {this.state.fit.stDevs[0].toFixed(3)}.
                                 The danceability of your song falls within {this.state.fit.sigmas[0]} σ (sigma) of the distribution.
                             </p>
-                            <h2>Happiness</h2>
+                            <h2>Positivity</h2>
                             <p>
                                 The happiness or 'Valence' of a song is how positive it sounds. Tracks with high valence sound more positive
                                 (happy, cheerful, euphoric) while tracks with low valence sound more negative (sad, depressed, angry).

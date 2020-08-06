@@ -411,7 +411,7 @@ class SongResultsPage extends React.Component {
                             and how regular the musical pattern is. Dancibility is determined on a scale of 0 - 10, with 10 being
                             the most danceable.
                         </p>
-                        <h2>Happiness</h2>
+                        <h2>Positivity</h2>
                         <p>
                             The happiness or 'Valence' of a song is how positive it sounds. Tracks with high valence sound more positive
                             (happy, cheerful, euphoric) while tracks with low valence sound more negative (sad, depressed, angry).

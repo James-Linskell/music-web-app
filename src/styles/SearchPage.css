@@ -1,5 +1,5 @@
 .Search {
-  background-color: rgba(0, 0, 15, 0.82);
+  background-color: rgba(0, 0, 10, 0.78);
 }
 
 .Search-logo {
@@ -28,7 +28,7 @@
 }
 
 .Search-header p {
-  margin: 1vh;
+  margin: 3vh;
 }
 
 .Margin {
@@ -141,4 +141,8 @@
   align-items: center;
   align-self: center;
   text-align: center;
+}
+
+.Title {
+  font-size: 6vh;
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { Router, Link } from "react-router-dom";
 import hellify from "../hellify.png";
 import '../styles/HomePage.css';
-import BackgroundSvgPaths from "../components/BackgroundSvgPaths";
+import BackgroundWavesSvgPaths from "../components/BackgroundWavesSvgPaths";
 
 /**
  * Takes song data as props and produces card elements for all data entered. Renders the card grid to he DOM.
@@ -12,6 +12,9 @@ class HomePage extends React.Component {
         return (
             <div className="App">
                 <header className="App-header">
+                    <div style={{width: "1vw", marginLeft: "-1vw", zIndex: "-1"}}>
+                        <BackgroundWavesSvgPaths fill="red" shiftDown="2vh"/>
+                    </div>
                     <div style={{display: "flex", justifyContent: "center", margin: "4vh"}}>
                         <img src={hellify} className="Logo" alt="logo"/>
                     </div>

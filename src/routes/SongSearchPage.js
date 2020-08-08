@@ -6,10 +6,13 @@ import FetchData from '../Helpers/FetchData';
 import SongCard from "../components/SongCard";
 import GenerateInfo from '../Helpers/GenerateInfo'
 
+/**
+ * Module for Search Song screen. Shows a search box to search for a song.
+ */
 class SongSearchPage extends React.Component {
   /**
-   * Default constructor for main app.
-   * @param props
+   * Sets default state values.
+   * @constructor
    */
   constructor(props) {
     super(props);
@@ -29,13 +32,10 @@ class SongSearchPage extends React.Component {
     this.onCardClick = this.onCardClick.bind(this);
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    if (nextProps.clicked === true) {
-      console.log("RELOADED");
-    }
-  }
-
-
+  /**
+   * Checks if the Song Search page is being loaded from the Song Analyser or Playlist analyser. This page has the same
+   * functionality either way, but the title changes.
+   */
   componentDidMount() {
     if (this.props.chain === "song") {
       this.setState({
@@ -71,10 +71,15 @@ class SongSearchPage extends React.Component {
     if (this.state.searchQuery == this.state.previousSearchQuery) {
       return
     }
-
     this.waitForFetch();
   }
 
+  /**
+   * Fetches song search results from the Spotify web API using the FetchData helper class. Throws an error and alerts
+   * user if the network connection failed. Sets a timeout for 'Searching for results...' prompt. This allows the results
+   * to be loaded instantly with no loading promp if the client has a fast network connection which looks cleaner,
+   * or displays a loading prompt if the search takes more than 1 second.
+   */
   waitForFetch = async () => {
     // Set timeout for 'searching' message to appear:
     setTimeout(() => {
@@ -121,8 +126,13 @@ class SongSearchPage extends React.Component {
 
   /**
    * When a song card is clicked, redirect to the results page passing the song id as the react router
-   * history object prop 'props.location.search'.
+   * history object prop 'props.location.search', as well as the chosen song data. Redirects to Song Results Page
+   * if loaded from the Song Analyser, ot Playlist Search Page if loaded from the Playlist Analyser.
    * @param songId
+   * @param name
+   * @param album
+   * @param artist
+   * @param art
    */
   onCardClick(songId, name, album, artist, art) {
     if (this.props.chain === "song") {
@@ -146,6 +156,11 @@ class SongSearchPage extends React.Component {
     window.scrollTo(0, -document.body.scrollHeight);
   }
 
+  /**
+   * Creates a grid of Song Cards for returned search results.
+   * @param data list of song ids
+   * @returns cardGrid component constant (not a true React component)
+   */
   populateGrid(data) {
     // Else generate cards.
     if (data == null) {
@@ -184,7 +199,7 @@ class SongSearchPage extends React.Component {
   }
 
   /**
-   * Renders main page to the DOM.
+   * Renders Song Search Page.
    */
   render() {
     return (

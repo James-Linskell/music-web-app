@@ -1,4 +1,12 @@
+/**
+ * helper module which simplifies song/playlist data from raw json (from Spotify API) to an array of simplified json objects.
+ */
 class GenerateInfo {
+    /**
+     * Simplifies playlist data.
+     * @param data raw Spotify json
+     * @return array of simplified json objects
+     */
     static generatePlaylistInfo(data) {
         const playlists = []
 
@@ -11,6 +19,11 @@ class GenerateInfo {
         return playlists;
     }
 
+    /**
+     * Simplifies song data.
+     * @param data raw Spotify json
+     * @return array of simplified json objects
+     */
     static generateSongInfo(data) {
         const songs = []
 

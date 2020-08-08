@@ -1,7 +1,14 @@
 import React from 'react';
 import '../styles/AboutPage.css';
 
+/**
+ * Module for About screen. Contains some informative text.
+ */
 class AboutPage extends React.Component {
+    /**
+     * Renders About page.
+     * @return <About/>
+     */
     render() {
         return (
             <div className="About">

@@ -1,8 +1,15 @@
 import React from 'react';
 import "../styles/BackgroundSvgPaths.css";
 
-
+/**
+ * Generates svg path for background images. The image is a slanted horizontal bar stretching across the page. The height
+ * can be adjusted using the 'shiftDown' prop, and the fill colour using the 'fill' prop.
+ */
 class BackgroundSvgPaths extends React.Component {
+    /**
+     * Renders the BackgroundSvgPaths component.
+     * @return <BackgroundSvgPaths/>
+     */
     render() {
         return (
             <div className="background">

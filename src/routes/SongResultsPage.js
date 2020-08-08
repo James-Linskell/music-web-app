@@ -14,7 +14,6 @@ import LightenColours from "../Helpers/LightenColours";
 
 /**
  * Styles the Material-UI tooltips used on the page.
- * @type {React.ComponentType<Omit<JSX.LibraryManagedAttributes<*, React.ComponentProps<*>>, keyof ({theme: Theme} & {classes: ClassNameMap<ClassKeyOfStyles<"arrow"|"tooltip">>}) | {classes: ClassNameMap<ClassKeyOfStyles<"arrow"|"tooltip">>}> & StyledComponentProps<"arrow"|"tooltip">>}
  */
 const LightTooltip = withStyles((theme) => ({
     tooltip: {
@@ -29,7 +28,15 @@ const LightTooltip = withStyles((theme) => ({
     }
 }))(Tooltip);
 
+/**
+ * Module for Song Analyser results screen. Shows results of the analysis, with information boxes and graphs.
+ */
 class SongResultsPage extends React.Component {
+    /**
+     * Sets default state values then calls the main function (waitForFetch). These are necessary to pre-populate the graphs with null data while the page waits
+     * to fetch results.
+     * @constructor
+     */
     constructor(props) {
         super(props);
         this.state = {
@@ -63,6 +70,9 @@ class SongResultsPage extends React.Component {
         }
     }
 
+    /**
+     * Calls main functions.
+     */
     componentDidMount = async () =>  {
         await this.waitForFeatures();
         await this.waitFortrack();
@@ -105,7 +115,8 @@ class SongResultsPage extends React.Component {
     }
 
     /**
-     * Fetches track data from my API, pre-processes the data, and generates a song card of the data.
+     * Fetches song data results from the Spotify web API using the FetchData helper class. Throws an error and alerts
+     * user if the network connection failed.
      */
     waitFortrack = async () => {
         const songId = this.props.location.search;
@@ -177,10 +188,10 @@ class SongResultsPage extends React.Component {
 
     };
 
-    /*
- * todo:
- *  refactor some of this to helper
- */
+    /**
+     * Fetches song mood feature data results from the Spotify web API using the FetchData helper class and saves data
+     * to state. Throws an error and alerts user if the network connection failed.
+     */
     waitForFeatures = async () => {
         const songId = this.props.location.search;
         const data = await FetchData.fetchData(songId.substring(1, songId.length), 'analysis', 'audio-features/').catch((error) => {
@@ -242,8 +253,8 @@ class SongResultsPage extends React.Component {
     };
 
     /**
-     * Calls the FetchData helper and returns album analysis results from Spotify for a given album id. Saves the album
-     * data to state.
+     * Fetches album data results from the Spotify web API using the FetchData helper class and saves data
+     * to state. Throws an error and alerts user if the network connection failed.
      */
     waitForAlbum = async () => {
         if (this.state.invalid === true) {

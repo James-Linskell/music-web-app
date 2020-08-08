@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Redirect, Switch, Link } from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import HomePage from "./routes/HomePage";
 import SongSearchPage from "./routes/SongSearchPage";
 import PlaylistSearchPage from "./routes/PlaylistSearchPage";
@@ -14,6 +14,10 @@ import NotFound from "./routes/NotFound";
  * Main page of the app. Only handles routing, then gets passed to index.js for rendering.
  */
 class App extends React.Component {
+    /**
+     * Sets default state values.
+     * @constructor
+     */
     constructor() {
         super();
         this.state = {
@@ -21,6 +25,9 @@ class App extends React.Component {
         }
     }
 
+    /**
+     * Renders main app.
+     */
     render() {
         return (
             <Router>

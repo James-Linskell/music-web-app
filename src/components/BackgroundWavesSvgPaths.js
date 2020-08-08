@@ -1,8 +1,16 @@
 import React from 'react';
 import "../styles/BackgroundSvgPaths.css";
 
-// Generated at https://convert.ing-now.com/mp3-audio-waveform-graphic-generator/
+/**
+ * Generates svg path for background images. The image is an audio wave stretching across the page. The height
+ * can be adjusted using the 'shiftDown' prop, and the fill colour using the 'fill' prop. This wave image was generated
+ * using https://convert.ing-now.com/mp3-audio-waveform-graphic-generator/ and converted to an svg path.
+ */
 class BackgroundWavesSvgPaths extends React.Component {
+    /**
+     * Renders the BackgroundWavesSvgPaths component.
+     * @return <BackgroundWavesSvgPaths/>
+     */
     render() {
         return (
             <div className="background">

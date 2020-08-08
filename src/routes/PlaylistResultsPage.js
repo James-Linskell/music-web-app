@@ -9,9 +9,14 @@ import BackgroundSvgPaths from "../components/BackgroundSvgPaths";
 import ColorThief from 'color-thief';
 import LightenColours from "../Helpers/LightenColours";
 
+/**
+ * Module for Playlist Analyser results screen. Shows results of the analysis, with information boxes and graphs.
+ */
 class PlaylistResultsPage extends React.Component {
     /**
-     * Sets defaults so the page can load blank data before fetching data from the API and replacing the default values.
+     * Sets default state values then calls the main function (waitForFetch). These are necessary to pre-populate the graphs with null data while the page waits
+     * to fetch results.
+     * @constructor
      */
     constructor() {
         super();
@@ -38,6 +43,9 @@ class PlaylistResultsPage extends React.Component {
         }
     }
 
+    /**
+     * Sets props to state if props exist. Else redirects to 404 Not Found.
+     */
     componentDidMount() {
         if (typeof this.props.location.state !== "undefined") {
             this.setState({propsToState: this.props.location.state})
@@ -51,6 +59,11 @@ class PlaylistResultsPage extends React.Component {
         window.scrollTo(0, -document.body.scrollHeight);
     }
 
+    /**
+     * Fetches song/playlist data results from the Spotify web API using the FetchData helper class. Then it creates the
+     * final score chart and histograms and saves them to state. Throws an error and alerts
+     * user if the network connection failed.
+     */
     waitFortracks = async () => {
         // Fetch track data from my API:
         const plTracks = await FetchData.fetchData('', 'analysis', 'playlists/' +
@@ -103,6 +116,7 @@ class PlaylistResultsPage extends React.Component {
             );
             return;
         }
+        // Calls function to set background colours from album art:
         this.setBgColours();
 
         // Fetch my API endpoint for sorting and pre-processing the data:
@@ -205,7 +219,10 @@ class PlaylistResultsPage extends React.Component {
         }.bind(this));
     }
 
-    //CHANGE: get new audio data every time, or the user can't bookmark this page ///////////////////////////////////////////
+    /**
+     * Renders the Playlist Results page.
+     * @returns <PlaylistResultsPage/>
+     */
     render() {
         return (
             <div className="Main-play" style={{backgroundColor: this.state.albumColours1}}>

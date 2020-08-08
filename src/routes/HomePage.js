@@ -5,7 +5,7 @@ import '../styles/HomePage.css';
 import BackgroundWavesSvgPaths from "../components/BackgroundWavesSvgPaths";
 
 /**
- * Takes song data as props and produces card elements for all data entered. Renders the card grid to he DOM.
+ * homepage for the website. Contains links to both the Playlist Analyser and Song Analyser.
  */
 class HomePage extends React.Component {
     render() {

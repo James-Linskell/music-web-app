@@ -2,7 +2,14 @@ import React from 'react';
 import '../styles/ContactPage.css';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
+/**
+ * Module for Contact screen. Contains some links to social media.
+ */
 class ContactPage extends React.Component {
+    /**
+     * Sets default state values.
+     * @constructor
+     */
     constructor() {
         super();
         this.state = {
@@ -11,10 +18,17 @@ class ContactPage extends React.Component {
         this.showEmail = this.showEmail.bind(this)
     }
 
+    /**
+     * Shows the email which is initially hidden (minor attempt to prevent email scrubbing).
+     */
     showEmail() {
         this.setState({email: <p className="Email"></p>});
     }
 
+    /**
+     * Renders the contact page.
+     * @returns <Contact/>
+     */
     render() {
         return (
             <div className="Contact">

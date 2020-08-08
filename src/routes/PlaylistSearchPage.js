@@ -1,15 +1,19 @@
 import React from 'react';
 import hellify from '../hellify.png';
 import '../styles/SearchPage.css';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import FetchData from '../Helpers/FetchData';
 import SongCard from "../components/SongCard";
 import GenerateInfo from "../Helpers/GenerateInfo";
 
+/**
+ * Module for Search Playlist screen. Shows the selected song from the song search, and a search box to search for a
+ * playlist.
+ */
 class PlaylistSearchPage extends React.Component {
     /**
-     * Default constructor for main app.
-     * @param props
+     * Sets default state values.
+     * @constructor
      */
     constructor(props) {
         super(props);
@@ -28,6 +32,9 @@ class PlaylistSearchPage extends React.Component {
         this.onCardClick = this.onCardClick.bind(this);
     }
 
+    /**
+     * Sets props to state if props exist. Else redirects to 404 Not Found.
+     */
     componentDidMount() {
         if (typeof this.props.location.state !== "undefined") {
             this.setState({propsToState: this.props.location.state})
@@ -67,6 +74,12 @@ class PlaylistSearchPage extends React.Component {
         this.waitForFetch();
     }
 
+    /**
+     * Fetches playlist search results from the Spotify web API using the FetchData helper class. Throws an error and alerts
+     * user if the network connection failed. Sets a timeout for 'Searching for results...' prompt. This allows the results
+     * to be loaded instantly with no loading promp if the client has a fast network connection which looks cleaner,
+     * or displays a loading prompt if the search takes more than 1 second.
+     */
     waitForFetch = async () => {
         // Set timeout for 'searching' message to appear:
         setTimeout(() => {
@@ -113,9 +126,13 @@ class PlaylistSearchPage extends React.Component {
     };
 
     /**
-     * When a song card is clicked, redirect to the results page passing the song id as the react router
-     * history object prop 'props.location.search'.
-     * @param songId
+     * When a playlist card is clicked, redirect to the results page passing the playlist id as the react router
+     * history object prop 'props.location.search', as well as the chosen song data.
+     * @param playlistId
+     * @param name
+     * @param album
+     * @param artist
+     * @param art
      */
     onCardClick(playlistId, name, album, artist, art) {
         window.scrollTo(0, -document.body.scrollHeight);
@@ -132,6 +149,11 @@ class PlaylistSearchPage extends React.Component {
         });
     }
 
+    /**
+     * Creates a grid of embedded iframes to display Spotify playlist previews from returned search results.
+     * @param data list of playlist ids
+     * @returns cardGrid component constant (not a true React component)
+     */
     populateGrid(data) {
         // Else generate cards.
         if (data == null) {
@@ -169,7 +191,7 @@ class PlaylistSearchPage extends React.Component {
     }
 
     /**
-     * Renders main page to the DOM.
+     * Renders Playlist Search Page.
      */
     render() {
         return (

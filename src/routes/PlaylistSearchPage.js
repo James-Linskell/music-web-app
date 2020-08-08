@@ -75,7 +75,22 @@ class PlaylistSearchPage extends React.Component {
             });
         }, 1000);
         // Fetch search data:
-        const data = await FetchData.fetchData(this.state.searchQuery,'search','playlist');
+        const data = await FetchData.fetchData(this.state.searchQuery,'search','playlist').catch((error) => {
+            // If any fetch error occurred (eg. network or json parsing error), throw error, alert user and navigate home:
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            alert(error);
+        });
+        // If any other error occurred:
+        if (typeof data === "undefined") {
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            return;
+        }
         // Clear all timeouts (as search is complete):
         let id = setTimeout(function() {}, 0);
         while (id--) {
@@ -86,14 +101,7 @@ class PlaylistSearchPage extends React.Component {
         }
         // Set state to returned data:
         this.setState({playlistsRaw: data})
-        // Error handling if no search results are returned:
-        if (data.playlists.items.length === 0) {
-            this.setState({
-                prompt: "No results found!",
-                results: <div className="Margin" ></div>
-            });
-            return;
-        }
+
         const playlists = GenerateInfo.generatePlaylistInfo(this.state.playlistsRaw.playlists.items);
         this.setState({playlistIds: playlists});
         this.setState({

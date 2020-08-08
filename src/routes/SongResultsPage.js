@@ -109,13 +109,20 @@ class SongResultsPage extends React.Component {
      */
     waitFortrack = async () => {
         const songId = this.props.location.search;
-        const data = await FetchData.fetchData(songId.substring(1, songId.length), 'analysis', 'tracks/');
-        // Error handling if no search results are returned:
-        if (data.length === 0) {
-            this.setState({
-                prompt: "Invalid song ID",
-                invalid: true
-            });
+        const data = await FetchData.fetchData(songId.substring(1, songId.length), 'analysis', 'tracks/').catch((error) => {
+            // If any fetch error occurred (eg. network or json parsing error), throw error, alert user and navigate home:
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            alert(error);
+        });
+        // If any other error occurred:
+        if (typeof data === "undefined") {
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
             return;
         }
         this.setState({
@@ -138,8 +145,23 @@ class SongResultsPage extends React.Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
+        }).catch((error) => {
+            // If any fetch error occurred (eg. network or json parsing error), throw error, alert user and navigate home:
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            alert(error);
         });
         let response = await sortTrackData.json();
+        // If any other error occurred:
+        if (typeof response === "undefined") {
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            return;
+        }
 
         // Generate songcard and save it to state:
         this.setState({
@@ -161,13 +183,20 @@ class SongResultsPage extends React.Component {
  */
     waitForFeatures = async () => {
         const songId = this.props.location.search;
-        const data = await FetchData.fetchData(songId.substring(1, songId.length), 'analysis', 'audio-features/');
-        // Error handling if no search results are returned:
-        if (data.length === 0) {
-            this.setState({
-                prompt: "Invalid song ID",
-                invalid: true
-            });
+        const data = await FetchData.fetchData(songId.substring(1, songId.length), 'analysis', 'audio-features/').catch((error) => {
+            // If any fetch error occurred (eg. network or json parsing error), throw error, alert user and navigate home:
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            alert(error);
+        });
+        // If any other error occurred:
+        if (typeof songId === "undefined") {
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
             return;
         }
 
@@ -179,7 +208,22 @@ class SongResultsPage extends React.Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
+        }).catch((error) => {
+            // If any fetch error occurred (eg. network or json parsing error), throw error, alert user and navigate home:
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            alert(error);
         });
+        // If any other error occurred:
+        if (typeof sortTrackData === "undefined") {
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            return;
+        }
         let response = await sortTrackData.json();
 
         this.setState({
@@ -205,14 +249,20 @@ class SongResultsPage extends React.Component {
         if (this.state.invalid === true) {
             return;
         }
-        const songId = this.props.location.search;
-        const data = await FetchData.fetchData(this.state.rawTrack.album.id, 'analysis', 'albums/');
-        // Error handling if no search results are returned:
-        if (data.length === 0) {
-            this.setState({
-                prompt: "Invalid song ID",
-                invalid: true
-            });
+        const data = await FetchData.fetchData(this.state.rawTrack.album.id, 'analysis', 'albums/').catch((error) => {
+            // If any fetch error occurred (eg. network or json parsing error), throw error, alert user and navigate home:
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            alert(error);
+        });
+        // If any other error occurred:
+        if (typeof data === "undefined") {
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
             return;
         }
         console.log(data);
@@ -240,7 +290,22 @@ class SongResultsPage extends React.Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(this.state.rawFeatures)
+        }).catch((error) => {
+            // If any fetch error occurred (eg. network or json parsing error), throw error, alert user and navigate home:
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            alert(error);
         });
+        // If any other error occurred:
+        if (typeof sortTrackData === "undefined") {
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            return;
+        }
         let response = await sortTrackData.json();
         this.setState(response);
     }

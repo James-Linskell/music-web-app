@@ -54,7 +54,22 @@ class PlaylistResultsPage extends React.Component {
     waitFortracks = async () => {
         // Fetch track data from my API:
         const plTracks = await FetchData.fetchData('', 'analysis', 'playlists/' +
-            this.props.location.hash.substring(1, this.props.location.hash.length) + '/tracks');
+            this.props.location.hash.substring(1, this.props.location.hash.length) + '/tracks').catch((error) => {
+            // If any fetch error occurred (eg. network or json parsing error), throw error, alert user and navigate home:
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            alert(error);
+        });
+        // If any other error occurred:
+        if (typeof plTracks === "undefined") {
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            return;
+        }
         let plTrackIds = '';
         // Initialise counter for number of songs:
         let n = 0;
@@ -72,13 +87,20 @@ class PlaylistResultsPage extends React.Component {
         // Index 0 is the song being fitted to the playlist.
         // Fetch feature data from my API:
         const featureData = await FetchData.fetchData(this.props.location.search.substring(1, this.props.location.search.length) +
-            ',' + plTrackIds, 'analysis', 'audio-features/?ids=');
-        // Error handling if no search results are returned:
-        if (featureData.length === 0) {
-            this.setState({
-                prompt: "Invalid ID",
-                invalid: true
-            });
+            ',' + plTrackIds, 'analysis', 'audio-features/?ids=').catch((error) => {
+            // If any fetch error occurred (eg. network or json parsing error), throw error, alert user and navigate home:
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            alert(error);
+        });
+        // If any other error occurred:
+        if (typeof featureData === "undefined") {
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
             return;
         }
         this.setBgColours();
@@ -91,7 +113,22 @@ class PlaylistResultsPage extends React.Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(featureData)
+        }).catch((error) => {
+            // If any fetch error occurred (eg. network or json parsing error), throw error, alert user and navigate home:
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            alert(error);
         });
+        // If any other error occurred:
+        if (typeof sortData === "undefined") {
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            return;
+        }
         // Receive the sorted json data:
         let response = await sortData.json();
 
@@ -103,7 +140,22 @@ class PlaylistResultsPage extends React.Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(response.score)
+        }).catch((error) => {
+            // If any fetch error occurred (eg. network or json parsing error), throw error, alert user and navigate home:
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            alert(error);
         });
+        // If any other error occurred:
+        if (typeof generateScore === "undefined") {
+            this.props.history.push({
+                    pathname: '/404',
+                }
+            );
+            return;
+        }
         let finalScore = await generateScore.json();
 
         // Generate histograms and set the returned data to state:

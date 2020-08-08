@@ -7,18 +7,29 @@ class FetchData {
      * @returns {Promise} Json body containing Spotify client token and test message
      */
     static getToken = async () => {
-        const response = await fetch('/authenticate');
-        const body = await response.json();
-
-        if (response.status !== 200) {
-            throw Error(body.message)
+        const response = await fetch('/authenticate').then((response) => {
+            if (!response.ok) {
+                // If HTTP response is bad, throw error:
+                throw new Error("There was a problem connecting to the Songmap service." + response.status);
+            }
+            return response;
+        }).catch((error) => {
+            // If any other error occurred (eg. url invalid), throw error:
+            throw new Error(error);
+        });
+        const body = await response.json().catch((error) => {throw new Error(error)});
+        if (!response.ok) {
+            // If HTTP response is bad, throw error:
+            throw new Error("There was a problem connecting to the Songmap service." + response.status);
         }
         return body;
     };
     /**
-     * Calls Spotify API using client access token. Takes an input string, a call type string (search or analysis) and a string
-     * for search type ('tracks/artists/playlists' for searches or 'audio-features/?ids=' for audio data).
-     * @returns {Promise} Spotify search or audio analysis data
+     * Calls Spotify API to retrieve track/playlist data.
+     * @param input search string or song/playlist id
+     * @param type string for search type (track/artist/playlist/ etc). Input as empty string if not applicable
+     * @param searchType search/features/track/analysis
+     * @returns Spotify json data
      */
     static fetchData = async (input, type, searchType) => {
         let data = '';
@@ -32,7 +43,7 @@ class FetchData {
         let url = "";
         if (type === "search") {
             // Replaces special characters in query:
-            input = input.replace(/\\|#|%|{|}|\^|\||`/g, "")
+            input = input.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, " ")
             const endpoint = 'https://api.spotify.com/v1/search?';
             const query = 'q=' + input;
             const type = '&type=' + searchType;
@@ -43,7 +54,16 @@ class FetchData {
             const id = input;
             url = endpoint + ty + id;
         }
-        const response = await fetch(url, myOptions)
+        const response = await fetch(url, myOptions).then((response) => {
+            // If HTTP response is bad, throw error:
+            if (!response.ok) {
+                throw new Error("There was a problem connecting to the Spotify service.\n" + response.status);
+            }
+            return response;
+        }).catch((error) => {
+            // If any other error occurred (eg. url invalid), throw error:
+            throw new Error(error);
+        });
         data = await response.json();
         return data;
     }

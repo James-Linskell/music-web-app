@@ -83,7 +83,22 @@ class SongSearchPage extends React.Component {
       });
     }, 1000);
     // Get search results:
-    const data = await FetchData.fetchData(this.state.searchQuery, 'search','track');
+    const data = await FetchData.fetchData(this.state.searchQuery, 'search','track').catch((error) => {
+      // If any fetch error occurred (eg. network or json parsing error), throw error, alert user and navigate home:
+      this.props.history.push({
+            pathname: '/404',
+          }
+      );
+      alert(error);
+    });
+    // If any other error occurred:
+    if (typeof data === "undefined") {
+      this.props.history.push({
+            pathname: '/404',
+          }
+      );
+      return;
+    }
     // Clear all timeouts (as search is complete):
     let id = setTimeout(function() {}, 0);
     while (id--) {
@@ -94,15 +109,7 @@ class SongSearchPage extends React.Component {
     }
     // Set state to returned data:
     this.setState({songListRaw: data})
-    // Error handling if no search results are returned:
-    if (data.tracks.items.length === 0) {
-      this.setState({
-        prompt: "No results found!",
-        results: <div className="Margin" ></div>
-      });
-      return;
-    }
-    const songs = GenerateInfo.generateSongInfo(this.state.songListRaw.tracks.items);
+    const songs = GenerateInfo.generateSongInfo(data.tracks.items);
     this.setState({simplifiedSongList: songs});
     this.setState({
       results:

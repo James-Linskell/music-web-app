@@ -43,7 +43,6 @@ class Histogram extends React.Component {
             body: JSON.stringify(input)
         });
         let response = await generateScore.json();
-        console.log(response);
         // Determine if the user is using Firefox browser:
         let userAgentString = navigator.userAgent;
         let firefoxAgent = userAgentString.indexOf("Firefox") > -1;

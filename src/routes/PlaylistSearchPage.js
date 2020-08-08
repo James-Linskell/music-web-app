@@ -114,6 +114,13 @@ class PlaylistSearchPage extends React.Component {
         }
         // Set state to returned data:
         this.setState({playlistsRaw: data})
+    	if (data.playlists.items.length === 0) {
+      	this.setState({
+        	prompt: "No results found!",
+        	results: <div className="Margin" ></div>
+      	});
+      	return;
+    	}
 
         const playlists = GenerateInfo.generatePlaylistInfo(this.state.playlistsRaw.playlists.items);
         this.setState({playlistIds: playlists});

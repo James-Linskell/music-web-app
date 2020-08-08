@@ -95,7 +95,6 @@ class SongResultsPage extends React.Component {
             let colour = colorThief.getColor(img);
             Vibrant.from(img).getPalette()
                 .then((palette) => {
-                    console.log(palette);
                     let rgb1 = palette.Vibrant.getRgb();
                     let rgb2 = palette.DarkVibrant.getRgb();
                     let rgb3 = palette.DarkMuted.getRgb();
@@ -276,7 +275,6 @@ class SongResultsPage extends React.Component {
             );
             return;
         }
-        console.log(data);
         this.setState({
             rawAlbum: data,
         });

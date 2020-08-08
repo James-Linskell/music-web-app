@@ -114,6 +114,13 @@ class SongSearchPage extends React.Component {
     }
     // Set state to returned data:
     this.setState({songListRaw: data})
+    if (data.tracks.items.length === 0) {
+      this.setState({
+        prompt: "No results found!",
+        results: <div className="Margin" ></div>
+      });
+      return;
+    }
     const songs = GenerateInfo.generateSongInfo(data.tracks.items);
     this.setState({simplifiedSongList: songs});
     this.setState({

@@ -168,7 +168,8 @@ class SongSearchPage extends React.Component {
     }
     var cardGrid = [];
     for (var i=0; i < data.length; i++) {
-
+      // Although there is a function for this in the Node server, it is duplicated here as there is a loop which renders
+      // react components, which is the most efficient way to do this in terms of both latency and processing:
       let name = data[i].name;
       let album = data[i].album;;
       let artist = data[i].artist;

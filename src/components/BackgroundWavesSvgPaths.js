@@ -15,6 +15,7 @@ class BackgroundWavesSvgPaths extends React.Component {
         return (
             <div className="background">
                 <svg viewBox="0 0 1920 900" style={{top: this.props.shiftDown}}>
+                    <title>background</title>
                     <path fill={this.props.fill}
                           d="M 850.00,323.00
            C 850.00,323.00 852.00,323.00 852.00,323.00

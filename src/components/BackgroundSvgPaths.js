@@ -14,6 +14,7 @@ class BackgroundSvgPaths extends React.Component {
         return (
             <div className="background">
                 <svg viewBox="0 0 1920 2140" style={{top: this.props.shiftDown}}>
+                    <title>background</title>
                     <path fill={this.props.fill}
                           d="M 0.00,1811.00
            C 0.00,1811.00 0.00,1214.00 0.00,1214.00

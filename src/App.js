@@ -8,7 +8,7 @@ import ContactPage from "./routes/ContactPage";
 import SongResultsPage from "./routes/SongResultsPage";
 import PlaylistResultsPage from "./routes/PlaylistResultsPage";
 import './styles/App.css';
-import NotFound from "./routes/NotFound";
+import NotFoundPage from "./routes/NotFoundPage";
 
 /**
  * Main page of the app. Only handles routing, then gets passed to index.js for rendering.
@@ -46,7 +46,7 @@ class App extends React.Component {
                     <Route path="/song-playlist" component={PlaylistSearchPage}/>
                     <Route path="/about" component={AboutPage}/>
                     <Route path="/contact" component={ContactPage}/>
-                    <Route path="/404" component={NotFound}/>
+                    <Route path="/404" component={NotFoundPage}/>
                     <Route path="/song"   render={(props) => (
                         <SongSearchPage {...props} chain="song" />
                     )}/>

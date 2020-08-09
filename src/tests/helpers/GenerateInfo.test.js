@@ -1,4 +1,5 @@
 import GenerateInfo from "../../Helpers/GenerateInfo";
+// Run with 'npm test', not 'jest'.
 
 /**
  * Jest test for GenerateInfo.generatePlaylistInfo().
@@ -24,8 +25,8 @@ describe("generatePlaylistInfo()", () => {
         }]
         // Test:
         expect(GenerateInfo.generatePlaylistInfo(inputData)).toStrictEqual(
-            [{playlistId: "id1"}, {playlistId: "id2"}, {playlistId: "id3"}]
-        );
+            [{playlistId: "id1"}, {playlistId: "id2"}, {playlistId: "id3"}]);
+        expect(() => GenerateInfo.generatePlaylistInfo(null)).toThrow(TypeError);
     });
 });
 
@@ -61,7 +62,7 @@ describe("generateSongInfo()", () => {
         }]
         // Test:
         expect(GenerateInfo.generateSongInfo(inputData)).toStrictEqual(
-            [{name: "song name", artist: "artist 1", album: "album name", art: "image large url", songId: "song id"}]
-        );
+            [{name: "song name", artist: "artist 1", album: "album name", art: "image large url", songId: "song id"}]);
+        expect(() => GenerateInfo.generateSongInfo(null)).toThrow(TypeError);
     });
 });

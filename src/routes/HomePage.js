@@ -46,8 +46,8 @@ class HomePage extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div style={{marginTop: "18vh", fontSize: "2vh"}}>Songmap 2020</div>
-                    <div style={{marginTop: "1vh", fontSize: "2vh"}}>Note: The song and playlist must be on Spotify. This website used Spotify's API to find song data.</div>
+                    <div style={{marginTop: "18vh", fontSize: "2vh"}}>Songmapper 2020</div>
+                    <div style={{marginTop: "1vh", fontSize: "2vh", marginBottom: "2vh"}}>Note: The song and playlist must be on Spotify. This website used Spotify's API to find song data.</div>
                 </header>
             </div>
         );

@@ -10,7 +10,7 @@ class FetchData {
         const response = await fetch('/authenticate').then((response) => {
             if (!response.ok) {
                 // If HTTP response is bad, throw error:
-                throw new Error("There was a problem connecting to the Songmap service." + response.status);
+                throw new Error("There was a problem connecting to the Songmapper service." + response.status);
             }
             return response;
         }).catch((error) => {
@@ -20,7 +20,7 @@ class FetchData {
         const body = await response.json().catch((error) => {throw new Error(error)});
         if (!response.ok) {
             // If HTTP response is bad, throw error:
-            throw new Error("There was a problem connecting to the Songmap service." + response.status);
+            throw new Error("There was a problem connecting to the Songmapper service." + response.status);
         }
         return body;
     };

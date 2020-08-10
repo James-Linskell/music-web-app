@@ -7,7 +7,7 @@ import FetchData from "../../Helpers/FetchData";
  * network errors.
  */
 describe("fetchData()", () => {
-    it("should throw a network error ('There was a problem connecting to the Songmap service.')", () => {
+    it("should throw a network error ('There was a problem connecting to the Songmapper service.')", () => {
         // Test:
         expect(() => {FetchData.fetchData("search query string",'search','playlist').toThrow(Error)});
         expect(() => {FetchData.fetchData(4 ,null,undefined).toThrow(TypeError)});

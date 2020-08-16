@@ -221,7 +221,7 @@ class PlaylistResultsPage extends React.Component {
 
     /**
      * Renders the Playlist Results page.
-     * @returns <PlaylistResultsPage/>
+     * @returns {component} PlaylistResultsPage
      */
     render() {
         return (

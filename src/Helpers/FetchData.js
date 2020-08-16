@@ -4,7 +4,7 @@
 class FetchData {
     /**
      * Calls my node server which requests a Spotify client access token.
-     * @returns {Promise} Json body containing Spotify client token and test message
+     * @return {object} Json body containing Spotify client token and test message
      */
     static getToken = async () => {
         const response = await fetch('/authenticate').then((response) => {

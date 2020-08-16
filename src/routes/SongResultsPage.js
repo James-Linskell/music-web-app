@@ -321,6 +321,7 @@ class SongResultsPage extends React.Component {
 
     /**
      * Renders the song results page.
+     * @return {component} SongResultsPage
      */
     render() {
         return (
@@ -466,6 +467,7 @@ class SongResultsPage extends React.Component {
                     <div>
                         <h2>Available regions:</h2>
                         <hr/>
+                        <p>The countries where the song is available are shown in red.</p>
                         <p style={{justifyContent: "center", display: "flex"}}>
                             <ComposableMap style={{color: "white", height: "42vh", marginRight: "2vw"}}>
                                 <Geographies geography="https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json">

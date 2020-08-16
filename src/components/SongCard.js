@@ -7,7 +7,7 @@ import '../styles/SongCard.css';
 class SongCard extends React.Component {
     /**
      * Renders the SongCard component.
-     * @return <SongCard/>
+     * @return {compoenent} SongCard
      */
     render() {
         return (

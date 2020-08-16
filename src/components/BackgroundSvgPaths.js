@@ -8,7 +8,7 @@ import "../styles/BackgroundSvgPaths.css";
 class BackgroundSvgPaths extends React.Component {
     /**
      * Renders the BackgroundSvgPaths component.
-     * @return <BackgroundSvgPaths/>
+     * @return {component} BackgroundSvgPaths
      */
     render() {
         return (

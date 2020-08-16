@@ -7,7 +7,7 @@ import '../styles/AboutPage.css';
 class AboutPage extends React.Component {
     /**
      * Renders About page.
-     * @return <About/>
+     * @return {component} About
      */
     render() {
         return (
@@ -24,6 +24,9 @@ class AboutPage extends React.Component {
                     Song Analyser lets you see detailed data for a single song, and the Playlist Analyser lets you compare
                     a song's features to all the other songs in a chosen playlist, calculating how well your song fits in
                     the playlist.
+                </div>
+                <div className="About-footer">
+                    This site is not affiliated with Spotify. This site does not store any information about you.
                 </div>
             </div>
         )

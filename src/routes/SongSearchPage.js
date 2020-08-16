@@ -40,11 +40,12 @@ class SongSearchPage extends React.Component {
     if (this.props.chain === "song") {
       this.setState({
         title: "Song Analyser",
+        searchTitle: "Search for a song by name, artist or album to get started."
       });
     } else {
       this.setState({
         title: "Playlist Analyser",
-        searchTitle: "First choose a song, then choose a playlist. Search for a song to get started."
+        searchTitle: "First choose a song, then choose a playlist. Search for a song by name, artist or album to get started."
       });
     }
   }
@@ -208,6 +209,7 @@ class SongSearchPage extends React.Component {
 
   /**
    * Renders Song Search Page.
+   * @return {component} SongSearchPage
    */
   render() {
     return (
@@ -219,7 +221,7 @@ class SongSearchPage extends React.Component {
               <p>{this.state.searchTitle}</p>
               <div className="searchbar">
                 <form onSubmit={this.handleSubmit}>
-                  <input className="Search-box" type="text" value={this.state.value} placeholder="Search.." onChange={this.handleChange}></input>
+                  <input className="Search-box" type="text" value={this.state.value} placeholder="Search..." onChange={this.handleChange}></input>
                   <button id="searchclick" type="submit">Search</button>
                 </form>
               </div>

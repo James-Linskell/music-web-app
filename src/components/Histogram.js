@@ -70,7 +70,7 @@ class Histogram extends React.Component {
 
     /**
      * Renders histogram.
-     * @return <Histogram/>
+     * @return {component} Histogram
      */
     render() {
         return (

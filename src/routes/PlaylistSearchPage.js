@@ -199,6 +199,7 @@ class PlaylistSearchPage extends React.Component {
 
     /**
      * Renders Playlist Search Page.
+     * @return {component} PlaylistSearchPage
      */
     render() {
         return (

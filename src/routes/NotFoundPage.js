@@ -5,10 +5,10 @@ import '../styles/NotFound.css'
  * Module for Not Found screen. Contains a '404 Not Found' error message. Broken links or thrown errors in other routes
  * redirect here.
  */
-export default class NotFoundPage extends React.Component {
+class NotFoundPage extends React.Component {
     /**
      * Renders the 404 Not Found page.
-     * @returns <NotFoundPage/>
+     * @return {component} NotFoundPage
      */
     render() {
         return(
@@ -19,3 +19,5 @@ export default class NotFoundPage extends React.Component {
         )
     }
 }
+
+export default NotFoundPage;

@@ -27,7 +27,7 @@ class ContactPage extends React.Component {
 
     /**
      * Renders the contact page.
-     * @returns <Contact/>
+     * @return {component} ContactPage
      */
     render() {
         return (

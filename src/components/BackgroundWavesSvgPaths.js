@@ -9,7 +9,7 @@ import "../styles/BackgroundSvgPaths.css";
 class BackgroundWavesSvgPaths extends React.Component {
     /**
      * Renders the BackgroundWavesSvgPaths component.
-     * @return <BackgroundWavesSvgPaths/>
+     * @return {component} BackgroundWavesSvgPaths
      */
     render() {
         return (

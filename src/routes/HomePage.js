@@ -8,6 +8,10 @@ import BackgroundWavesSvgPaths from "../components/BackgroundWavesSvgPaths";
  * homepage for the website. Contains links to both the Playlist Analyser and Song Analyser.
  */
 class HomePage extends React.Component {
+    /**
+     * Renders Home page.
+     * @return {component} Home
+     */
     render() {
         return (
             <div className="App">
